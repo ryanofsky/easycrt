@@ -1,0 +1,31 @@
+MapVirtualKey - Converts Virtual to Ascii or Scan Code
+
+
+
+
+
+If lngShift = 0 Then lngShift = 
+lngVk = lobyte(VkKeyScan(KeyValue)) ' get virtual key code
+lngScan = MapVirtualKey(lngVk, MAP_VKTOSCAN) ' get OEM scan code
+
+
+vkcode := lobyte(VkKeyScan(KeyValue);
+shifts := (hibyte(VkKeyScan(KeyValue))=1);
+
+If (shifts) then 
+  sendmessage(activew,wm_keydown,vk_shift,MapVirtualKey(VK_SHIFT, MAP_VKTOSCAN),0);
+
+sendmessage(activew,wm_keydown,vkcode  ,MapVirtualKey(vkcode,MAP_VKTOSCAN),0);
+sendmessage(activew,wm_keyup  ,vkcode  ,MapVirtualKey(vkcode,MAP_VKTOSCAN),0);
+
+If shifts then 
+  sendmessage(activew,wm_keyup,vk_shift,MapVirtualKey(VK_SHIFT, MAP_VKTOSCAN),0);
+
+
+
+
+End If
+keybd_event lngVk, lngScan, 0, 0 ' key down
+keybd_event lngVk, lngScan, KEYEVENTF_KEYUP, 0 ' key up
+If lngVk And 256 Then keybd_event VK_SHIFT, lngShift, KEYEVENTF_KEYUP, 0
+End Sub
