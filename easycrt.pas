@@ -1,4 +1,4 @@
-{ EasyCRT v3.2 }
+{ EasyCRT v3.3 }
 
 {*******************************************************}
 {                                                       }
@@ -56,6 +56,8 @@ procedure TrackCursor;
 procedure AssignCrt(var F: Text);
 
 {  RUSS   }
+
+var DC:HDC;
 
 var TheDC: SDC;
     ldown,rdown: boolean;
@@ -171,7 +173,7 @@ var
   Range: TPoint;                        { Scroll bar ranges }
   CharSize: TPoint;                     { Character cell size }
   CharAscent: Integer;                  { Character ascent }
-  DC: HDC;                              { Global device context }
+ { DC: HDC;                             { Global device context }
   PS: TPaintStruct;                     { Global paint structure }
   SaveFont: HFont;                      { Saved device context font }
   KeyBuffer: array[0..63] of Char;      { Keyboard type-ahead buffer }
