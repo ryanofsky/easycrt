@@ -1,305 +1,237 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Type"
-content="text/html; charset=iso-8859-1">
-<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
 <title>EasyCRT: Simplifying the Windows Graphical Device Interface</title>
 </head>
 
-<body background="../bgfleck.gif" link="#0000FF">
-<A name="top">
+<body background="../media/bgfleck.gif" link="#0000FF">
+
+<p><a name="top"></a></p>
+
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td width="70" bgcolor="#000000"><a href="../index.html"><img
-        src="../backarr.gif" border="0" width="65" height="59"></a><br>
-        <font color="#FFFFFF" size="1" face="Arial"><strong>Restart
-        Demo</strong></font></td>
-        <td width="10" bgcolor="#000000">&nbsp;</td>
-        <td width="70" bgcolor="#000000"><a href="../main.html"><font
-        color="#FFFFFF"><img src="../1.gif" border="0" width="36"
-        height="43"></font></a><font color="#FFFFFF"><br>
-        </font><font color="#FFFFFF" size="1" face="Arial"><strong>Main</strong></font></td>
-        <td bgcolor="#000000">&nbsp;</td>
-    </tr>
+  <tr>
+    <td width="100%" bgcolor="#000000"><table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="../index.html"><img src="../media/backarr.gif" border="0" WIDTH="65" HEIGHT="59"></a><br>
+        <font color="#FFFFFF" size="1" face="Arial"><strong>Restart Demo</strong></font></td>
+        <td width="10" bgcolor="#000000"><font color="#000000">-</font></td>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="../main.html"><img src="../media/hand.gif" border="0" WIDTH="36" HEIGHT="43"></a><br>
+        <font color="#FFFFFF" size="1" face="Arial"><strong>Main</strong></font></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
 </table>
 
-<p align="center"><b>Simplifying Graphics Procedures in the
-Windows Application Programming Interface</b></p>
+<p align="left"><font face="Arial Black">(CM USERS: The commands used here are from
+earlier versions of EasyGDI and EasyCRT and may not work as shown)</font></p>
 
-<p>Applications in Windows do not get direct control over what
-goes onto the monitor. They do not even get direct access to the
-video device driver. Rather they must go through a mechanism
-called the Graphical Device Interface (GDI) though a series of
-built in commands in the Windows Application Programming
-Interface (API) which draw lines, fill areas, copy bitmaps, etc.
-(Actually, with Windows 95 and DirectX, some programs can bypass
-the GDI, but except for some games and multimedia applications
-just about everything else still uses the GDI.) The purpose of
-this project is to address several problems that make the GDI
-difficult to work with. The first problem is the amount of
-commands necessary to perform an operation. In the example below
-it takes 18 lines of code to draw the simple line and circle.
-Compared to the QBasic (a simple DOS programming language)
-program on the left which does the exact same thing, it is very
-inefficient.</p>
+<p align="center"><b>Simplifying Graphics Procedures in the Windows Application
+Programming Interface</b></p>
 
-<p align="center"><font size="2"><img src="Image1.gif"
-width="565" height="432"></font></p>
+<p>Applications in Windows do not get direct control over what goes onto the monitor. They
+do not even get direct access to the video device driver. Rather they must go through a
+mechanism called the Graphical Device Interface (GDI) though a series of built in commands
+in the Windows Application Programming Interface (API) which draw lines, fill areas, copy
+bitmaps, etc. (Actually, with Windows 95 and DirectX, some programs can bypass the GDI,
+but except for some games and multimedia applications just about everything else still
+uses the GDI.) The purpose of this project is to address several problems that make the
+GDI difficult to work with. The first problem is the amount of commands necessary to
+perform an operation. In the example below it takes 18 lines of code to draw the simple
+line and circle. Compared to the QBasic (a simple DOS programming language) program on the
+left which does the exact same thing, it is very inefficient.</p>
+
+<p align="center"><font size="2"><img src="Image1.gif" WIDTH="565" HEIGHT="432"></font></p>
 
 <p align="center">&nbsp;</p>
 <div align="center"><center>
 
 <table border="1" cellpadding="7" cellspacing="1" width="524">
-    <tr>
-        <td valign="top" width="38%"><p align="center"><font
-        size="3" face="Arial Black">QuickBasic</font></p>
-        </td>
-        <td valign="top" width="62%"><p align="center"><font
-        size="2" face="Courier New"><b><img src="Image2.gif"
-        width="143" height="23"></b></font></p>
-        </td>
-    </tr>
-    <tr>
-        <td valign="top" width="38%"><font size="2"
-        face="Courier New"><b>LINE(0,0)-(640,480),10<br>
-        CIRCLE(320,240),100,12</b></font></td>
-        <td valign="top" width="62%"><font size="2"
-        face="Courier New"><b>DC := getDC(Hwindow);<br>
-        Pen := createpen(0,0,RGB(85,255,85));<br>
-        OldPen := Selectobject(DC, Pen);<br>
-        Moveto(DC,0,0);<br>
-        Lineto(DC,640,480);<br>
-        Pen := Selectobject(DC, Oldpen);<br>
-        Deleteobject(Pen);<br>
-        Pen := Createpen(0,0,RGB(255,85,85) );<br>
-        OldPen := Selectobject(DC, Pen);<br>
-        Brushstyle.lbstyle:=BS_HOLLOW;<br>
-        Brush:=CreateBrushIndirect(brushstyle)<br>
-        OldBrush := Selectobject(DC, Brush);<br>
-        Ellipse(DC,220,140,420,340);<br>
-        Brush := Selectobject(DC, OldBrush);<br>
-        Deleteobject(Brush);<br>
-        Pen := Selectobject(DC,Oldpen);<br>
-        Deleteobject(Pen);<br>
-        ReleaseDC(Hwindow,DC);</b></font></td>
-    </tr>
-    <tr>
-        <td valign="top" width="38%"><p align="center"><font
-        color="#0000FF" size="2" face="Courier New"><b>2 Lines</b></font><font
-        size="2" face="Courier New"><b><br>
-        </b></font><font color="#FF0000" size="2"
-        face="Courier New"><b>Handles</b></font><font size="2"
-        face="Courier New"><b><br>
-        </b></font><font color="#008000" size="2"
-        face="Courier New"><b>2 Commands</b></font></p>
-        </td>
-        <td valign="top" width="62%"><p align="center"><font
-        color="#0000FF" size="2" face="Courier New"><b>18 Lines</b></font><font
-        size="2" face="Courier New"><b><br>
-        </b></font><font color="#FF0000" size="2"
-        face="Courier New"><b>7 Handles</b></font><font size="2"
-        face="Courier New"><b><br>
-        </b></font><font color="#008000" size="2"
-        face="Courier New"><b>10 Commands</b></font></p>
-        </td>
-    </tr>
+  <tr>
+    <td valign="top" width="38%"><p align="center"><font size="3" face="Arial Black">QuickBasic</font></td>
+    <td valign="top" width="62%"><p align="center"><font size="2" face="Courier New"><b><img src="Image2.gif" width="143" height="23"></b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="38%"><font size="2" face="Courier New"><b>LINE(0,0)-(640,480),10<br>
+    CIRCLE(320,240),100,12</b></font></td>
+    <td valign="top" width="62%"><font size="2" face="Courier New"><b>DC := getDC(Hwindow);<br>
+    Pen := createpen(0,0,RGB(85,255,85));<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Moveto(DC,0,0);<br>
+    Lineto(DC,640,480);<br>
+    Pen := Selectobject(DC, Oldpen);<br>
+    Deleteobject(Pen);<br>
+    Pen := Createpen(0,0,RGB(255,85,85) );<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Brushstyle.lbstyle:=BS_HOLLOW;<br>
+    Brush:=CreateBrushIndirect(brushstyle)<br>
+    OldBrush := Selectobject(DC, Brush);<br>
+    Ellipse(DC,220,140,420,340);<br>
+    Brush := Selectobject(DC, OldBrush);<br>
+    Deleteobject(Brush);<br>
+    Pen := Selectobject(DC,Oldpen);<br>
+    Deleteobject(Pen);<br>
+    ReleaseDC(Hwindow,DC);</b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="38%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">2 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">Handles</font><font size="2" face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">2 Commands</font></b></td>
+    <td valign="top" width="62%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">18 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">7 Handles</font><font size="2" face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">10 Commands</font></b></td>
+  </tr>
 </table>
 </center></div>
 
 <p>&nbsp;</p>
 
-<p>Another problem is that GDI requires the programmer to keep
-track of numbers called <i>handles. </i>In order to draw, the
-program must create and keep track of many drawing objects (such
-as pens, brushes, fonts, bitmaps, and regions) and each of these
-has its own handle. This requires that a program find a way of
-storing all of these numbers, and this can make even simple tasks
-confusing and complex. And if a program fails to do this and
-loses one or two numbers, it becomes impossible to delete the
-objects and memory is wasted. If this happens in a FOR or REPEAT
-loop (as is often the case) the objects can eat up all of the
-memory in a matter of seconds and crash the computer. Another
-problem is the amount of commands in the GDI. I counted around
-200 commands in the Windows 3.1 GDI and there are even more in
-Windows 95. Many of these do almost the exact same thing and
-could be combined into more powerful and flexible commands. This
-would take away a lot of confusion, make information easier to
-find, and make it easier to learn.</p>
+<p>Another problem is that GDI requires the programmer to keep track of numbers called <i>handles.
+</i>In order to draw, the program must create and keep track of many drawing objects (such
+as pens, brushes, fonts, bitmaps, and regions) and each of these has its own handle. This
+requires that a program find a way of storing all of these numbers, and this can make even
+simple tasks confusing and complex. And if a program fails to do this and loses one or two
+numbers, it becomes impossible to delete the objects and memory is wasted. If this happens
+in a FOR or REPEAT loop (as is often the case) the objects can eat up all of the memory in
+a matter of seconds and crash the computer. Another problem is the amount of commands in
+the GDI. I counted around 200 commands in the Windows 3.1 GDI and there are even more in
+Windows 95. Many of these do almost the exact same thing and could be combined into more
+powerful and flexible commands. This would take away a lot of confusion, make information
+easier to find, and make it easier to learn.</p>
 
 <p align="center"><img src="Image3.gif" width="196" height="45"></p>
 
-<p>The goal of this project was to deal with all of these
-problems. This was done by creating a new library of commands,
-called EasyGDI, to replace and work with the original GDI. The
-new commands work by <i>combining</i> the old GDI commands. This
-will allows the programmer to do the same things in fewer lines
-and it also cuts down on the number of commands to learn. The new
-commands also <i>store and manage all handles</i> of objects and
-eliminate the problem of using up memory.</p>
+<p>The goal of this project was to deal with all of these problems. This was done by
+creating a new library of commands, called EasyGDI, to replace and work with the original
+GDI. The new commands work by <i>combining</i> the old GDI commands. This will allows the
+programmer to do the same things in fewer lines and it also cuts down on the number of
+commands to learn. The new commands also <i>store and manage all handles</i> of objects
+and eliminate the problem of using up memory.</p>
 
-<p align="center"><b><img src="Image4.gif" width="400"
-height="327"></b></p>
+<p align="center"><b><img src="Image4.gif" WIDTH="400" HEIGHT="327"></b></p>
 
-<p align="center"><font size="2"><b>Figure 1 </b>The new commands
-keep track of all the handles by combining them into a single
-data structure called a record (similar to the user-defined type
-in Visual Basic). This way, the user only has to keep of one
-variable for handles instead of several.</font></p>
+<p align="center"><font size="2"><b>Figure 1 </b>The new commands keep track of all the
+handles by combining them into a single data structure called a record (similar to the
+user-defined type in Visual Basic). This way, the user only has to keep of one variable
+for handles instead of several.</font></p>
 
-<p>The new commands are not designed to replace the whole GDI,
-just to simplify some of the repetitive and confusing tasks that
-must be done. The new commands can work alongside the old ones,
-since all handle information is still accessible to the program.</p>
+<p>The new commands are not designed to replace the whole GDI, just to simplify some of
+the repetitive and confusing tasks that must be done. The new commands can work alongside
+the old ones, since all handle information is still accessible to the program.</p>
 
-<p>New features that aren&#146;t in the GDI have also been added.
-EasyGDI automates some special effects techniques like bitmap
-masks and gradient fills and allows the user to load and display
-bitmaps from files.</p>
+<p>New features that aren&#146;t in the GDI have also been added. EasyGDI automates some
+special effects techniques like bitmap masks and gradient fills and allows the user to
+load and display bitmaps from files.</p>
 
-<p>All of this was done in Borland Turbo Pascal for Windows and
-it will takes the form of a Turbo Pascal Unit. Even though this
-is a specific application, the actual procedures could easily be
-replicated for almost any other programming tool or language for
-Windows. </p>
+<p>All of this was done in Borland Turbo Pascal for Windows and it will takes the form of
+a Turbo Pascal Unit. Even though this is a specific application, the actual procedures
+could easily be replicated for almost any other programming tool or language for Windows. </p>
 
 <table border="1" cellpadding="7" cellspacing="1" width="759">
-    <tr>
-        <td valign="top" width="46%"><p align="center"><font
-        size="2" face="Arial Black"><b><img src="Image5.gif"
-        width="121" height="29"></b></font></p>
-        </td>
-        <td valign="top" width="54%"><p align="center"><font
-        size="2" face="Courier New"><b><img src="Image2.gif"
-        width="230" height="35"></b></font></p>
-        </td>
-    </tr>
-    <tr>
-        <td valign="top" width="46%"><font size="2"
-        face="Courier New"><b>TheDC := makeDC(Hwindow,0);<br>
-        Asetpen(TheDC,color[10],0,0);<br>
-        aqline(TheDC,0,0,640,480);<br>
-        asetpen(TheDC,color[12],0,0);<br>
-        asetbrush(TheDC,-1,0,0);<br>
-        aqcircle(TheDC,320,240,100,100);<br>
-        killdc(thedc);</b></font></td>
-        <td valign="top" width="54%"><font size="2"
-        face="Courier New"><b>DC := getDC(Hwindow);<br>
-        Pen := createpen(0,0,RGB(85,255,85));<br>
-        OldPen := Selectobject(DC, Pen);<br>
-        Moveto(DC,0,0);<br>
-        Lineto(DC,640,480);<br>
-        Pen := Selectobject(DC, Oldpen);<br>
-        Deleteobject(Pen);<br>
-        Pen := Createpen(0,0,RGB(255,85,85) );<br>
-        OldPen := Selectobject(DC, Pen);<br>
-        Brushstyle.lbstyle:=BS_HOLLOW;<br>
-        Brush:=CreateBrushIndirect(brushstyle)<br>
-        OldBrush := Selectobject(DC, Brush);<br>
-        Ellipse(DC,220,140,420,340);<br>
-        Brush := Selectobject(DC, OldBrush);<br>
-        Deleteobject(Brush);<br>
-        Pen := Selectobject(DC,Oldpen);<br>
-        Deleteobject(Pen);<br>
-        ReleaseDC(Hwindow,DC);</b></font></td>
-    </tr>
-    <tr>
-        <td valign="top" width="46%"><p align="center"><font
-        color="#0000FF" size="2" face="Courier New"><b>7 Lines</b></font><font
-        size="2" face="Courier New"><b><br>
-        </b></font><font color="#FF0000" size="2"
-        face="Courier New"><b>1 Handles</b></font><font size="2"
-        face="Courier New"><b><br>
-        </b></font><font color="#008000" size="2"
-        face="Courier New"><b>5 Commands</b></font></p>
-        </td>
-        <td valign="top" width="54%"><p align="center"><font
-        color="#0000FF" size="2" face="Courier New"><b>18 Lines</b></font><font
-        size="2" face="Courier New"><b><br>
-        </b></font><font color="#FF0000" size="2"
-        face="Courier New"><b>7 Handles</b></font><font size="2"
-        face="Courier New"><b><br>
-        </b></font><font color="#008000" size="2"
-        face="Courier New"><b>9 Commands</b></font></p>
-        </td>
-    </tr>
+  <tr>
+    <td valign="top" width="46%"><p align="center"><font size="2" face="Arial Black"><b><img src="Image5.gif" width="121" height="29"></b></font></td>
+    <td valign="top" width="54%"><p align="center"><font size="2" face="Courier New"><b><img src="Image2.gif" width="230" height="35"></b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="46%"><font size="2" face="Courier New"><b>TheDC :=
+    makeDC(Hwindow,0);<br>
+    Asetpen(TheDC,color[10],0,0);<br>
+    aqline(TheDC,0,0,640,480);<br>
+    asetpen(TheDC,color[12],0,0);<br>
+    asetbrush(TheDC,-1,0,0);<br>
+    aqcircle(TheDC,320,240,100,100);<br>
+    killdc(thedc);</b></font></td>
+    <td valign="top" width="54%"><font size="2" face="Courier New"><b>DC := getDC(Hwindow);<br>
+    Pen := createpen(0,0,RGB(85,255,85));<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Moveto(DC,0,0);<br>
+    Lineto(DC,640,480);<br>
+    Pen := Selectobject(DC, Oldpen);<br>
+    Deleteobject(Pen);<br>
+    Pen := Createpen(0,0,RGB(255,85,85) );<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Brushstyle.lbstyle:=BS_HOLLOW;<br>
+    Brush:=CreateBrushIndirect(brushstyle)<br>
+    OldBrush := Selectobject(DC, Brush);<br>
+    Ellipse(DC,220,140,420,340);<br>
+    Brush := Selectobject(DC, OldBrush);<br>
+    Deleteobject(Brush);<br>
+    Pen := Selectobject(DC,Oldpen);<br>
+    Deleteobject(Pen);<br>
+    ReleaseDC(Hwindow,DC);</b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="46%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">7 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">1 Handles</font><font size="2" face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">5 Commands</font></b></td>
+    <td valign="top" width="54%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">18 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">7 Handles</font><font size="2" face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">9 Commands</font></b></td>
+  </tr>
 </table>
 
-<p><font size="2"><b>Figure 2 </b>Here is a comparison of the
-EasyGDI code and the Windows GDI code to draw the line and circle.</font></p>
+<p><font size="2"><b>Figure 2 </b>Here is a comparison of the EasyGDI code and the Windows
+GDI code to draw the line and circle.</font></p>
 
 <p align="center"><img src="Image6.gif" width="193" height="86"></p>
 
-<p>The second part of the project was an application of these
-procedures. This was an overhaul of WinCRT, which is a unit made
-by Borland for simple text based programming in windows. WinCRT
-allows beginning, non-windows programmers to make simple
-text-based procedural programs without having to know or worry
-about windows, event handling, or objects. However, it does not
-give the programmer any access to the powerful features and
-commands available in Windows. The new WinCRT, called EasyCRT,
-adds new drawing functions, control over the appearance and
-behavior of the window, mouse input, and improved keyboard input.
-Overall, it quadruples the number of commands available.</p>
+<p>The second part of the project was an application of these procedures. This was an
+overhaul of WinCRT, which is a unit made by Borland for simple text based programming in
+windows. WinCRT allows beginning, non-windows programmers to make simple text-based
+procedural programs without having to know or worry about windows, event handling, or
+objects. However, it does not give the programmer any access to the powerful features and
+commands available in Windows. The new WinCRT, called EasyCRT, adds new drawing functions,
+control over the appearance and behavior of the window, mouse input, and improved keyboard
+input. Overall, it quadruples the number of commands available.</p>
 
-<p>This is what the WinCRT window looked like before the
-modifications:</p>
+<p>This is what the WinCRT window looked like before the modifications:</p>
 
-<p align="center"><img src="Image7.gif" width="480" height="342"></p>
+<p align="center"><img src="Image7.gif" WIDTH="480" HEIGHT="342"></p>
 
-<p>These are some of the graphics that my Computer Math class was
-able to make using EasyCRT:</p>
+<p>These are some of the graphics that my Computer Math class was able to make using
+EasyCRT:</p>
 
-<p align="center"><img src="Image8.jpg" width="563" height="500"></p>
+<p align="center"><img src="Image8.jpg" WIDTH="563" HEIGHT="500"></p>
 
-<p>EasyCRT also adds in all of the extra features from EasyGDI
-and gives the program access to some of WinCRT&#146;s internal
-numbers (such as the window handle and device context handle) to
-allow the use of other API commands.</p>
+<p>EasyCRT also adds in all of the extra features from EasyGDI and gives the program
+access to some of WinCRT&#146;s internal numbers (such as the window handle and device
+context handle) to allow the use of other API commands.</p>
 
 <p><strong>Speed</strong></p>
 
-<p>One possible concern about the EasyGDI, is efficiency and
-speed. EasyGDI essentially adds another layer of code between the
-GDI and the program, so you would expect it to make things a
-little bit slower. I conducted a small speed test to measure how
-much slower it would be, and the results were not too surprising.</p>
+<p>One possible concern about the EasyGDI, is efficiency and speed. EasyGDI essentially
+adds another layer of code between the GDI and the program, so you would expect it to make
+things a little bit slower. I conducted a small speed test to measure how much slower it
+would be, and the results were not too surprising.</p>
 
-<p align="center"><font size="2"><img src="Image9.gif"
-width="400" height="373"></font></p>
+<p align="center"><font size="2"><img src="Image9.gif" WIDTH="400" HEIGHT="373"></font></p>
 
-<p>The results say that on average the Windows GDI was around 4%
-faster than the EasyGDI. Under most circumstances this would not
-probably not be significant, but it is one possible
-consideration. Also, the speed test was not very detailed or
-extensive becuase it only tested a small number of EasyGDI
-commands. But since most of the EasyGDI commands go through the
-same basic steps (see source), it is probably pretty accurate.</p>
+<p>The results say that on average the Windows GDI was around 4% faster than the EasyGDI.
+Under most circumstances this would not probably not be significant, but it is one
+possible consideration. Also, the speed test was not very detailed or extensive becuase it
+only tested a small number of EasyGDI commands. But since most of the EasyGDI commands go
+through the same basic steps (see source), it is probably pretty accurate.</p>
 
 <p><strong>Conclusion</strong></p>
 
-<p>At the possible cost of speed, EasyGDI does help deal with
-many of the problems in the Windows GDI. EasyCRT adds many new
-features to WinCRT and can enhance many simple Windows programs.
-Future plans for this project could include porting it over to
-other languages, adding multimedia commands, and working on any
-other ideas or suggestions I get.</p>
+<p>At the possible cost of speed, EasyGDI does help deal with many of the problems in the
+Windows GDI. EasyCRT adds many new features to WinCRT and can enhance many simple Windows
+programs. Future plans for this project could include porting it over to other languages,
+adding multimedia commands, and working on any other ideas or suggestions I get.</p>
 
 <p>Major Sources:</p>
 
-<p><i>Borland Turbo Pascal for Windows 1.5 Online Help</i>.
-Useful command reference and examples.</p>
+<p><i>Borland Turbo Pascal for Windows 1.5 Online Help</i>. Useful command reference and
+examples.</p>
 
-<p><i>Borland C++ 5.01 for Windows Online Help</i>. Similar to
-Pascal reference, but much more comprehensive. Also updated for
-Windows 95. </p>
+<p><i>Borland C++ 5.01 for Windows Online Help</i>. Similar to Pascal reference, but much
+more comprehensive. Also updated for Windows 95. </p>
 
-<p><i>Microsoft Developer Network (MSDN) Library</i>. <a
-href="http://www.microsoft.com/msdn/"><font size="2">http://www.microsoft.com/msdn/</font></a>
-Good reference information on specific commands and general
-concepts.</p>
+<p><i>Microsoft Developer Network (MSDN) Library</i>. <a href="http://www.microsoft.com/msdn/"><font size="2">http://www.microsoft.com/msdn/</font></a>
+Good reference information on specific commands and general concepts.</p>
 
-<p><A HREF="#top">Back to top</A></p>
-
+<p><a HREF="#top">Back to top</a></p>
 </body>
 </html>
