@@ -1,4 +1,4 @@
-{ EasyCRT Demo v2.0 }
+{ EasyCRT Demo v2.01 }
 
 { EASYCRT Documentation:                            (maximize for best view)
 
@@ -331,32 +331,38 @@ Miscellaneous
   function inkey:word;
     This function returns the Virtual key code of the last key pressed
     You can get a listing of virtual key codes in help under (you guessed
-    it) VIRTUAL KEY CODES. I am having some problems with this function.
-    If you put it in an endless loop like
+    it) VIRTUAL KEY CODES. This works exactly like inkey$ in qbasic
+    except the output is a keycode instead of an ascii code. You can
+    use this to capture normal keys as well as special keys like arrow,
+    shift, control, etc.
 
-    var c:word;
-    begin
-      repeat
-        c:=inkey;
-        writeln(c);
-      until c<>0
-    end.
+  function inkeyasc:char;
+    This function is exactly like inkey$ in qbasic. It will return the
+    last character pressed.
 
-    it will print the code every time you press a key and stop the loop.
-    However if you put it in the same loop without the writeln like:
+  function unfreeze;
+    You may have noticed that if you have a loop like:
 
-    var c:word;
-    begin
-      repeat
-        c:=inkey;
-      until c<>0
-    end.
+    for a:=1 to 200000 do;
 
-    it will go on forever and freeze up the computer. I haven't been able
-    to fix this problem, but it still may be useful for you.
-    If it could be fixed, it would allow us to capture any key, including
-    the arrows for games,etc.
+    or
 
+    repeat
+    until keypressed;
+
+    or
+
+    repeat
+    until 1=2;
+
+    Your CRT window will freeze up and no buttons or keys work. To avoid
+    this problem you can just add UNFREEZE to your loop, and the system
+    will be able to respond to mouseclicks, keypresses, or whatever without
+    locking up. For example:
+
+    repeat
+    unfreeze;
+    until keypressed;
 
   function readkey:char;
     This is almost exactly the same as input$(1) in qbasic. It pauses the
@@ -381,45 +387,51 @@ Miscellaneous
     in the next version. They switch EASYCRT into and out of the full screen
     mode I'm working on.
 
-}
 
-{ Quick Command Reference
-procedure InitDeviceContext;
-procedure DoneDeviceContext;
-function initdraw:HDC;
-procedure stopdraw;
-function pc(strng:string):pchar;
-function rgb(red,green,blue:integer):longint;
-function getred(color:longint):integer;
-function getgreen(color:longint):integer;
-function getblue(color:longint):integer;
-function gradient(color1,color2:longint; stepno,steps:integer):longint;
-procedure settitle(lbl:string);
-procedure pprint(DC:HDC; x,y:integer;  color:longint; txt:string);
-procedure txt(x,y,align:integer; color:longint; txt:string);
-procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
-procedure setpen(color: longint; linestyle, width: integer);
-procedure setbrush(color:longint; style:integer);
-procedure qline(x1,y1,x2,y2:integer);
-procedure qcircle(xpos,ypos,radiusw,radiush:integer);
-procedure qarc(xpos,ypos,radiusw,radiush,angle1,angle2,way:integer);
-procedure pset(xpos,ypos: integer; color:longint);
-function pixel(xpos,ypos:integer):longint;
-procedure fill(xpos,ypos:integer; colorinfo:longint; filltype:integer);
-procedure connectdots(var pointarray:points; count:integer);
-procedure shape(var pointarray:points; count,method: integer);
-procedure box(x1,y1,x2,y2,x3,y3:integer);
-procedure drawpicture(DC:HDC; x,y:integer; filename:string);
-function loadbmp(filename:string):BMP;
-procedure drawbmp(x,y: integer;  bmpname: bmp;  stretched,width,height:integer);
-procedure deletebmp(var thebmp:bmp);
-function getwidth(thebmp:bmp):integer;
-function getheight(thebmp:bmp):integer;
-procedure maskbmp(x,y: integer;  themask,thepic: bmp;  stretched,wth,ht:integer);
-procedure fullscreen;
-procedure windowscreen;
-procedure delay(milliseconds:longint);
-function inkey:word;
+Quick Command Reference
+---------------------------------------------------------------------------
+
+  procedure InitDeviceContext;
+  procedure DoneDeviceContext;
+  function initdraw:HDC;
+  procedure stopdraw;
+  function pc(strng:string):pchar;
+  function rgb(red,green,blue:integer):longint;
+  function getred(color:longint):integer;
+  function getgreen(color:longint):integer;
+  function getblue(color:longint):integer;
+  function gradient(color1,color2:longint; stepno,steps:integer):longint;
+  procedure settitle(lbl:string);
+  procedure circle(DC:HDC; xpos,ypos,radiusw,radiush:integer; color:longint;  linestyle,width:integer);
+  procedure line(DC:HDC; x1,y1,x2,y2:integer; color:longint;  linestyle,width:integer);
+  procedure pprint(DC:HDC; x,y:integer;  color:longint; txt:string);
+  procedure txt(x,y,align:integer; color:longint; txt:string);
+  procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
+  procedure setpen(color: longint; linestyle, width: integer);
+  procedure setbrush(color:longint; style:integer);
+  procedure qline(x1,y1,x2,y2:integer);
+  procedure qcircle(xpos,ypos,radiusw,radiush:integer);
+  procedure qarc(xpos,ypos,radiusw,radiush,angle1,angle2,way:integer);
+  procedure pset(xpos,ypos: integer; color:longint);
+  function pixel(xpos,ypos:integer):longint;
+  procedure fill(xpos,ypos:integer; colorinfo:longint; filltype:integer);
+  procedure connectdots(var pointarray:points; count:integer);
+  procedure shape(var pointarray:points; count,method: integer);
+  procedure box(x1,y1,x2,y2,x3,y3:integer);
+  procedure drawpicture(DC:HDC; x,y:integer; filename:string);
+  function loadbmp(filename:string):BMP;
+  procedure drawbmp(x,y: integer;  bmpname: bmp;  stretched,width,height:integer);
+  procedure deletebmp(var thebmp:bmp);
+  function getwidth(thebmp:bmp):integer;
+  function getheight(thebmp:bmp):integer;
+  procedure maskbmp(x,y: integer;  themask,thepic: bmp;  stretched,wth,ht:integer);
+  procedure fullscreen;
+  procedure windowscreen;
+  procedure delay(milliseconds:longint);
+  procedure unfreeze;
+  function inkey:word;
+  function inkeyasc:char;
+  
 }
 
 program demo;
@@ -484,7 +496,7 @@ begin
     l:=l+k;
     txt(centerx,centery+100,3,gradient(color[0],color[15],l,101),'Russ Yanofsky');
     delay(10);
-  until keypressed;
+  until inkey<>0;
   centery:=centery+50;
   setbrush(-1,0);
   for k:=1 to 400 do
@@ -494,7 +506,6 @@ begin
     end;
   setfont('Britannic Bold',100,0,0,0,0,0);
   txt(centerx,centery-100,3,rgb(238,30,0),'Features');
-  readkey;
   readkey;
   for k:=1 to 400 do
     begin
@@ -552,7 +563,7 @@ begin
         drawbmp(1,1,cool[k],0,0,0);
         delay(100);
       end;
-  until keypressed;
+  until inkey<>0;
   for k:=1 to 8 do
     deletebmp(cool[k]);
   for k:=1 to 400 do
@@ -576,7 +587,6 @@ begin
   txt(centerx,400,3,color[0],'Bitmap With Mask');
   deletebmp(bomb);
   deletebmp(bombmask);
-  readkey;
   readkey;
   for k:=1 to 400 do
     begin
