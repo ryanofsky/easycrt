@@ -103,6 +103,9 @@ procedure getclick;
 function dchandle: thandle;
 function windowhandle: thandle;
 function appinstance: thandle;
+procedure propersize;
+procedure setscreensize(rows,cols:Byte);
+procedure setbehave(aspect:integer; behavior:boolean);
 
 {  /RUSS  }
 
@@ -196,7 +199,7 @@ const
 
 {   RUSS   }
 
-var existscrollv, existscrollh: boolean;
+var existscrollv, existscrollh, enablescrollkeys, nazisize, thumbtracking: boolean;
 
 procedure setpen(color: longint; linestyle, width: integer);
   begin
@@ -383,13 +386,50 @@ procedure setsize(w,h: integer);
 
 function getpos(index:integer):integer;
   var windowpos: trect;
+  var size: tminmaxinfo;
   begin
     getwindowrect(Crtwindow,windowpos);
+    GetClientRect(Crtwindow,windowpos);
     case index of
-    0:  getpos := windowpos.left                 {x coordinate};
-    1:  getpos := windowpos.top                  {y coordinate};
-    2:  getpos := windowpos.right-windowpos.left {width}       ;
-    3:  getpos := windowpos.bottom-windowpos.top {height}      ;
+    0:  begin                                            {x coordinate}
+          getwindowrect(Crtwindow,windowpos);            
+          getpos := windowpos.left;
+        end;
+    1:  begin                                            {y coordinate}
+          getwindowrect(Crtwindow,windowpos);            
+          getpos := windowpos.top;
+        end; 
+
+    2:  begin                                            {width}
+          getwindowrect(Crtwindow,windowpos);            
+          getpos := windowpos.right-windowpos.left;
+        end;
+    3:  begin                                            {height}
+          getwindowrect(Crtwindow,windowpos);            
+          getpos := windowpos.bottom-windowpos.top;
+        end;
+
+    4:  begin                                            {client width}
+          GetClientRect(Crtwindow,windowpos);            
+          getpos := windowpos.right-windowpos.left;
+        end;
+    5:  begin                                            {client height}
+          GetClientRect(Crtwindow,windowpos);
+          getpos := windowpos.bottom-windowpos.top;
+        end;                
+    6:  begin
+          sendmessage(CrtWindow,WM_GETMINMAXINFO,0,longint(@size));  {windowminmaxinfo(@size);}
+          getpos := size[1].x;
+        end;
+    7:  begin
+          sendmessage(CrtWindow,WM_GETMINMAXINFO,0,longint(@size));  {windowminmaxinfo(@size);}
+          getpos := size[1].y;
+        end;
+    8:  getpos := screensize.x;                          {CRT Columns}
+    9:  getpos := screensize.y;                          {CRT Rows}
+
+
+
     end;
   end;
 
@@ -516,6 +556,43 @@ function appinstance: thandle;
   begin
     appinstance := hinstance;
   end;
+
+function Max(X, Y: Integer): Integer; forward;
+procedure WindowMinMaxInfo(MinMaxInfo: PMinMaxInfo); forward;
+
+procedure propersize;
+  var size: tminmaxinfo;
+  begin
+    sendmessage(CrtWindow,WM_GETMINMAXINFO,0,longint(@size));
+    setsize(size[1].x,size[1].y);
+  end;
+
+
+procedure setscreensize(rows,cols:Byte);
+  var size: tminmaxinfo;
+  begin
+    FreeMem(ScreenBuffer, ScreenSize.X * ScreenSize.Y);
+    screensize.x := cols;
+    screensize.y := rows;
+    GetMem(ScreenBuffer, ScreenSize.X * ScreenSize.Y);
+    Range.X := Max(0, ScreenSize.X - ClientSize.X);
+    Range.Y := Max(0, ScreenSize.Y - ClientSize.Y);
+    ClrScr;
+    if nazisize then propersize;
+  end;
+
+procedure setbehave(aspect:integer; behavior:boolean);
+  begin
+    case aspect of
+      0: autotracking     := behavior;
+      1: nazisize         := behavior;
+      2: enablescrollkeys := behavior;
+      3: thumbtracking    := behavior;
+    end;
+
+
+  end;
+
 
 {   /RUSS   }
 
@@ -884,6 +961,7 @@ begin
     sb_Top: GetNewPos := 0;
     sb_Bottom: GetNewPos := Range;
     sb_ThumbPosition: GetNewPos := Thumb;
+{RWH}  sb_ThumbTrack: GetNewPos := Thumb;
   else
     GetNewPos := Pos;
   end;
@@ -894,7 +972,7 @@ begin
   Y := Origin.Y;
   case Which of
     sb_Horz: X := GetNewPos(X, ClientSize.X div 2, Range.X);
-    sb_Vert: Y := GetNewPos(Y, ClientSize.Y, Range.Y);
+    sb_Vert: Y := GetNewPos(Y, ClientSize.Y{RWH}-1, Range.Y);
   end;
   ScrollTo(X, Y);
 end;
@@ -920,25 +998,33 @@ procedure WindowMinMaxInfo(MinMaxInfo: PMinMaxInfo);
 var
   X, Y: Integer;
   Metrics: TTextMetric;
+  Scrollfactx, Scrollfacty: integer;
 begin
   InitDeviceContext;
+  if existscrollh then scrollfactx := 1 else scrollfactx := 0;
+  if existscrollv then scrollfacty := 1 else scrollfacty := 0;
+
   GetTextMetrics(DC, Metrics);
   CharSize.X := Metrics.tmMaxCharWidth;
   CharSize.Y := Metrics.tmHeight + Metrics.tmExternalLeading;
   CharAscent := Metrics.tmAscent;
-  X := Min(ScreenSize.X * CharSize.X + GetSystemMetrics(sm_CXVScroll),
+  X := Min(ScreenSize.X * CharSize.X + scrollfactx*GetSystemMetrics(sm_CXVScroll),
     GetSystemMetrics(sm_CXScreen)) + GetSystemMetrics(sm_CXFrame) * 2;
-  Y := Min(ScreenSize.Y * CharSize.Y + GetSystemMetrics(sm_CYHScroll) +
+  Y := Min(ScreenSize.Y * CharSize.Y + scrollfacty*GetSystemMetrics(sm_CYHScroll) +
     GetSystemMetrics(sm_CYCaption), GetSystemMetrics(sm_CYScreen)) +
     GetSystemMetrics(sm_CYFrame) * 2;
+  {rwh}
   MinMaxInfo^[1].x := X;
   MinMaxInfo^[1].y := Y;
-  MinMaxInfo^[3].x := CharSize.X * 16 + GetSystemMetrics(sm_CXVScroll) +
-    GetSystemMetrics(sm_CXFrame) * 2;
-  MinMaxInfo^[3].y := CharSize.Y * 4 + GetSystemMetrics(sm_CYHScroll) +
-    GetSystemMetrics(sm_CYFrame) * 2 + GetSystemMetrics(sm_CYCaption);
-  MinMaxInfo^[4].x := X;
-  MinMaxInfo^[4].y := Y;
+  if nazisize then
+    begin
+      MinMaxInfo^[3].x := CharSize.X * 16 + GetSystemMetrics(sm_CXVScroll) +
+        GetSystemMetrics(sm_CXFrame) * 2;
+      MinMaxInfo^[3].y := CharSize.Y * 4 + GetSystemMetrics(sm_CYHScroll) +
+        GetSystemMetrics(sm_CYFrame) * 2 + GetSystemMetrics(sm_CYCaption);
+      MinMaxInfo^[4].x := X;
+      MinMaxInfo^[4].y := Y;
+    end;
   DoneDeviceContext;
 end;
 
@@ -963,14 +1049,14 @@ var
 begin
   if CheckBreak and (KeyDown = vk_Cancel) then Terminate;
   CtrlDown := GetKeyState(vk_Control) < 0;
-{RWH  for I := 1 to ScrollKeyCount do
+  if enablescrollkeys then 
+  for I := 1 to ScrollKeyCount do
     with ScrollKeys[I] do
       if (Key = KeyDown) and (Ctrl = CtrlDown) then
       begin
 	WindowScroll(SBar, Action, 0);
 	Exit;
       end;
-}
 end;
 
 { wm_SetFocus message handler }
@@ -1026,8 +1112,8 @@ begin
         wm_lButtonDown:
           begin
             ldown:=true;
-            lastclick.x := mousex;
-            lastclick.y := mousey;
+            lastclick.x := LOWORD(lParam);
+            lastclick.y := HIWORD(lParam);
             setcapture(CRTWindow);
           end;
         wm_lButtonUp:
@@ -1187,6 +1273,9 @@ begin
   ExitProc := @ExitWinCrt;
   existscrollh := TRUE;
   existscrollv := TRUE;
+  nazisize := TRUE;
+  enablescrollkeys := FALSE;
+  thumbtracking := TRUE;
 end.
 
 {
