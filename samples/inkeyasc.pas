@@ -1,8 +1,12 @@
-uses easycrt;
+uses easycrt,easygdi;
 
 var a: char;
 
 begin
+  initwincrt;
+  settitle('Type Something!');
+  showcursor;
+
   repeat
     repeat
       a:=inkeyasc;
