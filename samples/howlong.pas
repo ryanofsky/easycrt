@@ -3,11 +3,13 @@ uses winprocs, easycrt;
 var days, hours, minutes, seconds, milliseconds,t:longint;
 
 begin
-  setsize(300,100);
+  initwincrt;
+
+  settitle('Windows Timer');
+
   writeln('How long has windows been running?');
   repeat
-    delay(1);
-    t:=gettickcount;
+    t:=gettickcount;                        {Windows API call}
     days:=trunc(t/1000/60/60/24);
     t:=t-days*1000*60*60*24;
     hours:=trunc(t/1000/60/60);
