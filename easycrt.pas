@@ -1,4 +1,4 @@
-{ EasyCRT v4.01 }
+{ EasyCRT v4.02 }
 
 {*******************************************************}
 {                                                       }
@@ -246,8 +246,8 @@ procedure unfreeze;
 procedure delay(milliseconds:longint);
 procedure startdelay(var t: longint);
 procedure finishdelay(milliseconds,t:longint);
-function FileOpen(path,ftype,wildcards: string):string;
-function FileSave(path,ftype,wildcards: string):string;
+function FileOpen(path,ftype,extension: string):string;
+function FileSave(path,ftype,extension: string):string;
 function apppath: string;
 function appdir: string;
 
@@ -342,6 +342,8 @@ const
 
 
 {   RUSS   }
+
+const easycrt_icon = 1;
 
 var existscrollv, existscrollh, enablescrollkeys, nazisize, thumbtracking, usecolors: boolean;
     FColors, BColors: pchar;
@@ -794,14 +796,14 @@ function appdir: string;
     appdir := getappdir(hinstance);
   end;
 
-function FileOpen(path,ftype,wildcards: string):string;
+function FileOpen(path,ftype,extension:string):string;
   begin
-    fileopen := wfileopen(crtwindow,path,ftype,wildcards)
+    fileopen := wfileopen(crtwindow,path,ftype,extension)
   end;
 
-function FileSave(path,ftype,wildcards: string):string;
+function FileSave(path,ftype,extension: string):string;
   begin
-    filesave := wfilesave(crtwindow,path,ftype,wildcards);
+    filesave := wfilesave(crtwindow,path,ftype,extension);
   end;
 
 {   /RUSS   }
@@ -1294,6 +1296,8 @@ end;
 
 procedure WindowKillFocus;
 begin
+  {rwh}
+  ink := 0;
   if Reading then HideCursor;
   Focused := False;
 end;
@@ -1484,7 +1488,7 @@ begin
   begin
     CrtClass.hInstance := HInstance;
 {RWH CrtClass.hIcon := LoadIcon(0, idi_Application); }
-     CrtClass.hIcon := LoadIcon(HInstance, pchar(1));
+     CrtClass.hIcon := LoadIcon(HInstance, pchar(easycrt_icon));
 
     CrtClass.hCursor := LoadCursor(0, idc_Arrow);
     CrtClass.hbrBackground := GetStockObject(White_Brush);
