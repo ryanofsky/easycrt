@@ -1,0 +1,23 @@
+                 PASCAL PROJECT FOR QUARTER 2
+   This project is a game of any type - never done before by you
+   and only one of each project for the entire class
+   The following if the grade scale----
+
+ 1.   Introduction   graphics.............................10 pts  +10   
+ 2.   Directions and hints (1 page text)..................10 pts     
+ 3.   Board or playing area...............................10 pts     
+ 4.   Options to play 2 people or play computer...........10 pts     
+ 5.   Saving results to continue game again...............10 pts     
+ 6.   Saving top 5 peoples names and scorse with graph....10 pts     
+ 7.   Appropriate use of the RECORD command................5 pts   +5
+ 8.   Appropriate and needed uses of 8 string functions           ---
+          2 pts for each function   only counted once.....15 pts     
+ 9.   Appropriate use of FUNCTIONS/PROCEDURES                     ---
+           max of 5 total    3 pts each...................15 pts  +15
+ 10.  Originality /efficiency    5 each...................10 pts  +10
+
+               DUE DATE     FRONT ROW    DEC 18
+               DUE DATE     BACK ROW     DEC 19
+               BEFORE THOSE DATES      +3 POINTS
+
+                                     MID TERM   DEC 22  /  DEC 23
