@@ -1,0 +1,97 @@
+program Tron;
+
+uses Marccrt;
+
+var
+  ctr:integer;
+  ADir:integer;
+  BDir:integer;
+  k:integer;
+  s:integer;
+  score:integer;
+  tempstring:string;
+  ax:integer;
+  ay:integer;
+  bx:integer;
+  by:integer;
+
+begin
+  randomize;
+  s := 1;
+  ax := 320;
+  ay := 240;
+  bx := 319;
+  by := 240;
+  ADir := 4;
+  BDir := 6;
+
+  setbrush(color[-1], 0);
+
+  repeat
+    ctr := ctr + 1;
+    if ctr = 50 then
+    begin
+      setpen(rgb(random(256), random(256), random(256)), 0, 1);
+      setbrush(rgb(random(256), random(256), random(256)), 0);
+      {pset(random(640), random(480), rgb(random(256), random(256), random(256)));}
+      qcircle(random(640), random(480), random(50), random(50));
+
+      {qline(10+score, 10+score, 10 + score, 500 - score);
+      qline(10 + score, 500 - score, 500 - score, 500 - score);
+      qline(500 - score, 500 - score, 500 - score, 10 + score);
+      qline(500 - score, 10 + score, 10 + score, 10 + score);}
+      ctr := 0;
+      score := score + 1;
+    end;
+    k := inkey;
+    case k of
+      Up: BDir := 8;
+      Down: BDir := 2;
+      Left: BDir := 4;
+      Right: BDir := 6;
+      WKey: ADir := 8;
+      AKey: ADir := 4;
+      Dkey: ADir := 6;
+      SKey: ADir := 2;
+    end;
+
+    case ADir of
+      8: if pixel(ax, ay-1) <> color[15] then k := Esc;
+      2: if pixel(ax, ay+1) <> color[15] then k := Esc;
+      4: if pixel(ax-1, ay) <> color[15] then k := Esc;
+      6: if pixel(ax+1, ay) <> color[15] then k := Esc;
+    end;
+
+    case BDir of
+      8: if pixel(bx, by-1) <> color[15] then k := Esc;
+      2: if pixel(bx, by+1) <> color[15] then k := Esc;
+      4: if pixel(bx-1, by) <> color[15] then k := Esc;
+      6: if pixel(bx+1, by) <> color[15] then k := Esc;
+    end;
+
+    case ADir of
+      8: ay := ay - 1;
+      2: ay := ay + 1;
+      4: ax := ax - 1;
+      6: ax := ax + 1;
+    end;
+
+    case BDir of
+      8: by := by - 1;
+      2: by := by + 1;
+      4: bx := bx - 1;
+      6: bx := bx + 1;
+    end;
+
+    pset(Ax, Ay, color[0]);
+    pset(Bx, By, color[7]);
+    delay(10);
+  until k = Esc;
+  str(round(score/1), tempstring);
+  tempstring := concat('Score: ', tempstring);
+  setbrush(color[15], 0);
+  setfont('Times New Roman', 20, 6, 0, 0, 0, 0);
+  {txt(320, 230, 3, color[15], '');}
+  box(250, 220, 390, 260, 0, 0);
+  txt(320, 230, 3, color[0], tempstring);    
+end.
