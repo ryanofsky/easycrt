@@ -14,10 +14,10 @@
   <tr>
     <td width="100%" bgcolor="#000000"><table border="0" cellpadding="0" cellspacing="0">
       <tr>
-        <td width="*" bgcolor="#000000"><p align="center"><a href="../index.html"><img src="../media/backarr.gif" border="0" WIDTH="65" HEIGHT="59"></a><br>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="../index.html"><img src="../media/backarr.gif" border="0"></a><br>
         <font color="#FFFFFF" size="1" face="Arial"><strong>Restart Demo</strong></font></td>
         <td width="10" bgcolor="#000000"><font color="#000000">-</font></td>
-        <td width="*" bgcolor="#000000"><p align="center"><a href="../main.html"><img src="../media/hand.gif" border="0" WIDTH="36" HEIGHT="43"></a><br>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="../main.html"><img src="../media/hand.gif" border="0"></a><br>
         <font color="#FFFFFF" size="1" face="Arial"><strong>Main</strong></font></td>
       </tr>
     </table>
@@ -43,7 +43,7 @@ perform an operation. In the example below it takes 18 lines of code to draw the
 line and circle. Compared to the QBasic (a simple DOS programming language) program on the
 left which does the exact same thing, it is very inefficient.</p>
 
-<p align="center"><font size="2"><img src="Image1.gif" WIDTH="565" HEIGHT="432"></font></p>
+<p align="center"><font size="2"><img src="monitor.gif"></font></p>
 
 <p align="center">&nbsp;</p>
 <div align="center"><center>
@@ -51,7 +51,7 @@ left which does the exact same thing, it is very inefficient.</p>
 <table border="1" cellpadding="7" cellspacing="1" width="524">
   <tr>
     <td valign="top" width="38%"><p align="center"><font size="3" face="Arial Black">QuickBasic</font></td>
-    <td valign="top" width="62%"><p align="center"><font size="2" face="Courier New"><b><img src="Image2.gif" width="143" height="23"></b></font></td>
+    <td valign="top" width="62%"><p align="center"><font size="2" face="Courier New"><b><img src="wingdi.gif"></b></font></td>
   </tr>
   <tr>
     <td valign="top" width="38%"><font size="2" face="Courier New"><b>LINE(0,0)-(640,480),10<br>
@@ -101,7 +101,7 @@ Windows 95. Many of these do almost the exact same thing and could be combined i
 powerful and flexible commands. This would take away a lot of confusion, make information
 easier to find, and make it easier to learn.</p>
 
-<p align="center"><img src="Image3.gif" width="196" height="45"></p>
+<p align="center"><img src="easygdi.gif"></p>
 
 <p>The goal of this project was to deal with all of these problems. This was done by
 creating a new library of commands, called EasyGDI, to replace and work with the original
@@ -110,7 +110,7 @@ programmer to do the same things in fewer lines and it also cuts down on the num
 commands to learn. The new commands also <i>store and manage all handles</i> of objects
 and eliminate the problem of using up memory.</p>
 
-<p align="center"><b><img src="Image4.gif" WIDTH="400" HEIGHT="327"></b></p>
+<p align="center"><b><img src="struct.gif"></b></p>
 
 <p align="center"><font size="2"><b>Figure 1 </b>The new commands keep track of all the
 handles by combining them into a single data structure called a record (similar to the
@@ -128,11 +128,11 @@ load and display bitmaps from files.</p>
 <p>All of this was done in Borland Turbo Pascal for Windows and it will takes the form of
 a Turbo Pascal Unit. Even though this is a specific application, the actual procedures
 could easily be replicated for almost any other programming tool or language for Windows. </p>
-
-<table border="1" cellpadding="7" cellspacing="1" width="759">
+<center>
+<table border="1" cellpadding="7" cellspacing="1">
   <tr>
-    <td valign="top" width="46%"><p align="center"><font size="2" face="Arial Black"><b><img src="Image5.gif" width="121" height="29"></b></font></td>
-    <td valign="top" width="54%"><p align="center"><font size="2" face="Courier New"><b><img src="Image2.gif" width="230" height="35"></b></font></td>
+    <td valign="top" width="50%"><p align="center"><font size="2" face="Arial Black"><b><img src="easygdi2.gif"></b></font></td>
+    <td valign="top" width="50%"><p align="center"><font size="2" face="Courier New"><b><img src="wingdi.gif"></b></font></td>
   </tr>
   <tr>
     <td valign="top" width="46%"><font size="2" face="Courier New"><b>TheDC :=
@@ -163,19 +163,18 @@ could easily be replicated for almost any other programming tool or language for
     ReleaseDC(Hwindow,DC);</b></font></td>
   </tr>
   <tr>
-    <td valign="top" width="46%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">7 Lines</font><font size="2" face="Courier New"><br>
+    <td valign="top" width="50%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">7 Lines</font><font size="2" face="Courier New"><br>
     </font><font color="#FF0000" size="2" face="Courier New">1 Handles</font><font size="2" face="Courier New"><br>
     </font><font color="#008000" size="2" face="Courier New">5 Commands</font></b></td>
-    <td valign="top" width="54%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">18 Lines</font><font size="2" face="Courier New"><br>
+    <td valign="top" width="50%"><p align="center"><b><font color="#0000FF" size="2" face="Courier New">18 Lines</font><font size="2" face="Courier New"><br>
     </font><font color="#FF0000" size="2" face="Courier New">7 Handles</font><font size="2" face="Courier New"><br>
     </font><font color="#008000" size="2" face="Courier New">9 Commands</font></b></td>
   </tr>
 </table>
+<p align="center"><font size="2"><b>Figure 2 </b>Here is a comparison of the EasyGDI code and the Windows
+GDI code to draw the line and circle.</font></p></center>
 
-<p><font size="2"><b>Figure 2 </b>Here is a comparison of the EasyGDI code and the Windows
-GDI code to draw the line and circle.</font></p>
-
-<p align="center"><img src="Image6.gif" width="193" height="86"></p>
+<p align="center"><img src="easycrt.gif"></p>
 
 <p>The second part of the project was an application of these procedures. This was an
 overhaul of WinCRT, which is a unit made by Borland for simple text based programming in
@@ -188,12 +187,12 @@ input. Overall, it quadruples the number of commands available.</p>
 
 <p>This is what the WinCRT window looked like before the modifications:</p>
 
-<p align="center"><img src="Image7.gif" WIDTH="480" HEIGHT="342"></p>
+<p align="center"><img src="wincrt.gif"></p>
 
 <p>These are some of the graphics that my Computer Math class was able to make using
 EasyCRT:</p>
 
-<p align="center"><img src="Image8.jpg" WIDTH="563" HEIGHT="500"></p>
+<p align="center"><img src="shots.jpg"></p>
 
 <p>EasyCRT also adds in all of the extra features from EasyGDI and gives the program
 access to some of WinCRT&#146;s internal numbers (such as the window handle and device
@@ -206,7 +205,7 @@ adds another layer of code between the GDI and the program, so you would expect 
 things a little bit slower. I conducted a small speed test to measure how much slower it
 would be, and the results were not too surprising.</p>
 
-<p align="center"><font size="2"><img src="Image9.gif" WIDTH="400" HEIGHT="373"></font></p>
+<p align="center"><font size="2"><img src="speed.gif"></font></p>
 
 <p>The results say that on average the Windows GDI was around 4% faster than the EasyGDI.
 Under most circumstances this would not probably not be significant, but it is one
