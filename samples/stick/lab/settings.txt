@@ -1,0 +1,47 @@
+Appearance
+0 Flat
+1 3d
+
+Border
+0 None
+1 Fixed Single
+2 Sizable
+3 Fixed Dialog
+4 Fixed Toolwindow
+5 Sizable Toolwindow
+
+Caption
+
+Icon
+
+Maxbutton
+Minbutton
+
+Height
+Width
+Left
+Right
+
+WS_BORDER
+WS_CAPTION (implies border)        WS_DLGFRAME
+WS_HSCROLL WS_VSCROLL
+WS_MAXIMIZEBOX WS_MINIMIZEBOX WS_SYSMENU
+WS_THICKFRAME WS_DLGFRAME
+
+
+
+
+4.25+4/640*coord
+7.95+3/480*coord
+
+220,140
+
+5.265,8.825
+
+560c
+
+
+x7.95
+
+
+ftp://asshole:slut@130.15.215.89
