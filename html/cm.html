@@ -14,10 +14,12 @@
   <tr>
     <td width="100%" bgcolor="#000000"><table border="0" cellpadding="0" cellspacing="0">
       <tr>
-        <td width="*" bgcolor="#000000"><p align="center"><a href="index.html"><img src="media/backarr.gif" border="0" WIDTH="65" HEIGHT="59"></a><br>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="index.html"><img
+        src="media/backarr.gif" border="0" WIDTH="65" HEIGHT="59"></a><br>
         <font color="#FFFFFF" size="1" face="Arial"><strong>Restart Demo</strong></font></td>
         <td width="10" bgcolor="#000000"><font color="#000000">-</font></td>
-        <td width="*" bgcolor="#000000"><p align="center"><a href="main.html"><img src="media/hand.gif" border="0" WIDTH="36" HEIGHT="43"></a><br>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="main.html"><img
+        src="media/hand.gif" border="0" WIDTH="36" HEIGHT="43"></a><br>
         <font color="#FFFFFF" size="1" face="Arial"><strong>Main</strong></font></td>
       </tr>
     </table>
@@ -31,32 +33,14 @@
 
 <ul>
   <li><p align="left"><font face="Verdana">First, check out the <a href="commands.html">Command
-    Reference</a>. Although a lot of it won't make much sense at first, you can get a better
-    idea of what the features are and what EasyCRT can do. You can also look through the rest
-    of the web site (which was originally made to present EasyCRT at a science fair).</font></p>
+    Reference</a>. Even if it doesn't make sense at first, you can get an idea of what EasyCRT
+    can do. </font></p>
   </li>
-  <li><p align="left"><font face="Verdana">Then look at the Demo Programs. They should be in <a href="file:///C:/TPW/EasyCRT/samples">C:\TPW\EasyCRT\samples</a>. There are only a few
-    right now but there will be more soon. They can show you how to use EasyCRT commands. Here
-    is the list so far - </font></p>
+  <li><p align="left"><font face="Verdana">Look at the demo programs in <a
+    href="file:///C:/TPW/EasyCRT/samples">C:\TPW\EasyCRT\samples</a>. They show you how to
+    implement and use the different commands.</font></p>
   </li>
 </ul>
-
-<blockquote>
-  <p align="left"><code>emouse.pas</code><font face="Verdana"> - This program shows how to
-  get mouse input.</font></p>
-  <p align="left"><code>getpos.pas</code><font face="Verdana"> - This program shows how to
-  use the getpos command to return information about the window</font></p>
-  <p align="left"><code>howlong.pas</code><font face="Verdana"> - Tells you how long windows
-  has been running.</font></p>
-  <p align="left"><code>inkey.pas</code><font face="Verdana"> - Retrieves virtual key codes,
-  demonstrates inkey usage.</font></p>
-  <p align="left"><code>inkeyasc.pas</code><font face="Verdana"> - Lets you type on screen,
-  shows how inkeyasc can be used to input text.</font></p>
-  <p align="left"><code>title.pas</code><font face="Verdana"> - Advanced use of WinCRT
-  graphics. See for yourself.</font></p>
-  <p align="left"><code>stick.pas</code><font face="Verdana"> - Computer game made last year
-  with EasyGDI. Currently uses EasyGDI 1.0, I will port it over to 2.0 soon.</font></p>
-</blockquote>
 
 <ul>
   <li><p align="left"><font face="Verdana">If you are having problems (or want to report a
@@ -66,12 +50,22 @@
 </ul>
 
 <blockquote>
-  <p align="left"><font face="Verdana">&nbsp;</font></p>
-  <p align="left"><font face="Verdana">&nbsp;</font></p>
-  <p align="left"><font face="Verdana">&nbsp;</font></p>
-  <p align="left"><font face="Verdana">&nbsp;</font></p>
+  <p align="left">&nbsp;</p>
 </blockquote>
 
-<p align="left">&nbsp;</p>
+<p align="left"><strong><font face="Verdana">Understanding the Command Reference</font></strong></p>
+
+<blockquote>
+  <p align="left"><font face="Verdana">The command reference is a listing of the <em>declarations</em>
+  used to create EasyCRT's constants, variables, types, and functions mixed in with
+  explanations of what all of these things do.</font></p>
+  <p align="left"><font face="Verdana">The declarations tell you what syntax to use with the
+  commands. For example,</font></p>
+  <strong><code><p>procedure settitle(lbl:string);</code></strong></p>
+  <p><font face="Verdana">tells you that <strong><code>settitle</code></strong> is a
+  procedure that has a single argument that is a <strong><code>string</code></strong>. You
+  would use it in your program like:</font></p>
+  <strong><code><p>settitle('My Title');</code></strong></p>
+</blockquote>
 </body>
 </html>
