@@ -160,7 +160,7 @@ var path: string;
       if j<=0 then i:=1;
       j:=j+i;
       TheFont.fcolor := gradient(color[0],color[15],j,50);
-      print(CRT,getwidth(CRT) div 2,getheight(CRT) div 2+50,'by Russ Yanofsky');
+      print(CRT,getwidth(CRT) div 2,getheight(CRT) div 2+50,'by ---- -------');
       if checkquit then exit;
       delay(30);
     until gettickcount-t>=3000;
