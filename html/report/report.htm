@@ -1,0 +1,326 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>EasyCRT: Simplifying the Windows Graphical Device Interface</title>
+</head>
+
+<body background="../media/bgfleck.gif" link="#0000FF">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="100%" bgcolor="#000000"><table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="../index.html"><img
+        src="../media/backarr.gif" border="0" width="65" height="59"></a><br>
+        <font color="#FFFFFF" size="1" face="Arial"><strong>Restart Demo</strong></font></td>
+        <td width="10" bgcolor="#000000"><font color="#000000">-</font></td>
+        <td width="*" bgcolor="#000000"><p align="center"><a href="../main.html"><img
+        src="../media/hand.gif" border="0" width="36" height="43"></a><br>
+        <font color="#FFFFFF" size="1" face="Arial"><strong>Main</strong></font></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+
+<p align="center"><b>Simplifying Graphics Procedures in the Windows Application
+Programming Interface</b></p>
+
+<p>Programs in Windows do not get direct control over what goes onto the monitor. They do
+not even get direct access to the video device driver. In fact, the only way they can draw
+something onscreen is by calling (or activating) various drawing commands which are built
+into Windows and collectively called the Graphics Device Interface, or GDI<span
+style="text-decoration: none"><a href="#directx">*</a></span>. When called, these GDI
+commands can draw lines, fill areas, copy bitmaps, or draw text on the program's behalf.</p>
+
+<p>The GDI has a very clear and simple purpose, but in practice it is can be surprisingly
+difficult to implement in a program. There are three basic problems which&nbsp; account
+for this difficulty.</p>
+
+<p>The first problem is the amount of commands necessary to perform an operation. In the
+example below it takes 18 lines of code to draw the simple line and circle. Compared to
+the QBasic (a simple DOS programming language) program on the left which does the exact
+same thing, it is very inefficient.</p>
+
+<p align="center"><font size="2"><img src="monitor.gif" width="565" height="432"></font></p>
+
+<p align="center">&nbsp;</p>
+<div align="center"><center>
+
+<table border="1" cellpadding="7" cellspacing="1" width="524">
+  <tr>
+    <td valign="top" width="38%"><p align="center"><font size="3" face="Arial Black">QuickBasic</font></td>
+    <td valign="top" width="62%"><p align="center"><font size="2" face="Courier New"><b><img
+    src="wingdi.gif" width="143" height="22"></b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="38%"><font size="2" face="Courier New"><b>LINE(0,0)-(640,480),10<br>
+    CIRCLE(320,240),100,12</b></font></td>
+    <td valign="top" width="62%"><font size="2" face="Courier New"><b>DC := getDC(Hwindow);<br>
+    Pen := createpen(0,0,RGB(85,255,85));<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Moveto(DC,0,0);<br>
+    Lineto(DC,640,480);<br>
+    Pen := Selectobject(DC, Oldpen);<br>
+    Deleteobject(Pen);<br>
+    Pen := Createpen(0,0,RGB(255,85,85) );<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Brushstyle.lbstyle:=BS_HOLLOW;<br>
+    Brush:=CreateBrushIndirect(brushstyle)<br>
+    OldBrush := Selectobject(DC, Brush);<br>
+    Ellipse(DC,220,140,420,340);<br>
+    Brush := Selectobject(DC, OldBrush);<br>
+    Deleteobject(Brush);<br>
+    Pen := Selectobject(DC,Oldpen);<br>
+    Deleteobject(Pen);<br>
+    ReleaseDC(Hwindow,DC);</b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="38%"><p align="center"><b><font color="#0000FF" size="2"
+    face="Courier New">2 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">Handles</font><font size="2"
+    face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">2 Commands</font></b></td>
+    <td valign="top" width="62%"><p align="center"><b><font color="#0000FF" size="2"
+    face="Courier New">18 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">7 Handles</font><font size="2"
+    face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">10 Commands</font></b></td>
+  </tr>
+</table>
+</center></div>
+
+<p>Another problem has to do with numbers called <em>handles</em>. In object oriented
+programming, programmers like to organize their data in memory by categorizing it into
+data structures known as <em>objects</em>. The GDI has to be responsible for all sorts of
+data including line colors and styles, pictures and icons, regions and clipping modes, and
+window positions. It organizes all of this data into 6 basic object types. They are pens,
+brushes, bitmaps, regions, fonts, and device contexts. </p>
+
+<p><em>Pens</em> store data describing lines, curves, and borders of shapes. They keep
+track of information such as line color, line thickness, and line style. <em>Brushes</em>
+store data about fills. They are many different subtypes of brushes including solid
+brushes, hatched brushes and picture (bitmap) brushes. <em>Bitmap</em> objects store
+images by dividing them up into grids, and storing the color values for every square
+(pixel) on that grid. They are also responsible for other information about the pictures
+including their dimensions and their color formats. A <em>region</em> object holds
+information that mathematically describes a shape or area. <em>Font</em> objects store
+information that allows the GDI to display characters (letters, numbers, and symbols)
+graphically. They store detailed instructions on how to construct every shape as well as
+extensive information on vertical and horizontal intercharacter spacing. A <em>device
+context</em> represents a drawing surface. It can represent a window surface, a printer,
+or an image residing in the computer's memory.</p>
+
+<p>Every windows program that uses the GDI is responsible for creating and initializing
+these data structures. But, the GDI does not allow any program direct access to them.
+Instead, it assigns a unique number called a <em>handle</em> to every object after it has
+been created. Any time a program wants to access the object it must use pass along the
+object's handle to a GDI command. This means that a program must be responsible for the
+handles of every object it creates, and it must be able to store and catalog them in it's
+own memory. This is tremendous amount of work just to draw a line and circle!</p>
+
+<p>Furthermore, a program is also responsible for deleting every object it creates. If it
+loses track of a handle and does not delete an object, that object will remain in memory
+until the computer can be restarted. Since drawing is usually done repeatly in a windows
+program, one lost handle can translate into thousands of extraneous objects taking up the
+computer's memory and can cause a crash within seconds.</p>
+
+<p>The the third problem is the vast number of commands in the Windows GDI. There are over
+200 these commands in the Windows 3.1 and even more in Windows 95/98.. Many of these do
+almost the exact same thing and could be combined into more powerful and flexible
+commands. This would take away a lot of confusion, make information easier to find, and
+make graphics easier to implement.</p>
+
+<p>There have been a few attemps to remedy these problems and make the GDI easier to
+implement. The two mainstream approaches have been through the Borland ObjectWindows
+Library (OWL ) and Microsoft Foundation Classes (MFC). OWL and MFC are two competiting
+standards that do pretty much the same thing<span style="text-decoration: none"><a
+name="beck" href="#mfc">**</a></span>. Since the creation of the GDI, object oriented
+programming for windows has now become standard so just about every programming language
+for windows is able to create and manipulate objects just like the GDI can. MFC and OWL
+use a technique called <em>encapsulation</em> to bring the two formats of objects
+together. For every GDI object that is created by windows, MFC and OWL build their own
+object that behaves in the same way. The new object <em>is</em> compatible with the types
+of objects the programming language uses so the program can interact directly with the new
+objects rather than having to go through handles. As the program interacts with the new
+object, the new object calls the normal GDI commands and keeps track of all the GDI
+handles.</p>
+
+<p>This approach eliminates the problem of having to deal with GDI's handles, but it does
+not cut down on the amount of code needed to draw something or the number of different
+commands that are needed to do this. Furthermore the amount of code that is needed to
+drive these new objects adds to the program size and decreases it's efficiency. And,
+during situations where it is neccessary to use the orgininal GDI objects. such as when
+new commands are added to the GDI, the programmer has the additional burden of having to
+deal with two different types of objects at once. </p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img src="easygdi.gif" width="196" height="45"></p>
+
+<p>The goal of this project was to deal with the problems of the Windows GDI, and avoid
+the pitfalls of the MFC and OWL approach. This was done by creating a new library of
+commands, called EasyGDI, to replace and work with the original GDI. The new commands work
+by <i>combining</i> the old GDI commands. This will allows the programmer to do the same
+things in fewer lines and it also cuts down on the number of commands to learn. The new
+commands also <i>store and manage all handles</i> of objects and eliminate the problem of
+using up memory.</p>
+
+<p align="center"><b><img src="struct.gif" width="400" height="327"></b></p>
+
+<p align="center"><font size="2"><b>Figure 1 </b>The new commands keep track of all the
+handles by combining them into a single data structure called a record (similar to the
+user-defined type in Visual Basic). This way, the user only has to keep of one variable
+for handles instead of several.</font></p>
+
+<p>The new commands are not designed to replace the whole GDI, just to simplify some of
+the repetitive and confusing tasks that must be done. The new commands can work alongside
+the old ones, since all handle information is still accessible to the program.</p>
+
+<p>New features that aren&#146;t in the GDI have also been added. EasyGDI automates some
+special effects techniques like bitmap masks and gradient fills and allows the user to
+load and display bitmaps from files.</p>
+<div align="center"><center>
+
+<table border="1" cellpadding="7" cellspacing="1">
+  <tr>
+    <td valign="top" width="50%"><p align="center"><font size="2" face="Arial Black"><b><img
+    src="easygdi2.gif" width="121" height="28"></b></font></td>
+    <td valign="top" width="50%"><p align="center"><font size="2" face="Courier New"><b><img
+    src="wingdi.gif" width="143" height="22"></b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="46%"><font size="2" face="Courier New"><b>TheBMP :=
+    makewindowbmp(Hwindow,0);<br>
+    setpen(TheBMP,color[10],solid,0);<br>
+    line(TheBMP,0,0,640,480);<br>
+    setpen(TheBMP,color[12],0,0);<br>
+    setbrush(TheBMP,-1,-1,solid);<br>
+    circle(TheBMP,320,240,100,100);<br>
+    killbmp(TheBMP);</b></font></td>
+    <td valign="top" width="54%"><font size="2" face="Courier New"><b>DC := getDC(Hwindow);<br>
+    Pen := createpen(0,0,RGB(85,255,85));<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Moveto(DC,0,0);<br>
+    Lineto(DC,640,480);<br>
+    Pen := Selectobject(DC, Oldpen);<br>
+    Deleteobject(Pen);<br>
+    Pen := Createpen(0,0,RGB(255,85,85) );<br>
+    OldPen := Selectobject(DC, Pen);<br>
+    Brushstyle.lbstyle:=BS_HOLLOW;<br>
+    Brush:=CreateBrushIndirect(brushstyle)<br>
+    OldBrush := Selectobject(DC, Brush);<br>
+    Ellipse(DC,220,140,420,340);<br>
+    Brush := Selectobject(DC, OldBrush);<br>
+    Deleteobject(Brush);<br>
+    Pen := Selectobject(DC,Oldpen);<br>
+    Deleteobject(Pen);<br>
+    ReleaseDC(Hwindow,DC);</b></font></td>
+  </tr>
+  <tr>
+    <td valign="top" width="50%"><p align="center"><b><font color="#0000FF" size="2"
+    face="Courier New">7 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">1 Handles</font><font size="2"
+    face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">5 Commands</font></b></td>
+    <td valign="top" width="50%"><p align="center"><b><font color="#0000FF" size="2"
+    face="Courier New">18 Lines</font><font size="2" face="Courier New"><br>
+    </font><font color="#FF0000" size="2" face="Courier New">7 Handles</font><font size="2"
+    face="Courier New"><br>
+    </font><font color="#008000" size="2" face="Courier New">9 Commands</font></b></td>
+  </tr>
+</table>
+</center></div>
+
+<p align="center"><font size="2"><b>Figure 2 </b>Here is a comparison of the EasyGDI code
+and the Windows GDI code to draw the line and circle.</font></p>
+
+<p align="center"><font size="2">&nbsp;</font></p>
+
+<p align="left">EasyGDI effectively cuts down the number of commands needed to produce
+graphics in windows, eliminates the need to deal with object handles, and cuts down the
+number of steps involved in drawing. </p>
+
+<p align="center"><img src="easycrt.gif" width="101" height="45"></p>
+
+<p>The second part of the project was an application of these EasyGDI's procedures. This
+was an overhaul of WinCRT, which is a unit made by Borland for simple text based
+programming in windows. WinCRT allows beginning, non-windows programmers to make simple
+text-based procedural programs without having to know or worry about windows, event
+handling, or objects. However, it does not give the programmer any access to the powerful
+features and commands available in Windows. The new WinCRT, called EasyCRT, adds new
+drawing functions, control over the appearance and behavior of the window, mouse input,
+and improved keyboard input. Overall, it quadruples the number of commands available.</p>
+
+<p>This is what the WinCRT window looked like before the modifications:</p>
+
+<p align="center"><img src="wincrt.gif" width="480" height="342"></p>
+
+<p>These are some of the graphics that my Computer Math class was able to make using
+EasyCRT:</p>
+
+<p align="center"><img src="shots.jpg" width="563" height="500"></p>
+
+<p>EasyCRT also adds in all of the extra features from EasyGDI and gives the program
+access to some of WinCRT&#146;s internal numbers (such as the window handle and device
+context handle) to allow the use of other API commands.</p>
+
+<p><strong>Speed</strong></p>
+
+<p>One possible concern about the EasyGDI, is efficiency and speed. EasyGDI essentially
+adds another layer of code between the GDI and the program, so you would expect it to make
+things a little bit slower. I conducted a small speed test to measure how much slower it
+would be, and the results were not too surprising.</p>
+
+<p align="center"><font size="2"><img src="speed.gif" width="400" height="373"></font></p>
+
+<p>The results say that on average the Windows GDI was around 4% faster than the EasyGDI.
+Under most circumstances this would not probably not be significant, but it is one
+possible consideration. Also, the speed test was not very detailed or extensive becuase it
+only tested a small number of EasyGDI commands. But since most of the EasyGDI commands go
+through the same basic steps (see source), it is probably pretty accurate.</p>
+
+<p><strong>Conclusion</strong></p>
+
+<p>At the possible cost of speed, EasyGDI does help deal with many of the problems in the
+Windows GDI. EasyCRT adds many new features to WinCRT and can enhance many simple Windows
+programs. Future plans for this project could include porting it over to other languages,
+adding multimedia commands, and working on any other ideas or suggestions I get.</p>
+
+<p>Major Sources:</p>
+
+<p><i>Borland Turbo Pascal for Windows 1.5 Online Help</i>. Useful command reference and
+examples.</p>
+
+<p><i>Borland C++ 5.01 for Windows Online Help</i>. Similar to Pascal reference, but much
+more comprehensive. Also updated for Windows 95. </p>
+
+<p>Brent E. Rector and Joseph M Newcomer. <em>Win32 Programming</em>. Definitive guide for
+programmint the GDI and other areas of the Windows API.</p>
+
+<p><i>Microsoft Developer Network (MSDN) Library</i>. <a
+href="http://www.microsoft.com/msdn/"><font size="2">http://www.microsoft.com/msdn/</font></a>
+Good reference information on specific commands and general concepts.</p>
+
+<p><em>Reliable Software: Smart Tools for Smart Programmers</em>. <a
+href="http://www.relisoft.com/">http://www.relisoft.com/</a> Excellent tutorials and
+utilities for Object Oriented Windows Programming.</p>
+
+<p>&nbsp;</p>
+
+<p><a HREF="#top">Back to top</a></p>
+
+<p>&nbsp;</p>
+
+<p><span style="text-decoration: none"><a name="directx" href="#top">*</a></span>Actually,
+with Windows 95 and new technology called DirectX, games and other graphics intensive
+programs have the option to bypass the GDI. Still, the vast majority of Windows
+applications rely on GDI commands.</p>
+
+<p><span style="text-decoration: none"><a name="mfc" href="#beck">**</a></span> MFC and
+Microsoft's Visual C++ are what most commercial windows programs are made with. OWL is
+used in many of Borland's products mostly for smaller programs.</p>
+</body>
+</html>
