@@ -1,0 +1,8 @@
+function Concat(s1 [, s2,..., sn]: String): String;
+procedure Insert(Source: String; var S: String; Index: Integer);
+procedure Delete(var S: String; Index: Integer; Count:Integer);
+function Copy(S: String; Index: Integer; Count: Integer): String;
+function Length(S: String): Integer;
+function Pos(Substr: String; S: String): Byte;
+function Chr(X: Byte): Char;
+function Ord(X): Longint;
