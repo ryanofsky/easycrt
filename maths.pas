@@ -1,985 +1,972 @@
-UNIT Mathunit;
-INTERFACE
+unit maths;
+interface
 
+type
+  polyptr       = ^polynom;
+  rootstack     = ^eachroot;
+  complex       = record
+                     re : real  ;
+                   im : real  ;
+                 end;
+  polynom       = record
+                     link : polyptr;
+                   coeff : complex;
+                 end;
+  eachroot      = record
+                     link : rootstack;
+                   coeff : complex;
+                 end;
 
-{$N+}
-
-TYPE
-  PolyPtr       = ^Polynom;
-  RootStack     = ^EachRoot;
-  Complex       = RECORD
-                     Re : DOUBLE;
-                   Im : DOUBLE;
-                 END;
-  Polynom       = RECORD
-                     Link : PolyPtr;
-                   Coeff : Complex;
-                 END;
-  EachRoot      = RECORD
-                     Link : RootStack;
-                   Coeff : Complex;
-                 END;
-
-FUNCTION Floor(X : DOUBLE) : DOUBLE;  (* The next lowest integer             *)
-FUNCTION Ceiling(X : DOUBLE) : DOUBLE; (* The next highest integer           *)
-FUNCTION Log10(X : DOUBLE) : DOUBLE;  (* Base 10 log of x                    *)
-FUNCTION Exp10(X : DOUBLE) : DOUBLE;  (* 10 raised to the x power            *)
-FUNCTION PwrXY(X, Y : DOUBLE) : DOUBLE; (* raise x to the power y            *)
-FUNCTION QDBV(Volts : DOUBLE) : DOUBLE; (* convert from volts to dB          *)
-FUNCTION QDBW(Watts : DOUBLE) : DOUBLE; (* convert from watts to dB          *)
-FUNCTION QWATTS(DB : DOUBLE) : DOUBLE; (* convert from dB to watts           *)
-FUNCTION QVOLTS(DB : DOUBLE) : DOUBLE; (* convert from dB to volts           *)
-FUNCTION SINH(X : DOUBLE) : DOUBLE;   (* hyperbolic sine                     *)
-FUNCTION COSH(X : DOUBLE) : DOUBLE;   (* hyperbolic cosine                   *)
-FUNCTION TANH(X : DOUBLE) : DOUBLE;   (* hyperbolic tangent                  *)
-FUNCTION ISINH(X : DOUBLE) : DOUBLE;  (* arc hyperbolic sine                 *)
-FUNCTION ICOSH(X : DOUBLE) : DOUBLE;  (* arc hyperbolic cosine               *)
-FUNCTION ITANH(X : DOUBLE) : DOUBLE;  (* arc hyperbolic tangent              *)
-FUNCTION ARCSIN(X : DOUBLE) : DOUBLE; (* arc sine using TP arctan function   *)
-FUNCTION ARCCOS(X : DOUBLE) : DOUBLE; (* inverse cosine using TP arctan      *)
-FUNCTION ATAN2(X, Y : DOUBLE) : DOUBLE; (* arctan function with quadrant check
- X is real axis value or denominator, Y is imaginary axis value or numerator *)
-FUNCTION TAN(X : DOUBLE) : DOUBLE;    (* tangent of X                        *)
-FUNCTION GAUSS (Mean, StdDev : DOUBLE) : DOUBLE; (* gaussian random number   *)
-FUNCTION RESIDUE(Radix, Number : DOUBLE) : DOUBLE; (* remainder of number/radix
+function floor(x : real  ) : real  ;  (* the next lowest integer             *)
+function ceiling(x : real  ) : real  ; (* the next highest integer           *)
+function log10(x : real  ) : real  ;  (* base 10 log of x                    *)
+function exp10(x : real  ) : real  ;  (* 10 raised to the x power            *)
+function pwrxy(x, y : real  ) : real  ; (* raise x to the power y            *)
+function qdbv(volts : real  ) : real  ; (* convert from volts to db          *)
+function qdbw(watts : real  ) : real  ; (* convert from watts to db          *)
+function qwatts(db : real  ) : real  ; (* convert from db to watts           *)
+function qvolts(db : real  ) : real  ; (* convert from db to volts           *)
+function sinh(x : real  ) : real  ;   (* hyperbolic sine                     *)
+function cosh(x : real  ) : real  ;   (* hyperbolic cosine                   *)
+function tanh(x : real  ) : real  ;   (* hyperbolic tangent                  *)
+function isinh(x : real  ) : real  ;  (* arc hyperbolic sine                 *)
+function icosh(x : real  ) : real  ;  (* arc hyperbolic cosine               *)
+function itanh(x : real  ) : real  ;  (* arc hyperbolic tangent              *)
+function arcsin(x : real  ) : real  ; (* arc sine using tp arctan function   *)
+function arccos(x : real  ) : real  ; (* inverse cosine using tp arctan      *)
+function atan2(x, y : real  ) : real  ; (* arctan function with quadrant check
+ x is real axis value or denominator, y is imaginary axis value or numerator *)
+function tan(x : real  ) : real  ;    (* tangent of x                        *)
+function gauss (mean, stddev : real  ) : real  ; (* gaussian random number   *)
+function residue(radix, number : real  ) : real  ; (* remainder of number/radix
                                                                              *)
-FUNCTION MINIMUM(A, B : DOUBLE) : DOUBLE; (* the minimum of a and b          *)
-FUNCTION MAXIMUM(A, B : DOUBLE) : DOUBLE; (* the maximum of a and b          *)
-PROCEDURE Cadd(C, D : Complex;
-                   VAR Result : Complex); (* add two complex numbers         *)
-PROCEDURE Cconj(A : Complex;
-                   VAR Result : Complex); (* complex conjugate               *)
-PROCEDURE Cdiv(Num, Denom : Complex;
-                   VAR Result : Complex); (* complex division   *)
-PROCEDURE Cinv(A : Complex;
-                   VAR Result : Complex); (* complex inverse                 *)
-FUNCTION Cmag(C : Complex) : DOUBLE;  (* magnitude of a complex number       *)
-PROCEDURE Cmake(A, B : DOUBLE;
-                   VAR Result : Complex); (* form a complex number           *)
-PROCEDURE Cmult(C, D : Complex;
-                   VAR Result : Complex); (* multiply two complex numbers    *)
-PROCEDURE Csub(C, D : Complex;
-                   VAR Result : Complex); (* subtract D from C complex number
+function minimum(a, b : real  ) : real  ; (* the minimum of a and b          *)
+function maximum(a, b : real  ) : real  ; (* the maximum of a and b          *)
+procedure cadd(c, d : complex;
+                   var result : complex); (* add two complex numbers         *)
+procedure cconj(a : complex;
+                   var result : complex); (* complex conjugate               *)
+procedure cdiv(num, denom : complex;
+                   var result : complex); (* complex division   *)
+procedure cinv(a : complex;
+                   var result : complex); (* complex inverse                 *)
+function cmag(c : complex) : real  ;  (* magnitude of a complex number       *)
+procedure cmake(a, b : real  ;
+                   var result : complex); (* form a complex number           *)
+procedure cmult(c, d : complex;
+                   var result : complex); (* multiply two complex numbers    *)
+procedure csub(c, d : complex;
+                   var result : complex); (* subtract d from c complex number
                                                                              *)
-PROCEDURE Cexp(A : Complex;
-                   VAR Result : Complex); (* exponential of a complex number *)
-PROCEDURE Csqr(A : Complex;
-                   VAR Result : Complex); (* square of a complex number      *)
-PROCEDURE Csqrt(A : Complex;
-                   VAR Result : Complex); (* sqrt of a complex number        *)
-PROCEDURE Cln(A : Complex;
-                   VAR Result : Complex); (* natural log of complex A        *)
-PROCEDURE CpwrXY(X, Y : Complex;
-                   VAR Result : Complex); (* raise X to the Y power          *)
-PROCEDURE Csinh(A : Complex;
-                   VAR Result : Complex); (* hyperbolic sine of complex A    *)
-PROCEDURE Ccosh(A : Complex;
-                   VAR Result : Complex); (* hyperbolic cosine of complex A  *)
-PROCEDURE Ctanh(A : Complex;
-                   VAR Result : Complex); (* hyperbolic tangent of complex A *)
-PROCEDURE Csin(A : Complex;
-                   VAR Result : Complex); (* sine of complex A               *)
-PROCEDURE Ccos(A : Complex;
-                   VAR Result : Complex); (* cosine of complex A             *)
-PROCEDURE Ctan(A : Complex;
-                   VAR Result : Complex); (* tangent of complex A            *)
-PROCEDURE Carcsin(A : Complex;
-                   VAR Result : Complex); (* inverse sine of complex A       *)
-PROCEDURE Carccos(A : Complex;
-                   VAR Result : Complex); (* inverse cosine of complex A     *)
-PROCEDURE Carctan(A : Complex;
-                   VAR Result : Complex); (* inverse tangent of complex A    *)
-PROCEDURE PolyAssign(X : PolyPtr;     (* generate new polynomial at Y with   *)
-                   VAR Y : PolyPtr);  (* same coefficients as poly at X      *)
-PROCEDURE PolyClear(VAR Ptr : PolyPtr); (* remove a polynomial               *)
-PROCEDURE PolyEval(X : PolyPtr;       (* evaluate polynomial X in S          *)
-                   S : Complex;       (* at complex value S                  *)
-                   VAR Result : Complex); (* assign to Result                *)
-PROCEDURE PolyForm(A : RootStack;     (* form a polynomial B from the
-                                                        roots of rootstack A *)
-                   VAR B : PolyPtr);
-PROCEDURE PolyMult(Xx, Yy : PolyPtr;
-                   VAR Z : PolyPtr);  (* multiply two polynomials            *)
-PROCEDURE PolyNegate(X : PolyPtr);
-FUNCTION PolyOrder(Z : PolyPtr) : BYTE; (* order of a polynomial             *)
-PROCEDURE PolyPower(I : BYTE;           (* raise a polynomial X to power I *)
-                   X  : PolyPtr;
-                   VAR Y : PolyPtr);
-PROCEDURE PolyPrint(X : PolyPtr);     (* writeln for polynomial              *)
-PROCEDURE PolyScale(X : PolyPtr;      (* multiply polynomial X by            *)
-                   Scalar : Complex); (* complex number Scalar               *)
-PROCEDURE PolyUnary(X : PolyPtr);     (* make the polynomial X unary         *)
+procedure cexp(a : complex;
+                   var result : complex); (* exponential of a complex number *)
+procedure csqr(a : complex;
+                   var result : complex); (* square of a complex number      *)
+procedure csqrt(a : complex;
+                   var result : complex); (* sqrt of a complex number        *)
+procedure cln(a : complex;
+                   var result : complex); (* natural log of complex a        *)
+procedure cpwrxy(x, y : complex;
+                   var result : complex); (* raise x to the y power          *)
+procedure csinh(a : complex;
+                   var result : complex); (* hyperbolic sine of complex a    *)
+procedure ccosh(a : complex;
+                   var result : complex); (* hyperbolic cosine of complex a  *)
+procedure ctanh(a : complex;
+                   var result : complex); (* hyperbolic tangent of complex a *)
+procedure csin(a : complex;
+                   var result : complex); (* sine of complex a               *)
+procedure ccos(a : complex;
+                   var result : complex); (* cosine of complex a             *)
+procedure ctan(a : complex;
+                   var result : complex); (* tangent of complex a            *)
+procedure carcsin(a : complex;
+                   var result : complex); (* inverse sine of complex a       *)
+procedure carccos(a : complex;
+                   var result : complex); (* inverse cosine of complex a     *)
+procedure carctan(a : complex;
+                   var result : complex); (* inverse tangent of complex a    *)
+procedure polyassign(x : polyptr;     (* generate new polynomial at y with   *)
+                   var y : polyptr);  (* same coefficients as poly at x      *)
+procedure polyclear(var ptr : polyptr); (* remove a polynomial               *)
+procedure polyeval(x : polyptr;       (* evaluate polynomial x in s          *)
+                   s : complex;       (* at complex value s                  *)
+                   var result : complex); (* assign to result                *)
+procedure polyform(a : rootstack;     (* form a polynomial b from the
+                                                        roots of rootstack a *)
+                   var b : polyptr);
+procedure polymult(xx, yy : polyptr;
+                   var z : polyptr);  (* multiply two polynomials            *)
+procedure polynegate(x : polyptr);
+function polyorder(z : polyptr) : byte; (* order of a polynomial             *)
+procedure polypower(i : byte;           (* raise a polynomial x to power i *)
+                   x  : polyptr;
+                   var y : polyptr);
+procedure polyprint(x : polyptr);     (* writeln for polynomial              *)
+procedure polyscale(x : polyptr;      (* multiply polynomial x by            *)
+                   scalar : complex); (* complex number scalar               *)
+procedure polyunary(x : polyptr);     (* make the polynomial x unary         *)
 (* i.e. the leading coef = 1                                                 *)
-PROCEDURE RootPush(R : Complex;       (* add root R to a rootstack L         *)
-                   VAR L : RootStack);
-PROCEDURE RootPop(VAR L : RootStack;      (* get root from a rootstack L *)
-                  VAR R : Complex);
-PROCEDURE RootClear(VAR L : RootStack);   (* clear a rootstack L             *)
-PROCEDURE RootRotate(N : BYTE;VAR L : RootStack);(* rotate rootstack L by N  *)
+procedure rootpush(r : complex;       (* add root r to a rootstack l         *)
+                   var l : rootstack);
+procedure rootpop(var l : rootstack;      (* get root from a rootstack l *)
+                  var r : complex);
+procedure rootclear(var l : rootstack);   (* clear a rootstack l             *)
+procedure rootrotate(n : byte;var l : rootstack);(* rotate rootstack l by n  *)
                                             (* so that last moves toward 1st *)
-PROCEDURE RootCopy(S : RootStack;     (* copy a rootstack from S to D        *)
-                   VAR D: RootStack);
+procedure rootcopy(s : rootstack;     (* copy a rootstack from s to d        *)
+                   var d: rootstack);
 
-CONST
-  Cone : Complex = (Re : 1.0; Im : 0.0);
-  Czero: Complex = (Re : 0.0; Im : 0.0);
-  Ci   : Complex = (Re : 0.0; Im : 1.0);
+const
+  cone : complex = (re : 1.0; im : 0.0);
+  czero: complex = (re : 0.0; im : 0.0);
+  ci   : complex = (re : 0.0; im : 1.0);
 
-IMPLEMENTATION
-VAR
-  Ln10          : DOUBLE;
+implementation
+var
+  ln10          : real  ;
 
-FUNCTION Floor (X : DOUBLE) : DOUBLE; (* The next lowest integer             *)
+function floor (x : real  ) : real  ; (* the next lowest integer             *)
 
-(* note that INT will not work when X is a negative number *)
-BEGIN
-  IF X >= 0.0 THEN
-    Floor := Int(X)
-  ELSE                                (* Use int for positive x              *)
-    IF Frac(X) = 0.0 THEN
-      Floor := X
-    ELSE                              (* no shift on exact integer           *)
-      Floor := - Int(1 - X)           (* Round away from zero                *)
-END;                                  (* Floor                               *)
+(* note that int will not work when x is a negative number *)
+begin
+  if x >= 0.0 then
+    floor := int(x)
+  else                                (* use int for positive x              *)
+    if frac(x) = 0.0 then
+      floor := x
+    else                              (* no shift on exact integer           *)
+      floor := - int(1 - x)           (* round away from zero                *)
+end;                                  (* floor                               *)
 
-FUNCTION Ceiling (X : DOUBLE) : DOUBLE; (* The next highest integer          *)
-BEGIN
-  IF X <= 0.0 THEN
-    Ceiling := Int(X)
-  ELSE                                (* Use int for negative x              *)
-    IF Frac(X) = 0.0 THEN
-      Ceiling := X
-    ELSE                              (* no shift on exact integer           *)
-      Ceiling := 1 - Int(- X)         (* Shift x to negative                 *)
-END;                                  (* Ceiling                             *)
+function ceiling (x : real  ) : real  ; (* the next highest integer          *)
+begin
+  if x <= 0.0 then
+    ceiling := int(x)
+  else                                (* use int for negative x              *)
+    if frac(x) = 0.0 then
+      ceiling := x
+    else                              (* no shift on exact integer           *)
+      ceiling := 1 - int(- x)         (* shift x to negative                 *)
+end;                                  (* ceiling                             *)
 
-FUNCTION Log10 (X : DOUBLE) : DOUBLE; (* Base 10 log of x                    *)
-BEGIN                                 (* Ln(10) supplied for speed           *)
-  Log10 := Ln(X) / Ln10               (* Easily derived                      *)
-END;                                  (* Log10                               *)
+function log10 (x : real  ) : real  ; (* base 10 log of x                    *)
+begin                                 (* ln(10) supplied for speed           *)
+  log10 := ln(x) / ln10               (* easily derived                      *)
+end;                                  (* log10                               *)
 
-FUNCTION Exp10 (X : DOUBLE) : DOUBLE; (* 10 raised to the x power            *)
-BEGIN                                 (* Ln(10) supplied for speed           *)
-  Exp10 := Exp(X * Ln10)              (* easily derived                      *)
-END;                                  (* Exp10                               *)
+function exp10 (x : real  ) : real  ; (* 10 raised to the x power            *)
+begin                                 (* ln(10) supplied for speed           *)
+  exp10 := exp(x * ln10)              (* easily derived                      *)
+end;                                  (* exp10                               *)
 
-FUNCTION PwrXY (X, Y : DOUBLE) : DOUBLE; (* raise x to the power y           *)
-BEGIN
-  IF (Y = 0.0) THEN
-    PwrXY := 1.0
-  ELSE
-    IF (X <= 0.0) AND (Frac(Y) = 0.0) THEN
-      IF (Frac(Y / 2)) = 0.0 THEN
-        PwrXY := Exp(Y * Ln(Abs(X)))
-      ELSE
-        PwrXY := - Exp(Y * Ln(Abs(X)))
-    ELSE
-      PwrXY := Exp(Y * Ln(X));
-END;                                  (* PwrXY                               *)
+function pwrxy (x, y : real  ) : real  ; (* raise x to the power y           *)
+begin
+  if (y = 0.0) then
+    pwrxy := 1.0
+  else
+    if (x <= 0.0) and (frac(y) = 0.0) then
+      if (frac(y / 2)) = 0.0 then
+        pwrxy := exp(y * ln(abs(x)))
+      else
+        pwrxy := - exp(y * ln(abs(x)))
+    else
+      pwrxy := exp(y * ln(x));
+end;                                  (* pwrxy                               *)
 
-FUNCTION QDBV (Volts : DOUBLE) : DOUBLE; (* convert from volts to dB         *)
-BEGIN
-  QDBV := 20.0 * Log10(Volts)
-END;                                  (* QDBV                                *)
+function qdbv (volts : real  ) : real  ; (* convert from volts to db         *)
+begin
+  qdbv := 20.0 * log10(volts)
+end;                                  (* qdbv                                *)
 
-FUNCTION QDBW (Watts : DOUBLE) : DOUBLE; (* convert from watts to dB         *)
-BEGIN
-  QDBW := 10.0 * Log10(Watts)
-END;                                  (* QDBW                                *)
+function qdbw (watts : real  ) : real  ; (* convert from watts to db         *)
+begin
+  qdbw := 10.0 * log10(watts)
+end;                                  (* qdbw                                *)
 
-FUNCTION QWATTS (DB : DOUBLE) : DOUBLE; (* convert from dB to watts          *)
-BEGIN
-  QWATTS := Exp10(DB / 10.0);
-END;                                  (* QWATTS                              *)
+function qwatts (db : real  ) : real  ; (* convert from db to watts          *)
+begin
+  qwatts := exp10(db / 10.0);
+end;                                  (* qwatts                              *)
 
-FUNCTION QVOLTS (DB : DOUBLE) : DOUBLE; (* convert from dB to volts          *)
-BEGIN
-  QVOLTS := Exp10(DB / 20.0);
-END;                                  (* QVOLTS                              *)
+function qvolts (db : real  ) : real  ; (* convert from db to volts          *)
+begin
+  qvolts := exp10(db / 20.0);
+end;                                  (* qvolts                              *)
 
-FUNCTION SINH (X : DOUBLE) : DOUBLE;  (* hyperbolic sine                     *)
-BEGIN
-  SINH := 0.5 * (Exp(X) - Exp(- X))
-END;                                  (* SINH                                *)
+function sinh (x : real  ) : real  ;  (* hyperbolic sine                     *)
+begin
+  sinh := 0.5 * (exp(x) - exp(- x))
+end;                                  (* sinh                                *)
 
-FUNCTION COSH (X : DOUBLE) : DOUBLE;  (* hyperbolic cosine                   *)
-BEGIN
-  COSH := 0.5 * (Exp(X) + Exp(- X))
-END;                                  (* COSH                                *)
+function cosh (x : real  ) : real  ;  (* hyperbolic cosine                   *)
+begin
+  cosh := 0.5 * (exp(x) + exp(- x))
+end;                                  (* cosh                                *)
 
-FUNCTION TANH (X : DOUBLE) : DOUBLE;  (* hyperbolic tangent                  *)
-BEGIN
-  X := Exp(2.0 * X);
-  TANH := (X - 1.0) / (X + 1.0)
-END;                                  (* TANH                                *)
+function tanh (x : real  ) : real  ;  (* hyperbolic tangent                  *)
+begin
+  x := exp(2.0 * x);
+  tanh := (x - 1.0) / (x + 1.0)
+end;                                  (* tanh                                *)
 
-FUNCTION ISINH (X : DOUBLE) : DOUBLE; (* arc hyperbolic sine                 *)
-BEGIN
-  ISINH := Ln(Sqrt(1.0 + X * X) + X)
-END;                                  (* ISINH                               *)
+function isinh (x : real  ) : real  ; (* arc hyperbolic sine                 *)
+begin
+  isinh := ln(sqrt(1.0 + x * x) + x)
+end;                                  (* isinh                               *)
 
-FUNCTION ICOSH (X : DOUBLE) : DOUBLE; (* arc hyperbolic cosine               *)
-BEGIN
-  ICOSH := Ln(X + Sqrt(X * X - 1.0))
-END;                                  (* ICOSH                               *)
+function icosh (x : real  ) : real  ; (* arc hyperbolic cosine               *)
+begin
+  icosh := ln(x + sqrt(x * x - 1.0))
+end;                                  (* icosh                               *)
 
-FUNCTION ITANH (X : DOUBLE) : DOUBLE; (* arc hyperbolic tangent              *)
-BEGIN
-  ITANH := Ln((1.0 + X) / (1.0 - X))
-END;                                  (* ITANH                               *)
+function itanh (x : real  ) : real  ; (* arc hyperbolic tangent              *)
+begin
+  itanh := ln((1.0 + x) / (1.0 - x))
+end;                                  (* itanh                               *)
 
-FUNCTION ARCSIN (X : DOUBLE) : DOUBLE; (* arc sine using TP arctan function  *)
-BEGIN                                 (* answer returned in radians          *)
-  IF X = 1.0 THEN
-    ARCSIN := Pi / 2.0
-  ELSE
-    IF X = - 1.0 THEN
-      ARCSIN := Pi / - 2.0
-    ELSE
-      ARCSIN := Arctan(X / Sqrt(1.0 - Sqr(X)))
-END;                                  (* ARCSIN                              *)
+function arcsin (x : real  ) : real  ; (* arc sine using tp arctan function  *)
+begin                                 (* answer returned in radians          *)
+  if x = 1.0 then
+    arcsin := pi / 2.0
+  else
+    if x = - 1.0 then
+      arcsin := pi / - 2.0
+    else
+      arcsin := arctan(x / sqrt(1.0 - sqr(x)))
+end;                                  (* arcsin                              *)
 
-FUNCTION ARCCOS (X : DOUBLE) : DOUBLE; (* inverse cosine using TP arctan     *)
-BEGIN                                 (* answer returned in radians          *)
-  IF X = 0.0 THEN
-    ARCCOS := Pi / 2.0
-  ELSE
-    IF X < 0.0 THEN
-      ARCCOS := Pi - Arctan(Sqrt(1.0 - Sqr(X)) / Abs(X))
-    ELSE
-      ARCCOS := Arctan(Sqrt(1.0 - Sqr(X)) / Abs(X))
-END;                                  (* ARCCOS                              *)
+function arccos (x : real  ) : real  ; (* inverse cosine using tp arctan     *)
+begin                                 (* answer returned in radians          *)
+  if x = 0.0 then
+    arccos := pi / 2.0
+  else
+    if x < 0.0 then
+      arccos := pi - arctan(sqrt(1.0 - sqr(x)) / abs(x))
+    else
+      arccos := arctan(sqrt(1.0 - sqr(x)) / abs(x))
+end;                                  (* arccos                              *)
 
-FUNCTION ATAN2(X, Y : DOUBLE) : DOUBLE; (* arctan function with quadrant check
- X is real axis value or denominator, Y is imaginary axis value or numerator *)
-BEGIN                                 (* answer returned in radians          *)
-  IF Y <> 0.0 THEN
-    IF X <> 0.0 THEN                  (* point not on an axis                *)
-      IF X > 0.0 THEN                 (* 1st or 4th quadrant use std arctan  *)
-        ATAN2 := Arctan(Y / X)
-      ELSE
-        IF Y > 0.0 THEN               (* 2nd quadrant                        *)
-          ATAN2 := Pi + Arctan(Y / X)
-        ELSE
-          ATAN2 := Arctan(Y / X) - Pi (* 3rd quadrant                        *)
-    ELSE                              (* point on the Y axis                 *)
-      IF Y >= 0.0 THEN
-        ATAN2 := Pi / 2.0             (* positive Y axis                     *)
-       ELSE
-        ATAN2 := - Pi / 2.0           (* negative Y axis                     *)
-   ELSE                               (* point on the X axis                 *)
-    IF X >= 0.0 THEN
-      ATAN2 := 0.0                    (* positive X axis                     *)
-     ELSE
-      ATAN2 := - Pi                   (* negative X axis                     *)
-END;                                  (* ATAN2                               *)
+function atan2(x, y : real  ) : real  ; (* arctan function with quadrant check
+ x is real axis value or denominator, y is imaginary axis value or numerator *)
+begin                                 (* answer returned in radians          *)
+  if y <> 0.0 then
+    if x <> 0.0 then                  (* point not on an axis                *)
+      if x > 0.0 then                 (* 1st or 4th quadrant use std arctan  *)
+        atan2 := arctan(y / x)
+      else
+        if y > 0.0 then               (* 2nd quadrant                        *)
+          atan2 := pi + arctan(y / x)
+        else
+          atan2 := arctan(y / x) - pi (* 3rd quadrant                        *)
+    else                              (* point on the y axis                 *)
+      if y >= 0.0 then
+        atan2 := pi / 2.0             (* positive y axis                     *)
+       else
+        atan2 := - pi / 2.0           (* negative y axis                     *)
+   else                               (* point on the x axis                 *)
+    if x >= 0.0 then
+      atan2 := 0.0                    (* positive x axis                     *)
+     else
+      atan2 := - pi                   (* negative x axis                     *)
+end;                                  (* atan2                               *)
 
-FUNCTION TAN (X : DOUBLE) : DOUBLE;   (* tangent of X                        *)
-BEGIN
-  TAN := Sin(X) / Cos(X)
-END;                                  (* TAN                                 *)
+function tan (x : real  ) : real  ;   (* tangent of x                        *)
+begin
+  tan := sin(x) / cos(x)
+end;                                  (* tan                                 *)
 
-FUNCTION GAUSS (Mean, StdDev : DOUBLE) : DOUBLE; (* gaussian random number   *)
-VAR
-  I             : BYTE;               (* index for loop                      *)
-  T             : DOUBLE;             (* temporary variable                  *)
+function gauss (mean, stddev : real  ) : real  ; (* gaussian random number   *)
+var
+  i             : byte;               (* index for loop                      *)
+  t             : real  ;             (* temporary variable                  *)
 
-BEGIN                                 (* Based on the central limit theorem  *)
-  T := - 6.0;                         (* maximum deviation is 6 sigma, remove
+begin                                 (* based on the central limit theorem  *)
+  t := - 6.0;                         (* maximum deviation is 6 sigma, remove
                                          the mean first                      *)
-  FOR I := 1 TO 12 DO
-    T := T + Random;                  (* 12 uniform over 0 to 1              *)
-  GAUSS := Mean + T * StdDev          (* adjust mean and standard deviation  *)
-END;                                  (* GAUSS                               *)
+  for i := 1 to 12 do
+    t := t + random;                  (* 12 uniform over 0 to 1              *)
+  gauss := mean + t * stddev          (* adjust mean and standard deviation  *)
+end;                                  (* gauss                               *)
 
-FUNCTION RESIDUE (Radix, Number : DOUBLE) : DOUBLE; (* remainder of
+function residue (radix, number : real  ) : real  ; (* remainder of
                                          radix/number                        *)
 
-(* uses APL residue definition *)
-BEGIN
-  RESIDUE := Number - Radix * Floor(Number / Radix)
-END;                                  (* RESIDUE                             *)
+(* uses apl residue definition *)
+begin
+  residue := number - radix * floor(number / radix)
+end;                                  (* residue                             *)
 
-FUNCTION MINIMUM (A, B : DOUBLE) : DOUBLE; (* the minimum of a and b         *)
-BEGIN
-  IF A < B THEN
-    MINIMUM := A
-  ELSE
-    MINIMUM := B
-END;                                  (* MINIMUM                             *)
+function minimum (a, b : real  ) : real  ; (* the minimum of a and b         *)
+begin
+  if a < b then
+    minimum := a
+  else
+    minimum := b
+end;                                  (* minimum                             *)
 
-FUNCTION MAXIMUM (A, B : DOUBLE) : DOUBLE; (* the maximum of a and b         *)
-BEGIN
-  IF A < B THEN
-    MAXIMUM := B
-  ELSE
-    MAXIMUM := A
-END;                                  (* MAXIMUM                             *)
+function maximum (a, b : real  ) : real  ; (* the maximum of a and b         *)
+begin
+  if a < b then
+    maximum := b
+  else
+    maximum := a
+end;                                  (* maximum                             *)
 
+procedure cmult(c, d : complex;
+                   var result : complex); (* multiply two complex numbers    *)
+begin
+  result.re := c.re * d.re - c.im * d.im; (* real part                       *)
+  result.im := c.re * d.im + c.im * d.re; (* imaginary part                  *)
+end;
 
-PROCEDURE Cmult(C, D : Complex;
-                   VAR Result : Complex); (* multiply two complex numbers    *)
-BEGIN
-  Result.Re := C.Re * D.Re - C.Im * D.Im; (* real part                       *)
-  Result.Im := C.Re * D.Im + C.Im * D.Re; (* imaginary part                  *)
-END;
+procedure cadd(c, d : complex;
+                   var result : complex); (* add two complex numbers         *)
+begin
+  result.re := c.re + d.re;           (* real part                           *)
+  result.im := c.im + d.im;           (* imaginary part                      *)
+end;
 
-PROCEDURE Cadd(C, D : Complex;
-                   VAR Result : Complex); (* add two complex numbers         *)
-BEGIN
-  Result.Re := C.Re + D.Re;           (* real part                           *)
-  Result.Im := C.Im + D.Im;           (* imaginary part                      *)
-END;
-
-PROCEDURE Csub(C, D : Complex;
-                   VAR Result : Complex); (* subtract D from C complex number
+procedure csub(c, d : complex;
+                   var result : complex); (* subtract d from c complex number
                                                                              *)
-BEGIN
-  Result.Re := C.Re - D.Re;           (* real part                           *)
-  Result.Im := C.Im - D.Im;           (* imaginary part                      *)
-END;
+begin
+  result.re := c.re - d.re;           (* real part                           *)
+  result.im := c.im - d.im;           (* imaginary part                      *)
+end;
 
-FUNCTION Cmag (C : Complex) : DOUBLE; (* magnitude of a complex number       *)
-BEGIN
-  Cmag := Sqrt(Sqr(C.Re) + Sqr(C.Im));
-END;
+function cmag (c : complex) : real  ; (* magnitude of a complex number       *)
+begin
+  cmag := sqrt(sqr(c.re) + sqr(c.im));
+end;
 
-PROCEDURE Cmake(A, B : DOUBLE;
-                   VAR Result : Complex); (* form a complex number           *)
-BEGIN
-  Result.Re := A;
-  Result.Im := B;
-END;
+procedure cmake(a, b : real  ;
+                   var result : complex); (* form a complex number           *)
+begin
+  result.re := a;
+  result.im := b;
+end;
 
-PROCEDURE Cconj(A : Complex;
-                   VAR Result : Complex); (* complex conjugate               *)
-BEGIN
-  Result.Re := A.Re;
-  Result.Im := - A.Im;
-END;
+procedure cconj(a : complex;
+                   var result : complex); (* complex conjugate               *)
+begin
+  result.re := a.re;
+  result.im := - a.im;
+end;
 
-PROCEDURE Cexp(A : Complex;
-                   VAR Result : Complex); (* exponential of a complex number *)
-VAR
-  Magnitude     : DOUBLE;
+procedure cexp(a : complex;
+                   var result : complex); (* exponential of a complex number *)
+var
+  magnitude     : real  ;
 
-BEGIN                               (* exp(real+j imag)=exp(real)exp(j imag) *)
-  Magnitude := Exp(A.Re);
-  Result.Re := Magnitude * Cos(A.Im); (* Eulers equation                     *)
-  Result.Im := Magnitude * Sin(A.Im);
-END;
+begin                               (* exp(real+j imag)=exp(real)exp(j imag) *)
+  magnitude := exp(a.re);
+  result.re := magnitude * cos(a.im); (* eulers equation                     *)
+  result.im := magnitude * sin(a.im);
+end;
 
-PROCEDURE Csqr(A : Complex;
-                   VAR Result : Complex); (* square of a complex number      *)
-BEGIN                                 (* sqr(real + j imag)                  *)
-  Result.Re := Sqr(A.Re) - Sqr(A.Im);
-  Result.Im := 2.0 * A.Re * A.Im;
-END;
+procedure csqr(a : complex;
+                   var result : complex); (* square of a complex number      *)
+begin                                 (* sqr(real + j imag)                  *)
+  result.re := sqr(a.re) - sqr(a.im);
+  result.im := 2.0 * a.re * a.im;
+end;
 
-PROCEDURE Csqrt(A : Complex;
-                   VAR Result : Complex); (* sqrt of a complex number        *)
-VAR
-  Magnitude, Phase : DOUBLE;          (* A to be written as mag*exp(j phase) *)
+procedure csqrt(a : complex;
+                   var result : complex); (* sqrt of a complex number        *)
+var
+  magnitude, phase : real  ;          (* a to be written as mag*exp(j phase) *)
 
-BEGIN                                 (* solve sqrt(mag)*exp(j .5*phase      *)
-  Phase := 0.5 * Atan2(A.Re, A.Im);
-  Magnitude := Sqrt(Sqrt(Sqr(A.Re) + Sqr(A.Im)));
-  Result.Re := Magnitude * Cos(Phase); (* Eulers equation                    *)
-  Result.Im := Magnitude * Sin(Phase);
-END;
+begin                                 (* solve sqrt(mag)*exp(j .5*phase      *)
+  phase := 0.5 * atan2(a.re, a.im);
+  magnitude := sqrt(sqrt(sqr(a.re) + sqr(a.im)));
+  result.re := magnitude * cos(phase); (* eulers equation                    *)
+  result.im := magnitude * sin(phase);
+end;
 
-PROCEDURE Cln(A : Complex;
-                   VAR Result : Complex); (* natural log of complex A        *)
-BEGIN                                 (* A to be written as mag*exp(j phase) *)
-  Result.Re := 0.5 * Ln(Sqr(A.Re) + Sqr(A.Im));
-  Result.Im := Atan2(A.Re, A.Im);
-END;
+procedure cln(a : complex;
+                   var result : complex); (* natural log of complex a        *)
+begin                                 (* a to be written as mag*exp(j phase) *)
+  result.re := 0.5 * ln(sqr(a.re) + sqr(a.im));
+  result.im := atan2(a.re, a.im);
+end;
 
-PROCEDURE CpwrXY(X, Y : Complex;
-                   VAR Result : Complex); (* raise X to the Y power          *)
-VAR
-  Temp          : Complex;
+procedure cpwrxy(x, y : complex;
+                   var result : complex); (* raise x to the y power          *)
+var
+  temp          : complex;
 
-BEGIN
-  IF (X.Re = 0.0) AND (X.Im = 0.0) THEN (* avoid taking log of 0             *)
-    BEGIN
-      Result.Re := 0.0;
-      Result.Im := 0.0;
-    END
-  ELSE
-    BEGIN
-      Cln(X,Temp);
-      Cmult(Y,Temp,Temp);
-      Cexp(Temp,Result);
-    END
-END;
+begin
+  if (x.re = 0.0) and (x.im = 0.0) then (* avoid taking log of 0             *)
+    begin
+      result.re := 0.0;
+      result.im := 0.0;
+    end
+  else
+    begin
+      cln(x,temp);
+      cmult(y,temp,temp);
+      cexp(temp,result);
+    end
+end;
 
+procedure csinh(a : complex;
+                   var result : complex); (* hyperbolic sine of complex a    *)
+begin
+  result.re := cos(a.im) * sinh(a.re);
+  result.im := sin(a.im) * cosh(a.re);
+end;
 
+procedure ccosh(a : complex;
+                   var result : complex); (* hyperbolic cosine of complex a  *)
+begin
+  result.re := cos(a.im) * cosh(a.re);
+  result.im := sin(a.im) * sinh(a.re);
+end;
 
-PROCEDURE Csinh(A : Complex;
-                   VAR Result : Complex); (* hyperbolic sine of complex A    *)
-BEGIN
-  Result.Re := Cos(A.Im) * Sinh(A.Re);
-  Result.Im := Sin(A.Im) * Cosh(A.Re);
-END;
+procedure ctanh(a : complex;
+                   var result : complex); (* hyperbolic tangent of complex a *)
+var
+  denom         : real  ;
 
-PROCEDURE Ccosh(A : Complex;
-                   VAR Result : Complex); (* hyperbolic cosine of complex A  *)
-BEGIN
-  Result.Re := Cos(A.Im) * Cosh(A.Re);
-  Result.Im := Sin(A.Im) * Sinh(A.Re);
-END;
+begin
+  denom := cos(2.0 * a.im) + cosh(2.0 * a.re);
+  result.re := sinh(2.0 * a.re) / denom;
+  result.im := sin(2.0 * a.im) / denom;
+end;
 
-PROCEDURE Ctanh(A : Complex;
-                   VAR Result : Complex); (* hyperbolic tangent of complex A *)
-VAR
-  Denom         : DOUBLE;
+procedure csin(a : complex;
+                   var result : complex); (* sine of complex a               *)
+begin
+  result.re := sin(a.re) * cosh(a.im);
+  result.im := cos(a.re) * sinh(a.im);
+end;
 
-BEGIN
-  Denom := Cos(2.0 * A.Im) + Cosh(2.0 * A.Re);
-  Result.Re := Sinh(2.0 * A.Re) / Denom;
-  Result.Im := Sin(2.0 * A.Im) / Denom;
-END;
+procedure ccos(a : complex;
+                   var result : complex); (* cosine of complex a             *)
+begin
+  result.re := cos(a.re) * cosh(a.im);
+  result.im := - sin(a.re) * sinh(a.im);
+end;
 
-PROCEDURE Csin(A : Complex;
-                   VAR Result : Complex); (* sine of complex A               *)
-BEGIN
-  Result.Re := Sin(A.Re) * Cosh(A.Im);
-  Result.Im := Cos(A.Re) * Sinh(A.Im);
-END;
+procedure ctan(a : complex;
+                   var result : complex); (* tangent of complex a            *)
+var
+  denom         : real  ;
 
-PROCEDURE Ccos(A : Complex;
-                   VAR Result : Complex); (* cosine of complex A             *)
-BEGIN
-  Result.Re := Cos(A.Re) * Cosh(A.Im);
-  Result.Im := - Sin(A.Re) * Sinh(A.Im);
-END;
+begin
+  denom := cos(2.0 * a.re) + cosh(2.0 * a.im);
+  result.re := sin(2.0 * a.re) / denom;
+  result.im := sinh(2.0 * a.im) / denom;
+end;
 
-PROCEDURE Ctan(A : Complex;
-                   VAR Result : Complex); (* tangent of complex A            *)
-VAR
-  Denom         : DOUBLE;
+procedure cinv(a : complex;
+                   var result : complex); (* complex inverse                 *)
+var
+  scalar        : real  ;
 
-BEGIN
-  Denom := Cos(2.0 * A.Re) + Cosh(2.0 * A.Im);
-  Result.Re := Sin(2.0 * A.Re) / Denom;
-  Result.Im := Sinh(2.0 * A.Im) / Denom;
-END;
+begin
+  scalar := sqr(a.re) + sqr(a.im);
+  result.re := a.re / scalar;
+  result.im := - a.im / scalar;
+end;
 
-PROCEDURE Cinv(A : Complex;
-                   VAR Result : Complex); (* complex inverse                 *)
-VAR
-  Scalar        : DOUBLE;
+procedure cdiv(num, denom : complex;
+                   var result : complex); (* complex division   *)
 
-BEGIN
-  Scalar := Sqr(A.Re) + Sqr(A.Im);
-  Result.Re := A.Re / Scalar;
-  Result.Im := - A.Im / Scalar;
-END;
+(* returns num/denom *)
+var
+  scalar        : real  ;
 
-PROCEDURE Cdiv(Num, Denom : Complex;
-                   VAR Result : Complex); (* complex division   *)
-
-(* returns Num/Denom *)
-VAR
-  Scalar        : DOUBLE;
-
-BEGIN
+begin
 
  (****************************************************************************)
  (* try to avoid overflow by normalizing the denominator                     *)
  (****************************************************************************)
-  IF (Abs(Denom.Re) > Abs(Denom.Im)) THEN
-    BEGIN
-      Scalar := Denom.Re;
-      Denom.Im := - Denom.Im / Scalar;
-(*    Denom.Re := 1.0;  is implied *)
-      Scalar := (Sqr(Denom.Im) + 1.0) * Scalar;
-      Result.Re := (Num.Re - Num.Im * Denom.Im) / Scalar;
-      Result.Im := (Num.Re * Denom.Im + Num.Im) / Scalar;
-    END
-  ELSE
-    BEGIN
-      Scalar := Denom.Im;
-      Denom.Re := Denom.Re / Scalar;
-(*    Denom.Im := -1.0;  is implied *)
-      Scalar := (Sqr(Denom.Re) + 1.0) * Scalar;
-      Result.Re := (Num.Re * Denom.Re + Num.Im) / Scalar;
-      Result.Im := (Num.Im * Denom.Re - Num.Re) / Scalar;
-    END;
-END;
+  if (abs(denom.re) > abs(denom.im)) then
+    begin
+      scalar := denom.re;
+      denom.im := - denom.im / scalar;
+(*    denom.re := 1.0;  is implied *)
+      scalar := (sqr(denom.im) + 1.0) * scalar;
+      result.re := (num.re - num.im * denom.im) / scalar;
+      result.im := (num.re * denom.im + num.im) / scalar;
+    end
+  else
+    begin
+      scalar := denom.im;
+      denom.re := denom.re / scalar;
+(*    denom.im := -1.0;  is implied *)
+      scalar := (sqr(denom.re) + 1.0) * scalar;
+      result.re := (num.re * denom.re + num.im) / scalar;
+      result.im := (num.im * denom.re - num.re) / scalar;
+    end;
+end;
 
-PROCEDURE Carcsin(A : Complex;
-                   VAR Result : Complex); (* inverse sine of complex A       *)
-VAR
-  Temp          : Complex;
+procedure carcsin(a : complex;
+                   var result : complex); (* inverse sine of complex a       *)
+var
+  temp          : complex;
 
-BEGIN
-  Csqr(A, Temp);
-  Csub(Cone, Temp, Temp);
-  Csqrt(Temp, Temp);
-  Cmult(Ci, A, A);
-  Csub(Temp, A, Temp);
-  Cln(Temp, Temp);
-  Cmult(Ci, Temp, Result)
-END;
+begin
+  csqr(a, temp);
+  csub(cone, temp, temp);
+  csqrt(temp, temp);
+  cmult(ci, a, a);
+  csub(temp, a, temp);
+  cln(temp, temp);
+  cmult(ci, temp, result)
+end;
 
-PROCEDURE Carccos(A : Complex;
-                   VAR Result : Complex); (* inverse cosine of complex A     *)
-VAR
-  Temp          : Complex;
+procedure carccos(a : complex;
+                   var result : complex); (* inverse cosine of complex a     *)
+var
+  temp          : complex;
 
-BEGIN
-  Csqr(A, Temp);
-  Csub(Temp, Cone, Temp);
-  Csqrt(Temp, Temp);
-  Csub(A, Temp, Temp);
-  Cln(Temp, Temp);
-  Cmult(Ci, Temp, Result)
-END;
+begin
+  csqr(a, temp);
+  csub(temp, cone, temp);
+  csqrt(temp, temp);
+  csub(a, temp, temp);
+  cln(temp, temp);
+  cmult(ci, temp, result)
+end;
 
-PROCEDURE Carctan(A : Complex;
-                   VAR Result : Complex); (* inverse tangent of complex A    *)
-VAR
-  Temp          : DOUBLE;
+procedure carctan(a : complex;
+                   var result : complex); (* inverse tangent of complex a    *)
+var
+  temp          : real  ;
 
-BEGIN
-  Temp := Sqr(A.Re);
-  Result.Re := 0.5 * Atan2((1.0 - Temp - Sqr(A.Im)),2.0 * A.Re);
-  Result.Im := 0.25 * Ln((Sqr(1.0 + A.Im) + Temp) / (Sqr(1.0 - A.Im) + Temp));
-END;
+begin
+  temp := sqr(a.re);
+  result.re := 0.5 * atan2((1.0 - temp - sqr(a.im)),2.0 * a.re);
+  result.im := 0.25 * ln((sqr(1.0 + a.im) + temp) / (sqr(1.0 - a.im) + temp));
+end;
 
-PROCEDURE PolyClear(VAR Ptr : PolyPtr); (* remove a polynomial               *)
-VAR
-  Tempptr       : PolyPtr;
+procedure polyclear(var ptr : polyptr); (* remove a polynomial               *)
+var
+  tempptr       : polyptr;
 
-BEGIN
-  WHILE Ptr <> NIL DO                 (* for all polynomial coefficients     *)
-    BEGIN
-      Tempptr := Ptr^.Link;           (* store link to the next coefficient  *)
-      Dispose(Ptr);                   (* free memory at current coefficient  *)
-      Ptr := Tempptr;                 (* go to next coefficient              *)
-    END;
-END;
+begin
+  while ptr <> nil do                 (* for all polynomial coefficients     *)
+    begin
+      tempptr := ptr^.link;           (* store link to the next coefficient  *)
+      dispose(ptr);                   (* free memory at current coefficient  *)
+      ptr := tempptr;                 (* go to next coefficient              *)
+    end;
+end;
 
-PROCEDURE PolyNext(VAR Ptr : PolyPtr); (* new linked list element            *)
-BEGIN
-  New(Ptr);                           (* get memory space for a coefficient  *)
-  Ptr^.Coeff := Czero;                (* set the coefficient to zero         *)
-  Ptr^.Link := NIL;                   (* next element in the list is
+procedure polynext(var ptr : polyptr); (* new linked list element            *)
+begin
+  new(ptr);                           (* get memory space for a coefficient  *)
+  ptr^.coeff := czero;                (* set the coefficient to zero         *)
+  ptr^.link := nil;                   (* next element in the list is
                                          nonexistant                         *)
-END;
+end;
 
-FUNCTION PolyOrder (Z : PolyPtr) : BYTE; (* order of a polynomial            *)
-VAR
-  OrderCtr      : BYTE;               (* maximum order is 255                *)
+function polyorder (z : polyptr) : byte; (* order of a polynomial            *)
+var
+  orderctr      : byte;               (* maximum order is 255                *)
 
-BEGIN
-  OrderCtr := 0;                      (* return 0 for polynomial with one
+begin
+  orderctr := 0;                      (* return 0 for polynomial with one
                                          element                             *)
-  WHILE Z^.Link <> NIL DO             (* last element in list ?              *)
-    BEGIN
-      Inc(OrderCtr);                  (* count number of times through loop  *)
-      Z := Z^.Link;                   (* go to next coefficient              *)
-    END;
-  PolyOrder := OrderCtr;
-END;
+  while z^.link <> nil do             (* last element in list ?              *)
+    begin
+      inc(orderctr);                  (* count number of times through loop  *)
+      z := z^.link;                   (* go to next coefficient              *)
+    end;
+  polyorder := orderctr;
+end;
 
-PROCEDURE PolyNew(N : BYTE;           (* create a zero polynomial of length N>0
+procedure polynew(n : byte;           (* create a zero polynomial of length n>0
                                                                              *)
-                   VAR Z : PolyPtr);  (* ** Z must be an existing polynomial **
+                   var z : polyptr);  (* ** z must be an existing polynomial **
                                                                              *)
-VAR
-  I             : BYTE;               (* maximum order is 255                *)
-  Ztemp         : PolyPtr;            (* to move through coefficient list    *)
+var
+  i             : byte;               (* maximum order is 255                *)
+  ztemp         : polyptr;            (* to move through coefficient list    *)
 
-BEGIN
-  PolyClear(Z);                       (* free existing polynomial location   *)
-  PolyNext(Z);                        (* get zeroth coefficient              *)
-  Ztemp := Z;                         (* Z stays at first element of list    *)
-  FOR I := 1 TO N DO                  (* add other coefficients to the list  *)
-    BEGIN
-      PolyNext(Ztemp^.Link);
-      Ztemp := Ztemp^.Link;
-    END;
-END;
+begin
+  polyclear(z);                       (* free existing polynomial location   *)
+  polynext(z);                        (* get zeroth coefficient              *)
+  ztemp := z;                         (* z stays at first element of list    *)
+  for i := 1 to n do                  (* add other coefficients to the list  *)
+    begin
+      polynext(ztemp^.link);
+      ztemp := ztemp^.link;
+    end;
+end;
 
-PROCEDURE PolyAssign(X : PolyPtr;     (* generate new polynomial at Y with   *)
-                   VAR Y : PolyPtr);  (* same coefficients as poly at X      *)
-VAR
-  I             : BYTE;               (* length of polynomial X              *)
-  Ytemp, YtStart : PolyPtr;           (* to move through the list            *)
+procedure polyassign(x : polyptr;     (* generate new polynomial at y with   *)
+                   var y : polyptr);  (* same coefficients as poly at x      *)
+var
+  i             : byte;               (* length of polynomial x              *)
+  ytemp, ytstart : polyptr;           (* to move through the list            *)
   (* maximum order is 255                                                    *)
 
-BEGIN
-  IF X <> NIL THEN
-    BEGIN
-      I := PolyOrder(X);              (* order of X                          *)
-      Ytemp := NIL;                   (* initialize Ytemp                    *)
-      PolyNew(I, Ytemp);              (* get new poly of same order          *)
-      YtStart := Ytemp;               (* remember first element of list      *)
-      WHILE X <> NIL DO               (* go through X                        *)
-        BEGIN
-          Ytemp^.Coeff := X^.Coeff;   (* assign X coef to Y coef             *)
-          Ytemp := Ytemp^.Link;       (* locate next element of Y            *)
-          X := X^.Link;               (* locate next element of X            *)
-        END;
-      PolyClear(Y);                   (* in case PolyAssign(P1,P1)           *)
-      Y := YtStart;
-    END
-  ELSE PolyClear(Y);
-END;
+begin
+  if x <> nil then
+    begin
+      i := polyorder(x);              (* order of x                          *)
+      ytemp := nil;                   (* initialize ytemp                    *)
+      polynew(i, ytemp);              (* get new poly of same order          *)
+      ytstart := ytemp;               (* remember first element of list      *)
+      while x <> nil do               (* go through x                        *)
+        begin
+          ytemp^.coeff := x^.coeff;   (* assign x coef to y coef             *)
+          ytemp := ytemp^.link;       (* locate next element of y            *)
+          x := x^.link;               (* locate next element of x            *)
+        end;
+      polyclear(y);                   (* in case polyassign(p1,p1)           *)
+      y := ytstart;
+    end
+  else polyclear(y);
+end;
 
-PROCEDURE Root_Poly(Root : Complex;   (* form polynomial S-Root              *)
-                   VAR Result : PolyPtr);
-VAR
-  ResultTemp    : PolyPtr;            (* to move through two element list    *)
+procedure root_poly(root : complex;   (* form polynomial s-root              *)
+                   var result : polyptr);
+var
+  resulttemp    : polyptr;            (* to move through two element list    *)
 
-BEGIN
-  PolyNew(1, Result);                 (* generate two element list           *)
-  ResultTemp := Result;               (* keep Result at 1st element of list  *)
-  ResultTemp^.Coeff.Im := - Root.Im;  (* zeroth coefficient                  *)
-  ResultTemp^.Coeff.Re := - Root.Re;
-  ResultTemp := ResultTemp^.Link;     (* move to S*1 coefficient             *)
-  ResultTemp^.Coeff := Cone;          (* set it equal to 1 + j0              *)
-END;
+begin
+  polynew(1, result);                 (* generate two element list           *)
+  resulttemp := result;               (* keep result at 1st element of list  *)
+  resulttemp^.coeff.im := - root.im;  (* zeroth coefficient                  *)
+  resulttemp^.coeff.re := - root.re;
+  resulttemp := resulttemp^.link;     (* move to s*1 coefficient             *)
+  resulttemp^.coeff := cone;          (* set it equal to 1 + j0              *)
+end;
 
-PROCEDURE PolyMult(Xx, Yy : PolyPtr;
-                   VAR Z : PolyPtr);
-VAR
-  X, Y, Ypt, Zpt, Zptsave : PolyPtr;
-  Result        : Complex;
-  I             : BYTE;               (* maximum order is 255                *)
+procedure polymult(xx, yy : polyptr;
+                   var z : polyptr);
+var
+  x, y, ypt, zpt, zptsave : polyptr;
+  result        : complex;
+  i             : byte;               (* maximum order is 255                *)
 
-BEGIN
-  X := NIL;                           (* don't give PolyAssign trash         *)
-  Y := NIL;                           (* don't give PolyAssign trash         *)
-  PolyAssign(Xx, X);                  (* copy Xx, in case PolyMult(A,A,A)    *)
-  PolyAssign(Yy, Y);                  (* copy Yy, in case PolyMult(A,A,A)    *)
-  I := PolyOrder(X) + PolyOrder(Y);   (* resultant polynomial order          *)
-  PolyClear(Z);                       (* release existing Z                  *)
-  PolyNew(I, Z);                      (* make a list of length I             *)
-  Zptsave := Z;                       (* keep Z at start of the list         *)
-  WHILE X <> NIL DO                   (* for each element of x               *)
-    BEGIN
-      Zpt := Zptsave;                 (* remember start of list 2nd loop     *)
-      Ypt := Y;                       (* remember start of list 2nd loop     *)
-      WHILE Ypt <> NIL DO             (* 2nd loop goes over elements of Y    *)
-        BEGIN                         (* scale Y polynomial by X coeff       *)
-          Cmult(X^.Coeff, Ypt^.Coeff, Result);
-          Cadd(Result, Zpt^.Coeff, Zpt^.Coeff);
-          Ypt := Ypt^.Link;           (* next element in Y                   *)
-          Zpt := Zpt^.Link;           (* next element in Z                   *)
-        END;
-      Zptsave := Zptsave^.Link;       (* begin at next higher element in Z   *)
-      X := X^.Link;                   (* by multiplying by next X element    *)
-    END;
-  PolyClear(X);                       (* release X storage                   *)
-  PolyClear(Y);                       (* release Y storage                   *)
-END;
+begin
+  x := nil;                           (* don't give polyassign trash         *)
+  y := nil;                           (* don't give polyassign trash         *)
+  polyassign(xx, x);                  (* copy xx, in case polymult(a,a,a)    *)
+  polyassign(yy, y);                  (* copy yy, in case polymult(a,a,a)    *)
+  i := polyorder(x) + polyorder(y);   (* resultant polynomial order          *)
+  polyclear(z);                       (* release existing z                  *)
+  polynew(i, z);                      (* make a list of length i             *)
+  zptsave := z;                       (* keep z at start of the list         *)
+  while x <> nil do                   (* for each element of x               *)
+    begin
+      zpt := zptsave;                 (* remember start of list 2nd loop     *)
+      ypt := y;                       (* remember start of list 2nd loop     *)
+      while ypt <> nil do             (* 2nd loop goes over elements of y    *)
+        begin                         (* scale y polynomial by x coeff       *)
+          cmult(x^.coeff, ypt^.coeff, result);
+          cadd(result, zpt^.coeff, zpt^.coeff);
+          ypt := ypt^.link;           (* next element in y                   *)
+          zpt := zpt^.link;           (* next element in z                   *)
+        end;
+      zptsave := zptsave^.link;       (* begin at next higher element in z   *)
+      x := x^.link;                   (* by multiplying by next x element    *)
+    end;
+  polyclear(x);                       (* release x storage                   *)
+  polyclear(y);                       (* release y storage                   *)
+end;
 
-PROCEDURE PolyForm(A : RootStack;     (* form a polynomial B from the
-                                                        roots of rootstack A *)
-                   VAR B : PolyPtr);
-VAR
-  Tply          : PolyPtr;             (* will hold the 1st order polynomial *)
-  DupRoots      : RootStack;           (* get a duplicate rootStack *)
-  Troot         : Complex;
+procedure polyform(a : rootstack;     (* form a polynomial b from the
+                                                        roots of rootstack a *)
+                   var b : polyptr);
+var
+  tply          : polyptr;             (* will hold the 1st order polynomial *)
+  duproots      : rootstack;           (* get a duplicate rootstack *)
+  troot         : complex;
 
-BEGIN
-  PolyClear(B);                        (* erase B *)
-  IF A <> NIL THEN
-  BEGIN
-   DupRoots := NIL;                    (* initialize DupRoots *)
-   RootCopy(A,DupRoots);               (* don't destroy the contents of A *)
-   RootPop(DupRoots,Troot);            (* get first root *)
-   Root_Poly(Troot,B);                 (* form 1st order poly *)
-   Tply := NIL;                        (* initialize Tply *)
-   WHILE DupRoots <> NIL DO            (* for other each root *)
-         BEGIN
-         RootPop(DupRoots,Troot);
-         Root_Poly(Troot,Tply);       (* form 1st order poly *)
-         PolyMult(Tply,B,B);               (* multiply by current B *)
-         END;
-   PolyClear(Tply);                        (* free temporary polynomial *)
-   RootClear(DupRoots);                    (* free temporary rootlist *)
-  END;
-END;
+begin
+  polyclear(b);                        (* erase b *)
+  if a <> nil then
+  begin
+   duproots := nil;                    (* initialize duproots *)
+   rootcopy(a,duproots);               (* don't destroy the contents of a *)
+   rootpop(duproots,troot);            (* get first root *)
+   root_poly(troot,b);                 (* form 1st order poly *)
+   tply := nil;                        (* initialize tply *)
+   while duproots <> nil do            (* for other each root *)
+         begin
+         rootpop(duproots,troot);
+         root_poly(troot,tply);       (* form 1st order poly *)
+         polymult(tply,b,b);               (* multiply by current b *)
+         end;
+   polyclear(tply);                        (* free temporary polynomial *)
+   rootclear(duproots);                    (* free temporary rootlist *)
+  end;
+end;
 
-PROCEDURE PolyPrint(X : PolyPtr);
-BEGIN
-  WHILE X <> NIL DO
-    BEGIN
-      Writeln(X^.Coeff.Re, X^.Coeff.Im);
-      X := X^.Link;
-   
-    END;
-END;
+procedure polyprint(x : polyptr);
+begin
+  while x <> nil do
+    begin
+      writeln(x^.coeff.re, x^.coeff.im);
+      x := x^.link;
+    end;
+end;
 
-PROCEDURE PolyPower(I : BYTE;           (* raise a polynomial X to power I *)
-                   X  : PolyPtr;
-                   VAR Y : PolyPtr);    (* assign to polynomial Y *)
-VAR
-  N             : BYTE;
-  Xtemp         : PolyPtr;
+procedure polypower(i : byte;           (* raise a polynomial x to power i *)
+                   x  : polyptr;
+                   var y : polyptr);    (* assign to polynomial y *)
+var
+  n             : byte;
+  xtemp         : polyptr;
 
-BEGIN
-  IF I = 0 THEN                         (* expression to the 0 power is 1 *)
-    BEGIN
-      PolyClear(Y);
-      PolyNext(Y);
-      Y^.Coeff.Re := 1.0;
-    END
-  ELSE                                  (* not 0 power *)
-    BEGIN
-      Xtemp := NIL;                     (* initialize Xtemp *)
-      PolyAssign(X, Xtemp);             (* in case called PolyPwr(3,A,A) *)
-      PolyAssign(Xtemp, Y);             (* first power *)
-      N := 1;
-      WHILE N < I DO                    (* continuing powers *)
-        BEGIN
-          PolyMult(Xtemp, Y, Y);        (* multiply by X *)
-          INC(N);                       (* current power *)
-        END;                          (* WHILE                               *)
-      PolyClear(Xtemp);
-    END                               (* IF                                  *)
-END;
+begin
+  if i = 0 then                         (* expression to the 0 power is 1 *)
+    begin
+      polyclear(y);
+      polynext(y);
+      y^.coeff.re := 1.0;
+    end
+  else                                  (* not 0 power *)
+    begin
+      xtemp := nil;                     (* initialize xtemp *)
+      polyassign(x, xtemp);             (* in case called polypwr(3,a,a) *)
+      polyassign(xtemp, y);             (* first power *)
+      n := 1;
+      while n < i do                    (* continuing powers *)
+        begin
+          polymult(xtemp, y, y);        (* multiply by x *)
+          inc(n);                       (* current power *)
+        end;                          (* while                               *)
+      polyclear(xtemp);
+    end                               (* if                                  *)
+end;
 
-PROCEDURE PolyEval(X : PolyPtr;       (* evaluate polynomial X in S          *)
-                   S : Complex;       (* at complex value S                  *)
-                   VAR Result : Complex); (* assign to Result                *)
-VAR
-  Tempr, Temps  : Complex;
+procedure polyeval(x : polyptr;       (* evaluate polynomial x in s          *)
+                   s : complex;       (* at complex value s                  *)
+                   var result : complex); (* assign to result                *)
+var
+  tempr, temps  : complex;
 
-BEGIN
-  Temps := S;                         (* in generating powers of S           *)
-  IF X <> NIL THEN                    (* any coefficients in X               *)
-    BEGIN
-      Result := X^.Coeff;             (* add the constant of the polynomial  *)
-      X := X^.Link;                   (* go to S*1 coefficient               *)
-      WHILE X <> NIL DO               (* continue for each coefficient       *)
-        BEGIN
-          Cmult(X^.Coeff, Temps, Tempr); (* multiply by S*n                  *)
-          Cadd(Result, Tempr, Result); (* add to running sum                 *)
-          Cmult(S, Temps, Temps);     (* form S*(n+1)                        *)
-          X := X^.Link;               (* next order                          *)
-        END;                          (* while                               *)
-    END;
-END;
+begin
+  temps := s;                         (* in generating powers of s           *)
+  if x <> nil then                    (* any coefficients in x               *)
+    begin
+      result := x^.coeff;             (* add the constant of the polynomial  *)
+      x := x^.link;                   (* go to s*1 coefficient               *)
+      while x <> nil do               (* continue for each coefficient       *)
+        begin
+          cmult(x^.coeff, temps, tempr); (* multiply by s*n                  *)
+          cadd(result, tempr, result); (* add to running sum                 *)
+          cmult(s, temps, temps);     (* form s*(n+1)                        *)
+          x := x^.link;               (* next order                          *)
+        end;                          (* while                               *)
+    end;
+end;
 
-PROCEDURE PolyAdd(X, Y : PolyPtr;     (* add polynomials X and Y             *)
-                   VAR Z : PolyPtr);  (* assign to polynomial Z              *)
-VAR
-  Xtemp, Ytemp, Tptr1, Tptr2, Tptr3 : PolyPtr;
+procedure polyadd(x, y : polyptr;     (* add polynomials x and y             *)
+                   var z : polyptr);  (* assign to polynomial z              *)
+var
+  xtemp, ytemp, tptr1, tptr2, tptr3 : polyptr;
 
-BEGIN
-  Xtemp := NIL;                       (* Initialize undefined polynomials    *)
-  Ytemp := NIL;
-  PolyAssign(X, Xtemp);               (* temporary working polynomials       *)
-  PolyAssign(Y, Ytemp);
-  PolyClear(Z);                       (* in case of PolyAdd(P1,P2,P2)        *)
-  IF PolyOrder(Xtemp) > PolyOrder(Ytemp) THEN (* want to add the smaller to
+begin
+  xtemp := nil;                       (* initialize undefined polynomials    *)
+  ytemp := nil;
+  polyassign(x, xtemp);               (* temporary working polynomials       *)
+  polyassign(y, ytemp);
+  polyclear(z);                       (* in case of polyadd(p1,p2,p2)        *)
+  if polyorder(xtemp) > polyorder(ytemp) then (* want to add the smaller to
                                          larger                              *)
-    BEGIN                             (* Z will be same order of the larger  *)
-      Tptr1 := Xtemp;
-      Tptr2 := Ytemp;
-    END
-  ELSE
-    BEGIN
-      Tptr1 := Ytemp;
-      Tptr2 := Xtemp;
-    END;
-  PolyAssign(Tptr1, Z);               (* Z is 0 + the larger                 *)
-  Tptr3 := Z;                         (* keep Z at start of polynomial       *)
-  WHILE Tptr2 <> NIL DO               (* for each coeff of the smaller       *)
-    BEGIN
-      Cadd(Tptr3^.Coeff, Tptr2^.Coeff, Tptr3^.Coeff); (* Z + smaller         *)
-      Tptr3 := Tptr3^.Link;           (* next Z coef                         *)
-      Tptr2 := Tptr2^.Link;           (* next smaller coef                   *)
-    END;
-  PolyClear(Xtemp);                   (* free Xtemp and Ytemp storage        *)
-  PolyClear(Ytemp);
-END;
+    begin                             (* z will be same order of the larger  *)
+      tptr1 := xtemp;
+      tptr2 := ytemp;
+    end
+  else
+    begin
+      tptr1 := ytemp;
+      tptr2 := xtemp;
+    end;
+  polyassign(tptr1, z);               (* z is 0 + the larger                 *)
+  tptr3 := z;                         (* keep z at start of polynomial       *)
+  while tptr2 <> nil do               (* for each coeff of the smaller       *)
+    begin
+      cadd(tptr3^.coeff, tptr2^.coeff, tptr3^.coeff); (* z + smaller         *)
+      tptr3 := tptr3^.link;           (* next z coef                         *)
+      tptr2 := tptr2^.link;           (* next smaller coef                   *)
+    end;
+  polyclear(xtemp);                   (* free xtemp and ytemp storage        *)
+  polyclear(ytemp);
+end;
 
-PROCEDURE PolyNegate(X : PolyPtr);    (* change poly in S to poly in -S      *)
-VAR
-  Temp          : Complex;            (* to be 1+j0 or -1+j0                 *)
+procedure polynegate(x : polyptr);    (* change poly in s to poly in -s      *)
+var
+  temp          : complex;            (* to be 1+j0 or -1+j0                 *)
 
-BEGIN
-  Temp := Cone;                       (* initially 1+j0                      *)
-  WHILE X <> NIL DO                   (* for each coefficient                *)
-    BEGIN
-      Cmult(X^.Coeff, Temp, X^.Coeff); (* multiply by 1 or -1                *)
-      Temp.Re := - Temp.Re;           (* change 1 to -1 or -1 to 1           *)
-      X := X^.Link;                   (* next coefficient                    *)
-    END;
-END;
+begin
+  temp := cone;                       (* initially 1+j0                      *)
+  while x <> nil do                   (* for each coefficient                *)
+    begin
+      cmult(x^.coeff, temp, x^.coeff); (* multiply by 1 or -1                *)
+      temp.re := - temp.re;           (* change 1 to -1 or -1 to 1           *)
+      x := x^.link;                   (* next coefficient                    *)
+    end;
+end;
 
-PROCEDURE PolyScale(X : PolyPtr;      (* multiply polynomial X by            *)
-                   Scalar : Complex); (* complex number Scalar               *)
-BEGIN
-  WHILE X <> NIL DO                   (* go through each element of X        *)
-    BEGIN
-      Cmult(Scalar, X^.Coeff, X^.Coeff); (* scale the coefficient            *)
-      X := X^.Link;                   (* locate next element of X            *)
-    END;
-END;
+procedure polyscale(x : polyptr;      (* multiply polynomial x by            *)
+                   scalar : complex); (* complex number scalar               *)
+begin
+  while x <> nil do                   (* go through each element of x        *)
+    begin
+      cmult(scalar, x^.coeff, x^.coeff); (* scale the coefficient            *)
+      x := x^.link;                   (* locate next element of x            *)
+    end;
+end;
 
-PROCEDURE PolyUnary(X : PolyPtr);     (* make the polynomial X unary         *)
+procedure polyunary(x : polyptr);     (* make the polynomial x unary         *)
 (* i.e. the leading coef = 1                                                 *)
-VAR
-  Xtemp         : PolyPtr;
-  Scalar        : Complex;
+var
+  xtemp         : polyptr;
+  scalar        : complex;
 
-BEGIN
-  Xtemp := X;                         (* remember the start of the list      *)
-  WHILE X <> NIL DO                   (* go through each element of X        *)
-    BEGIN                             (* to locate last element              *)
-      Scalar := X^.Coeff;             (* looking for the last coefficient    *)
-      X := X^.Link;                   (* locate next element of X            *)
-    END;                              (* while                               *)
-  Cinv(Scalar, Scalar);               (* inverse of last element of X        *)
-  PolyScale(Xtemp, Scalar);           (* will make last element = 1.0        *)
-END;
+begin
+  xtemp := x;                         (* remember the start of the list      *)
+  while x <> nil do                   (* go through each element of x        *)
+    begin                             (* to locate last element              *)
+      scalar := x^.coeff;             (* looking for the last coefficient    *)
+      x := x^.link;                   (* locate next element of x            *)
+    end;                              (* while                               *)
+  cinv(scalar, scalar);               (* inverse of last element of x        *)
+  polyscale(xtemp, scalar);           (* will make last element = 1.0        *)
+end;
 
-PROCEDURE PolyDivide(Num, Denom : PolyPtr; (* Synthetic division *)
-                     VAR Quotient, Remainder: PolyPtr);
-VAR
-  TempN, TempD, TempQ, TempR : PolyPtr;
-  OrderNum, OrderDenom, OrderQuo  : BYTE;
-  LeadingCoef, LeadingCoefD : Complex;
-BEGIN
-  OrderNum := PolyOrder(Num);
-  OrderDenom := PolyOrder(Denom);
-  IF OrderNum > OrderDenom THEN
-    BEGIN
-      TempN := NIL;                   (* initialize temporary numerator     *)
-      TempD := NIL;                   (* initialize temporary denominator   *)
-      PolyAssign(Num,TempN);          (* in case PolyDivide(A,B,A,B)        *)
-      PolyAssign(Denom,TempD);        (* in case PolyDivide(A,B,A,B)        *)
-      WHILE TempN <> NIL DO           (* find the leading coef of the num   *)
-        BEGIN
-          LeadingCoef := TempN^.Coeff;
-          TempN       := TempN^.Link;
-        END;
-      WHILE TempD <> NIL DO           (* find the leading coef of the denom *)
-        BEGIN
-          LeadingCoefD:= TempD^.Coeff;
-          TempD       := TempD^.Link;
-        END;
-      Cdiv(LeadingCoef,LeadingCoefD,LeadingCoef);  (* quotient leading coef *)
-      TempQ := NIL;                   (* initialize temporary quotient      *)
-      PolyClear(Quotient);
-      PolyNew((OrderNum-OrderDenom),Quotient);
-      TempR := NIL;                   (* initialize temporary remainder     *)
+procedure polydivide(num, denom : polyptr; (* synthetic division *)
+                     var quotient, remainder: polyptr);
+var
+  tempn, tempd, tempq, tempr : polyptr;
+  ordernum, orderdenom, orderquo  : byte;
+  leadingcoef, leadingcoefd : complex;
+begin
+  ordernum := polyorder(num);
+  orderdenom := polyorder(denom);
+  if ordernum > orderdenom then
+    begin
+      tempn := nil;                   (* initialize temporary numerator     *)
+      tempd := nil;                   (* initialize temporary denominator   *)
+      polyassign(num,tempn);          (* in case polydivide(a,b,a,b)        *)
+      polyassign(denom,tempd);        (* in case polydivide(a,b,a,b)        *)
+      while tempn <> nil do           (* find the leading coef of the num   *)
+        begin
+          leadingcoef := tempn^.coeff;
+          tempn       := tempn^.link;
+        end;
+      while tempd <> nil do           (* find the leading coef of the denom *)
+        begin
+          leadingcoefd:= tempd^.coeff;
+          tempd       := tempd^.link;
+        end;
+      cdiv(leadingcoef,leadingcoefd,leadingcoef);  (* quotient leading coef *)
+      tempq := nil;                   (* initialize temporary quotient      *)
+      polyclear(quotient);
+      polynew((ordernum-orderdenom),quotient);
+      tempr := nil;                   (* initialize temporary remainder     *)
 
-      PolyClear(Quotient);
-      PolyClear(Remainder);
+      polyclear(quotient);
+      polyclear(remainder);
 
+    end
+  else  (* denominator cannot divide into numerator *)
+    begin
+      polyassign(num,remainder);
+      polyclear(quotient);
+    end;
+end;
 
+procedure rootpush(r : complex;       (* add root r to a rootstack l         *)
+                   var l : rootstack);
+var
+  newspace : rootstack;
+begin
+  new(newspace);                      (* get memory space for new root       *)
+  newspace^.coeff := r;               (* set the coefficient to r            *)
+  newspace^.link  := l;               (* next element in the list is l       *)
+  l               := newspace;        (* new top of stack                    *)
+end;
 
+procedure rootpop(var l : rootstack;      (* get root from a rootstack l *)
+                  var r : complex);
+var
+  ltemp : rootstack;
+begin
+  if l <> nil then
+    begin
+      r := l^.coeff;                  (* assign r from first stack element   *)
+      ltemp := l;                     (* remember top stack element location *)
+      l := l^.link;                   (* move l to second member of stack    *)
+      dispose(ltemp);                 (* free memory at old top of stack     *)
+    end;
+end;
 
+procedure rootclear(var l : rootstack);   (* clear a rootstack l             *)
+var
+  dummy : complex;
+begin
+  while l <> nil do rootpop(l,dummy); (* pop until empty                     *)
+end;
 
-
-
-    END
-  ELSE  (* denominator cannot divide into numerator *)
-    BEGIN
-      PolyAssign(Num,Remainder);
-      PolyClear(Quotient);
-    END;
-END;
-
-PROCEDURE RootPush(R : Complex;       (* add root R to a rootstack L         *)
-                   VAR L : RootStack);
-VAR
-  NewSpace : RootStack;
-BEGIN
-  New(NewSpace);                      (* get memory space for new root       *)
-  NewSpace^.Coeff := R;               (* set the coefficient to R            *)
-  NewSpace^.Link  := L;               (* next element in the list is L       *)
-  L               := NewSpace;        (* new top of stack                    *)
-END;
-
-PROCEDURE RootPop(VAR L : RootStack;      (* get root from a rootstack L *)
-                  VAR R : Complex);
-VAR
-  Ltemp : RootStack;
-BEGIN
-  IF L <> NIL THEN
-    BEGIN
-      R := L^.Coeff;                  (* assign R from first stack element   *)
-      Ltemp := L;                     (* remember top stack element location *)
-      L := L^.Link;                   (* move L to second member of stack    *)
-      Dispose(Ltemp);                 (* free memory at old top of stack     *)
-    END;
-END;
-
-PROCEDURE RootClear(VAR L : RootStack);   (* clear a rootstack L             *)
-VAR
-  Dummy : Complex;
-BEGIN
-  WHILE L <> NIL DO RootPop(L,Dummy); (* pop until empty                     *)
-END;
-
-PROCEDURE RootRotate(N : BYTE;VAR L : RootStack);(* rotate rootstack L by N  *)
+procedure rootrotate(n : byte;var l : rootstack);(* rotate rootstack l by n  *)
                                             (* so that last moves toward 1st *)
-VAR
-  MarkTop, Temp  : RootStack;
-  Count : Byte;
-BEGIN
-  IF (L <> NIL) AND (N <> 0) THEN
-    BEGIN                                   (* make the stack a ring *)
-      MarkTop := L;                         (* link to top of L *)
-      While L <> NIL DO                     (* search to the end of the list *)
-        Begin
-          Temp := L;                        (* Previous element *)
-          L    := L^.Link;
-        END;
-      Temp^.Link := MarkTop;           (* wrap the last element to the first *)
-      Temp := MarkTop;                 (* move temp back to top of the list  *)
+var
+  marktop, temp  : rootstack;
+  count : byte;
+begin
+  if (l <> nil) and (n <> 0) then
+    begin                                   (* make the stack a ring *)
+      marktop := l;                         (* link to top of l *)
+      while l <> nil do                     (* search to the end of the list *)
+        begin
+          temp := l;                        (* previous element *)
+          l    := l^.link;
+        end;
+      temp^.link := marktop;           (* wrap the last element to the first *)
+      temp := marktop;                 (* move temp back to top of the list  *)
 
 (* in the following we locate the bottom of the list which is currently      *)
-(* linked to the first element of the list.  Set the link at the bottom to   *)
-(* NIL, and its link (being the top) to L                                    *)
+(* linked to the first element of the list.  set the link at the bottom to   *)
+(* nil, and its link (being the top) to l                                    *)
 
-      FOR Count := 1 to N DO           (* will locate bottom of list *)
-          Temp := Temp^.Link;
-      L := Temp^.Link;                 (* pointer to the top of list *)
-      Temp^.Link := NIL;               (* split the ring *)
-    END;
-END;
+      for count := 1 to n do           (* will locate bottom of list *)
+          temp := temp^.link;
+      l := temp^.link;                 (* pointer to the top of list *)
+      temp^.link := nil;               (* split the ring *)
+    end;
+end;
 
-PROCEDURE RootCopy(S : RootStack;     (* copy a rootstack from S to D        *)
-                   VAR D: RootStack);
-VAR
-  Dtemp, DtempPrev : RootStack;
-BEGIN
-  If S <> D THEN                        (* if = then exit *)
-  BEGIN
-    IF D <> NIL THEN RootClear(D);      (* clear existing stack *)
-    IF S <> NIL THEN
-    BEGIN
-      New(Dtemp);                       (* first element *)
-      D := Dtemp;                       (* is at top of new stack *)
-      D^.Coeff := S^.Coeff;             (* copy the first root *)
-      D^.Link  := NIL;                  (* don't know if another element *)
-      S := S^.Link;                     (* move to second coeff *)
-      While S <> NIL DO
-        BEGIN
+procedure rootcopy(s : rootstack;     (* copy a rootstack from s to d        *)
+                   var d: rootstack);
+var
+  dtemp, dtempprev : rootstack;
+begin
+  if s <> d then                        (* if = then exit *)
+  begin
+    if d <> nil then rootclear(d);      (* clear existing stack *)
+    if s <> nil then
+    begin
+      new(dtemp);                       (* first element *)
+      d := dtemp;                       (* is at top of new stack *)
+      d^.coeff := s^.coeff;             (* copy the first root *)
+      d^.link  := nil;                  (* don't know if another element *)
+      s := s^.link;                     (* move to second coeff *)
+      while s <> nil do
+        begin
         writeln('rootcopy');
-        DtempPrev := Dtemp;
-        New(Dtemp);
-        Dtemp^.Coeff := S^.Coeff;       (* copy the root *)
-        DtempPrev^.Link := Dtemp;       (* tie to previous stack element *)
-        Dtemp^.Link := NIL;
-        S := S^.Link;
-        END; (* while *)
-    END; (* if *)
-  END;   (* if *)
-END; (* RootCopy *)
-BEGIN
-  Randomize;
-  Ln10 := Ln(10.0)
-END.
+        dtempprev := dtemp;
+        new(dtemp);
+        dtemp^.coeff := s^.coeff;       (* copy the root *)
+        dtempprev^.link := dtemp;       (* tie to previous stack element *)
+        dtemp^.link := nil;
+        s := s^.link;
+        end; (* while *)
+    end; (* if *)
+  end;   (* if *)
+end; (* rootcopy *)
+begin
+  randomize;
+  ln10 := ln(10.0)
+end.
 
