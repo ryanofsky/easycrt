@@ -53,9 +53,16 @@ procedure AssignCrt(var F: Text);
 
 {  RUSS   }
 
+procedure clearcolors;
+procedure makecolors;
+function getFcolor(X,Y:integer):plongint;
+function getBcolor(X,Y:integer):plongint;
+procedure killcolors;
+
 var TheDC: SDC;
     ldown,rdown: boolean;
     lastclick: points;
+    foreground, background: longint;
 
 procedure setpen(color: longint; linestyle, width: integer);
 procedure setbrush(color,bcolor:longint; style: integer);
@@ -199,7 +206,60 @@ const
 
 {   RUSS   }
 
-var existscrollv, existscrollh, enablescrollkeys, nazisize, thumbtracking: boolean;
+var existscrollv, existscrollh, enablescrollkeys, nazisize, thumbtracking, usecolors: boolean;
+    FColors, BColors: pchar;
+
+const nochars = 4;
+
+{procedure bfillchar(x:pchar; count: longint; value: byte);
+  var m,n: integer;             
+  begin
+    count := count * 4;
+    for n := 1 to (count div 8684) do
+      begin
+        fillchar(x,30,value);
+        x := @x[8464]; 
+      end; 
+    m := count-(count div 8464)*8464; 
+    writeln(m);
+    fillchar(x,m,0);
+  end;
+}
+procedure clearcolors;
+  var n: longint;
+  begin
+    for n := 0 to ScreenSize.X * ScreenSize.Y - 1 do
+      begin
+        plongint(@Fcolors[n*4])^ := foreground;
+        plongint(@Bcolors[n*4])^ := background;
+      end;
+  end;
+
+procedure makecolors;
+  begin
+    GetMem(FColors, ScreenSize.X * ScreenSize.Y * nochars);
+    GetMem(BColors, ScreenSize.X * ScreenSize.Y * nochars);
+  end;
+
+function getFcolor(X,Y:integer):plongint;
+  begin
+   Inc(Y, FirstLine);
+    if Y >= ScreenSize.Y then Dec(Y, ScreenSize.Y); 
+    getFcolor := @FColors[ (Y * ScreenSize.X + X)*nochars ] ;
+  end;
+
+function getBcolor(X,Y:integer):plongint;
+  begin
+   Inc(Y, FirstLine);
+    if Y >= ScreenSize.Y then Dec(Y, ScreenSize.Y); 
+    getBcolor := @BColors[ (Y * ScreenSize.X + X)*nochars ] ;
+  end;
+
+procedure killcolors;
+  begin
+    FreeMem(FColors, ScreenSize.X * ScreenSize.Y * nochars);
+    FreeMem(BColors, ScreenSize.X * ScreenSize.Y * nochars);
+  end;
 
 procedure setpen(color: longint; linestyle, width: integer);
   begin
@@ -588,7 +648,13 @@ procedure setbehave(aspect:integer; behavior:boolean);
       1: nazisize         := behavior;
       2: enablescrollkeys := behavior;
       3: thumbtracking    := behavior;
+      4: begin
+           if (not usecolors) and behavior then makecolors;
+           if (usecolors) and (not behavior) then killcolors;
+           usecolors := behavior;
+         end;
     end;
+    
 
 
   end;
@@ -998,19 +1064,17 @@ procedure WindowMinMaxInfo(MinMaxInfo: PMinMaxInfo);
 var
   X, Y: Integer;
   Metrics: TTextMetric;
-  Scrollfactx, Scrollfacty: integer;
+
 begin
   InitDeviceContext;
-  if existscrollh then scrollfactx := 1 else scrollfactx := 0;
-  if existscrollv then scrollfacty := 1 else scrollfacty := 0;
 
   GetTextMetrics(DC, Metrics);
   CharSize.X := Metrics.tmMaxCharWidth;
   CharSize.Y := Metrics.tmHeight + Metrics.tmExternalLeading;
   CharAscent := Metrics.tmAscent;
-  X := Min(ScreenSize.X * CharSize.X + scrollfactx*GetSystemMetrics(sm_CXVScroll),
+  X := Min(ScreenSize.X * CharSize.X + ord(existscrollv)*GetSystemMetrics(sm_CXVScroll),
     GetSystemMetrics(sm_CXScreen)) + GetSystemMetrics(sm_CXFrame) * 2;
-  Y := Min(ScreenSize.Y * CharSize.Y + scrollfacty*GetSystemMetrics(sm_CYHScroll) +
+  Y := Min(ScreenSize.Y * CharSize.Y + ord(existscrollh)*GetSystemMetrics(sm_CYHScroll) +
     GetSystemMetrics(sm_CYCaption), GetSystemMetrics(sm_CYScreen)) +
     GetSystemMetrics(sm_CYFrame) * 2;
   {rwh}
@@ -1276,6 +1340,9 @@ begin
   nazisize := TRUE;
   enablescrollkeys := FALSE;
   thumbtracking := TRUE;
+  usecolors := FALSE;
+  foreground := color[0];
+  background := color[15];
 end.
 
 {
