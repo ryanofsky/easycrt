@@ -1060,7 +1060,7 @@ var lng:integer;
 procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
   begin
     PrpFont.lfHeight         := -1*size;
-    PrpFont.lfWidth          := 0;
+    PrpFont.lfWidth          := round(size div 2);
     PrpFont.lfEscapement     := round(angle*10);
     PrpFont.lfWeight         := weight*100;
     PrpFont.lfItalic         := byte(italic);
