@@ -1,7 +1,11 @@
-uses easycrt,easygdi;
+{ EasyCRT 4.01 / EasyGDI 2.01 Demo }
+
+uses easycrt,easygdi,winprocs,wintypes;
 
 const overlap = 10;
 const maxheight = 300;
+const wheight = 480;
+const wwidth = 640;
 
 FUNCTION PwrXY (X, Y : real) : real; (* raise x to the power y           *)
 BEGIN
@@ -57,25 +61,25 @@ var path: string;
     
   begin
 
-    letters[1]  := loadbmp(CRT,appdir+'\e.bmp');
-    letters[2]  := loadbmp(CRT,appdir+'\a.bmp');
-    letters[3]  := loadbmp(CRT,appdir+'\s.bmp');
-    letters[4]  := loadbmp(CRT,appdir+'\y.bmp');
-    letters[5]  := loadbmp(CRT,appdir+'\c.bmp');
-    letters[6]  := loadbmp(CRT,appdir+'\r.bmp');
-    letters[7]  := loadbmp(CRT,appdir+'\t.bmp');
+    letters[1]  := loadbmp(appdir+'\e.bmp');
+    letters[2]  := loadbmp(appdir+'\a.bmp');
+    letters[3]  := loadbmp(appdir+'\s.bmp');
+    letters[4]  := loadbmp(appdir+'\y.bmp');
+    letters[5]  := loadbmp(appdir+'\c.bmp');
+    letters[6]  := loadbmp(appdir+'\r.bmp');
+    letters[7]  := loadbmp(appdir+'\t.bmp');
 
-    lettersm[1] := loadbmp(CRT,appdir+'\em.bmp');
-    lettersm[2] := loadbmp(CRT,appdir+'\am.bmp');
-    lettersm[3] := loadbmp(CRT,appdir+'\sm.bmp');
-    lettersm[4] := loadbmp(CRT,appdir+'\ym.bmp');
-    lettersm[5] := loadbmp(CRT,appdir+'\cm.bmp');
-    lettersm[6] := loadbmp(CRT,appdir+'\rm.bmp');
-    lettersm[7] := loadbmp(CRT,appdir+'\tm.bmp');
+    lettersm[1] := loadbmp(appdir+'\em.bmp');
+    lettersm[2] := loadbmp(appdir+'\am.bmp');
+    lettersm[3] := loadbmp(appdir+'\sm.bmp');
+    lettersm[4] := loadbmp(appdir+'\ym.bmp');
+    lettersm[5] := loadbmp(appdir+'\cm.bmp');
+    lettersm[6] := loadbmp(appdir+'\rm.bmp');
+    lettersm[7] := loadbmp(appdir+'\tm.bmp');
 
-    totalwidth := 0;
+    totalwidth := -8*overlap;
     for i := 1 to 7 do
-      totalwidth := totalwidth + getwidth(letters[i]) - overlap;
+      inc(totalwidth,getwidth(letters[i]));
 
     totalheight := getheight(letters[1]);
     x := (getpos(clientw)-totalwidth) div 2+totalwidth;
@@ -132,11 +136,15 @@ var path: string;
 
 begin
   initwincrt;
+  setbehave(restrictsize,FALSE);
+  setsize(wwidth,wheight);
+  setpos((getsystemmetrics(SM_CXSCREEN)-wwidth ) div 2,
+         (getsystemmetrics(SM_CYSCREEN)-wheight) div 2);
   setborder(caption,0);
   setborder(scrollbar,0);
 
   easyspiral;
   drawtitle;
-
-  donewincrt; 
+  donewincrt;
+ 
 end.
