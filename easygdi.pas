@@ -1,4 +1,4 @@
-{ EasyGDI v2.01 }
+{ EasyGDI v2.02 }
 
 unit easygdi;
 
@@ -6,7 +6,7 @@ unit easygdi;
              
 interface
 
-uses bitmaps,wobjects, winprocs,wintypes,strings,commdlg, windos, mmsystem;
+uses bitmaps,wobjects, winprocs,wintypes,strings,commdlg, windos, mmsystem, win31;
 
 type points = record
     x: Integer;
@@ -36,7 +36,8 @@ type BMP = ^EZBitmap;
 
 const wndBMP = 0;
       memBMP = 1;
-      encBMP = 2;
+      encdcBMP = 2;
+      enchBMP = 3;
 
 const solid      = 0;
       dash       = 1;
@@ -138,6 +139,7 @@ function pixel(TheBMP:BMP; x,y:integer):longint;
 procedure fill(TheBMP:BMP; x,y:integer; colorinfo:longint; filltype:integer);
 procedure quickfont(var AFont:FONT; fface:string; fsize: integer);
 procedure setfont(ABMP:BMP; var AFont:FONT);
+function getfont(ABMP:BMP):pFONT;
 procedure print(ABMP:BMP; x,y:integer; text:string);
 procedure wrapprint(ABMP:BMP; x,y,w:integer; text:string);
 function getwrappedheight(ABMP:BMP; w:integer; text:string):integer;
@@ -156,6 +158,7 @@ function makewindowBMP(HWindow:hwnd):BMP;
 function makeblankBMP(CompatibleBMP:BMP;  Width,Height:word):BMP;
 function LoadBMP(filename:string):BMP;
 function encapsulateDC(DC:HDC):BMP;
+function isbmp(var it:BMP):boolean;
 procedure killBMP(var it: BMP);
 procedure saveBMP(TheBMP:BMP; filename:string);
 procedure drawpicture(TheBMP: BMP; filename: string; x,y:integer);
@@ -172,8 +175,8 @@ procedure wunfreeze(Wnd: Hwnd);
 procedure wdelay(Wnd:Hwnd; milliseconds:longint);
 procedure wstartdelay(var t: longint);
 procedure wfinishdelay(Wnd:Hwnd; t,milliseconds:longint);
-function wFileOpen(HWindow:hwnd; path,ftype,wildcards: string):string;
-function wFileSave(HWindow:hwnd; path,ftype,wildcards: string):string;
+function wFileOpen(HWindow:hwnd; path,ftype,extension: string):string;
+function wFileSave(HWindow:hwnd; path,ftype,extension: string):string;
 function getapppath(instance: thandle): string;
 function getappdir(instance:thandle):string;
 
@@ -327,6 +330,11 @@ procedure quickfont(var AFont:FONT; fface:string; fsize: integer);
 procedure setfont(ABMP:BMP; var AFont:FONT);
   begin
     ABMP^.TheFont := @AFont;
+  end;
+
+function getfont(ABMP:BMP):pFONT;
+  begin
+    getfont := ABMP^.TheFont;
   end;
 
 function prepfont(DC:HDC; font: pFONT): hfont; {not part of interface}
@@ -493,7 +501,11 @@ var infob:tbitmap;
           begin
             getobject(TheBitmap,sizeof(infob),@infob);
             getwidth:=infob.bmwidth;
-          end; 
+          end;
+        encdcBMP:
+          begin
+            getwidth:=GetDeviceCaps(DChandle,horzres);
+          end;
         else getwidth := 0;
       end;
   end;
@@ -632,11 +644,19 @@ function encapsulateDC(DC:HDC):BMP;
     x := new(BMP);
     with x^ do
       begin
-        Breed     := encBMP;
+        Breed     := encdcBMP;
         DChandle  := DC;
         origDC    := SaveDC(DChandle);
       end;
     encapsulateDC := x;
+  end;
+
+function isbmp(var it:BMP):boolean;
+  begin
+    if (it=nil) or IsBadWritePtr(it,sizeof(ezbitmap)) then
+      isbmp := false
+    else
+      if isgdiobject(it^.dchandle) then isbmp := true;
   end;
 
 procedure killBMP(var it: BMP);
@@ -650,10 +670,11 @@ procedure killBMP(var it: BMP);
         case Breed of
           wndBMP: ReleaseDC(windowh, DCHandle);
           memBMP: DeleteDC(DCHandle);
-          encBMP: begin end;
+          encdcBMP: begin end;
         end;
       end;
     dispose(it);
+    it := nil;
   end;
 
 procedure saveBMP(TheBMP:BMP; filename:string);
@@ -723,7 +744,7 @@ var Msg: TMsg;
   begin  
     while PeekMessage(Msg, Wnd, 0, 0, pm_Remove) do
     begin
-      if Msg.Message = WM_QUIT then begin Application^.Done; halt; end; 
+      if Msg.Message = WM_QUIT then begin Application^.Done; halt; end;
       TranslateMessage(Msg);
       DispatchMessage(Msg);
     end;
@@ -752,16 +773,16 @@ procedure wfinishdelay(Wnd:Hwnd; t,milliseconds:longint);
 
 type TFilename = array [0..255] of Char;
 
-function wFileOpen(HWindow:hwnd; path,ftype,wildcards: string):string;
-const
-  DefExt = 'sav';
+function wFileOpen(HWindow:hwnd; path,ftype,extension: string):string;
 var
   OpenFN      : TOpenFileName;
   Filter      : array [0..100] of Char;
   FullFileName: TFilename;
   WinDir      : array [0..145] of Char;
   filename    : pchar;
+  wildcards   : string;
 begin
+  wildcards := '*.'+extension;
   SetCurDir(pc(path));
   StrCopy(FullFileName, '');
   FillChar(Filter, SizeOf(Filter), #0);  { Set up for double null at end }
@@ -772,7 +793,7 @@ begin
   begin
     hInstance     := HInstance;
     hwndOwner     := HWindow;
-    lpstrDefExt   := DefExt;
+    lpstrDefExt   := pc(extension);
     lpstrFile     := FullFileName;
     lpstrFilter   := Filter;
     lpstrFileTitle:= FileName;
@@ -785,16 +806,16 @@ begin
   {SndPlaySound(FileName, 1);   {Second parameter must be 1} 
 end;
 
-function wFileSave(HWindow:hwnd; path,ftype,wildcards: string):string;
-const
-  DefExt = 'sav';
+function wFileSave(HWindow:hwnd; path,ftype,extension: string):string;
 var
   OpenFN      : TOpenFileName;
   Filter      : array [0..100] of Char;
   FullFileName: TFilename;
   WinDir      : array [0..145] of Char;
   filename    : pchar;
+  wildcards   : string;
 begin
+  wildcards := '*.'+extension;
   SetCurDir(pc(path));
   StrCopy(FullFileName, '');
   FillChar(Filter, SizeOf(Filter), #0);  { Set up for double null at end }
@@ -805,7 +826,7 @@ begin
   begin
     hInstance     := HInstance;
     hwndOwner     := HWindow;
-    lpstrDefExt   := DefExt;
+    lpstrDefExt   := pc(extension);
     lpstrFile     := FullFileName;
     lpstrFilter   := Filter;
     lpstrFileTitle:= FileName;
