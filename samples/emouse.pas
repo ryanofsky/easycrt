@@ -1,12 +1,16 @@
-uses easycrt, easygdi;
+uses easycrt,easygdi;
 
 begin
-  gotoxy(20,9); writeln('X':5,'   ','Y':5,'   ','LEFT':5,'   ','RIGHT':5);
+  initwincrt;   {opens the CRT window so you don't get an error calling settitle }
+
+  Settitle('Mouse Input Demo');
+
+  setcolors(color[15],color[0]);
+  setpen(CRT,color[-1],solid,0);
   repeat
-    unfreeze;                 {prevent lockup}
-    delay(1);                 {helps get rid of screen flicker}
-    gotoxy(20,10); writeln(mousex:5,'   ',mousey:5,'   ',ldown:5,'   ',rdown:5);
-    if ldown then pset(mousex,mousey,color[4]);
-    if rdown then pset(mousex,mousey,color[1]);
-  until inkey<>0;             {repeat until keypress}
+    gotoxy(1,1); write('X':5,'   ','Y':5,'   ','LEFT':5,'   ','RIGHT':5);
+    gotoxy(1,2); write(mousex:5,'   ',mousey:5,'   ',ldown:5,'   ',rdown:5);
+    if ldown then begin setbrush(CRT,color[4],0,solid); circle(CRT,mousex,mousey,3,3); end;
+    if rdown then begin setbrush(CRT,color[1],0,solid); circle(CRT,mousex,mousey,3,3); end;
+  until inkey<>0;
 end.
