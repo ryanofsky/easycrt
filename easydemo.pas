@@ -1,3 +1,6 @@
+{ EasyCRT Demo v1.02 }
+
+
 program demo;
 uses easycrt,wobjects;
 
