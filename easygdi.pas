@@ -1,4 +1,6 @@
-{ EasyGDI v2.02 }
+{ EasyGDI v2.03 }
+
+{ added clipto, cliptorect, clearclip, ishappyptr }
 
 unit easygdi;
 
@@ -147,6 +149,10 @@ function getwrappedwidth(ABMP:BMP; w:integer; text:string):integer;
 function gettextwidth(ABMP: BMP; text:string):word;
 function gettextheight(ABMP: BMP; text:string):word;
 
+procedure cliptorect(ABMP:BMP; x1,y1,x2,y2:hrgn);
+procedure clipto(ABMP:BMP; rgn: hrgn);
+procedure clearclip(ABMP:BMP);
+
 function DChandle(thebmp:BMP):HDC;
 function getwidth(thebmp:bmp):integer;
 function getheight(thebmp:bmp):integer;
@@ -169,6 +175,7 @@ procedure maskcopy(Source,SourceMask,Destination:bmp; Dx,Dy:integer);
 
 function pc(var s: string): pchar;
 function FileExists(FileName: String): Boolean;
+function ishappyptr(p:pointer; size:integer):boolean;
 function isdown(virtkey: integer): boolean;
 
 procedure wunfreeze(Wnd: Hwnd);
@@ -481,6 +488,24 @@ function gettextheight(ABMP: BMP; text:string):word;
     deleteobject(selectobject(DC,oldfont));
   end;
 
+procedure cliptorect(ABMP:BMP; x1,y1,x2,y2:hrgn);
+  var rgn:hrgn;
+  begin
+    rgn := CreateRectRgn(X1, Y1, X2, Y2);
+    selectcliprgn(ABMP^.dchandle,rgn);
+    deleteobject(rgn);
+  end;
+
+procedure clipto(ABMP:BMP; rgn: hrgn);
+  begin
+    selectcliprgn(ABMP^.dchandle,rgn);
+  end;
+
+procedure clearclip(ABMP:BMP);
+  begin
+    selectcliprgn(ABMP^.dchandle,0);
+  end;
+
 function DChandle(thebmp:BMP):HDC;
   begin
     DChandle := thebmp^.dchandle;
@@ -733,6 +758,11 @@ begin
   {$I+}
   FileExists := (IOResult = 0) and (FileName <> '');
 end;
+
+function ishappyptr(p:pointer; size:integer):boolean;
+  begin
+    ishappyptr := (p<>nil) and not IsBadWritePtr(p,size);
+  end;
 
 function isdown(virtkey: integer): boolean;
   begin
