@@ -1,0 +1,188 @@
+
+{38-UP}
+{40-DOWN}
+program project1;
+uses easycrt,winprocs;
+	var
+	dc:hdc;
+	pause:string;
+	a,B,y,x,u,z,k,l,DD,BB,radius:integer;
+        s,f,H,d,P,PP,SC,SS:integer;
+        AA:LONGINT;
+        C:WORD;
+begin
+writeln;
+dc:=initdraw;
+FOR BB:=625 DOWNTO 1 DO
+BEGIN
+y:=10;
+x:=50;
+qline(1,bb,625,BB);
+END;
+Drawpicture(dc,150,0,'c:\logo.bmp');
+setfont('arial',20,0,0,0,0,0);
+txt(252,350,1,color[1],'proudly presents');
+txt(220,390,1,color[4],'hit any key to continue');
+repeat until inkey<>0;
+FOR BB:=625 downTO 1 DO
+BEGIN
+qline(1,bb,625,bb);
+END;
+Drawpicture(dc,1,50,'a:\plane.bmp');
+Drawpicture(dc,300,50,'a:\plane2.bmp');
+txt(255,315,1,color[1],'Written by:');
+txt(290,360,1,color[4],'Greg Dickensheets');
+repeat 
+     if l>=100 then k:=-1;
+    if l<=0 then k:=1;
+    l:=l+k;
+setfont('Ariel',35,0,0,0,0,0);
+    txt(317,165,3,gradient(color[4],color[1],l,101),'Dog Fight');
+setfont('ariel',20,0,0,0,0,0);
+    txt(220,390,1,gradient(color[1],color[4],l,101),'Hit any key to begin');
+    delay(10);
+    until inkey<>0;
+x:=427;
+y:=183;
+setfont('ariel',35,0,0,0,0,0);
+for x:=427 downto 200 do
+begin
+txt(x,y,3,color[14],'_');
+txt(x,y-71,3,color[14],'_');
+txt(x,y,3,color[0],'_');
+txt(x,y-71,3,color[0],'_');
+end;
+for radius:=1 to 100 do
+begin
+setpen(color[14],radius,100);
+qcircle(150,200,radius,radius);
+setpen(color[4],radius,100);
+qcircle(150,200,radius-50,radius-50);
+SETPEN(COLOR[12],RADIUS,100);
+QCIRCLE(150,200,RADIUS-100,RADIUS-100);
+end;
+repeat
+     if l>=100 then k:=-1;
+    if l<=0 then k:=1;
+    l:=l+k;
+setfont('ariel',20,0,0,0,0,0);
+    txt(220,390,1,gradient(color[1],color[4],l,101),'Hit any key to begin');
+    delay(10);
+    until inkey<>0;
+SETPEN(COLOR[0],0,0);
+FOR BB:=625 downTO 1 DO
+BEGIN
+qline(1,bb,625,bb);
+END;
+setfont('ariel',35,0,0,0,0,0);
+txt(200,100,1,color[15],'FIGHT');
+delay(400);
+txt(200,100,1,color[0],'FIGHT');
+txt(200,200,1,color[1],'OR');
+delay(400);
+txt(200,200,1,color[0],'OR');
+txt(200,300,1,color[4],'DIE');
+delay(400);
+txt(200,300,1,color[0],'DIE');
+begin
+repeat
+FOR aa:=625 downTO 1 DO
+BEGIN
+qline(1,aa,625,aa);
+END;
+B:=50;
+Drawpicture(dc,1,50,'a:\plane.bmp');
+Drawpicture(dc,300,50,'a:\plane2.bmp');
+setfont('courier new bold',25,0,0,0,0,0);
+repeat
+txt(120,b+50,1,color[-1],'-->');
+b:=b+50;
+until b=250;
+b:=50;
+REPEAT
+C:=INKEY;
+setfont('ariel',35,0,0,0,0,0);
+txt(150,1,1,color[1],'DOG FIGHT MENU');
+setfont('courier new bold',25,0,0,0,0,0);
+txt(206,50,1,color[4],'Instructions');
+txt(165,100,1,color[15],'Plane Vs. Computer');
+txt(190,150,1,color[1],'Plane Vs. Plane');
+txt(182,200,1,color[4],'Encrypted Scores');
+txt(170,250,1,color[15],'Quit the Dog Fight');
+TXT(120,B,1,COLOR[1],'-->');
+IF C=38 THEN BEGIN
+B:=B-50;
+tXT(120,B+50,1,COLOR[-1],'-->');
+IF B<50 THEN B:=50
+END;
+IF C=40 THEN BEGIN
+B:=B+50;
+TXT(120,B-50,1,COLOR[-1],'-->');
+
+IF B>250 THEN B:=250;
+END;
+txt(300,350,3,color[1],'HIT ENTER TO ACTIVATE');
+UNTIL C=13;
+
+{instructions}
+if b=50 then begin
+FOR aa:=625 downTO 1 DO
+BEGIN
+qline(1,aa,625,aa);
+END;
+setfont('courier new bold',20,0,0,0,0,0);
+txt(50,1,1,color[1],'Mission Objective(both two and one player)');
+setfont('ariel bold',15,0,0,0,0,0);
+txt(70,40,1,color[4],'Your mission is to destroy the other plane without getting yourself killed.');
+txt(150,60,1,color[15],'Keys for movement and shooting on the planes');
+txt(10,90,1,color[15],'Plane 1(on one and two player mode)');
+txt(10,105,1,color[15],'Fire- Spacebar');
+txt(10,120,1,color[15],'Move up- W button');
+txt(10,135,1,color[15],'Move down- Z button');
+txt(10,150,1,color[15],'Move left- A button');
+txt(10,165,1,color[15],'Move right- S button');
+txt(300,90,1,color[15],'Plane 2(on two player mode)');
+txt(300,105,1,color[15],'Fire- Enter');
+txt(300,120,1,color[15],'Move up- Up Arrow');
+txt(300,135,1,color[15],'Move down- Down Arrow');
+txt(300,150,1,color[15],'Move left- Left Arrow');
+txt(300,165,1,color[15],'Move right- Right Arrow');
+txt(10,190,1,color[4],'Important Note on two player game:  Tap the keys to move and shoot, do not hold them down.');
+txt(10,205,1,color[4],'It will mess up plane movement and firing ability.');
+txt(10,255,1,color[1],'After you destroy the enemy plane you can view your score in the encrypted score menu');
+txt(10,270,1,color[1],'option.');
+txt(10,285,1,color[4],'If you are destroyed by the enemy plane the game will tell you who one and who lost.');
+txt(10,300,1,color[15],'Even if you lose you can still see your score, eventhough it will be low.');
+txt(10,315,1,color[1],'Fighting the computer is the same as fighting on 2 player, the objective does not change.');
+setfont('courier new bold',20,0,0,0,0,0);
+txt(50,350,1,color[4],'Good Luck to both of you, and happy hunting.');
+txt(100,400,1,color[15],'Hit any key to return to main menu');
+repeat until inkey<>0;
+end;
+
+{player 1 mode}
+if b=100 then begin
+FOR aa:=625 downTO 1 DO
+BEGIN
+qline(1,aa,625,aa);
+END;
+repeat until inkey<>0;
+end;
+
+{2 player mode}
+if b=150 then begin
+end;
+
+{scores}
+if b=200 then begin
+FOR aa:=625 downTO 1 DO
+BEGIN
+qline(1,aa,625,aa);
+END;
+repeat until inkey<>0;
+end;
+{quit game}
+until b=250; 
+DONEWINCRT; 
+end;
+END.
