@@ -1,0 +1,32 @@
+program spotmove;
+
+uses easycrt, strings;
+
+var
+  cool:array[1..8] of bmp;
+  ctr:integer;
+  filename:string;
+  sctr:string;
+
+begin
+  for ctr := 1 to 8 do
+  begin
+    str(ctr, sctr);
+    filename := concat('c:\tpw\doc\cool', sctr, '.bmp');
+    cool[ctr] := loadbmp(filename);
+  end;
+  ctr := 0;
+  repeat
+    delay(100);
+    ctr := ctr + 1;
+    if ctr = 9 then ctr := 1;
+    drawbmp(320, 240, cool[ctr], 0, 0, 0);
+  until inkey <> 0;
+  for ctr := 1 to 8 do
+  begin
+    str(ctr, sctr);
+    filename := concat('c:\tpw\doc\cool', sctr, '.bmp');
+    deletebmp(cool[ctr]);
+  end;
+  donewincrt;
+end.
