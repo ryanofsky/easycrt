@@ -1,4 +1,4 @@
-{ EasyGDI v2.0}
+{ EasyGDI v2.01 }
 
 unit easygdi;
 
@@ -154,7 +154,7 @@ procedure supremecopy(Source, SourceMask, Destination: bmp;
 
 function makewindowBMP(HWindow:hwnd):BMP;
 function makeblankBMP(CompatibleBMP:BMP;  Width,Height:word):BMP;
-function LoadBMP(CompatibleBMP:BMP; filename:string):BMP;
+function LoadBMP(filename:string):BMP;
 function encapsulateDC(DC:HDC):BMP;
 procedure killBMP(var it: BMP);
 procedure saveBMP(TheBMP:BMP; filename:string);
@@ -545,10 +545,7 @@ procedure supremecopy(Source, SourceMask, Destination: bmp;
         oldbmp1 := SelectObject(newdc1, CreateCompatibleBitmap(Destination^.DChandle,Dw,Dh));
         oldbmp2 := SelectObject(newdc2, CreateCompatibleBitmap(Source^.DChandle,Sw,Sh));
 
-        patblt(newdc1,0,0,Dw,Dh,blackness);
-        patblt(newdc2,0,0,Sw,Sh,blackness);
-
-        BitBlt(     newdc1,                 0,  0, Dw, Dw,
+        BitBlt(     newdc1,                 0,  0, Dw, Dh,
                     Destination^.DChandle, Dx, Dy,
                     SrcCopy);
 
@@ -607,7 +604,7 @@ function makeblankBMP(CompatibleBMP:BMP;  Width,Height:word):BMP;
     makeblankBMP := x;
   end;
 
-function LoadBMP(CompatibleBMP:BMP; filename:string):BMP;
+function LoadBMP(filename:string):BMP;
   var x: BMP;
       error: string;
   begin
@@ -615,7 +612,7 @@ function LoadBMP(CompatibleBMP:BMP; filename:string):BMP;
     with x^ do
       begin
         Breed     := memBMP;
-        DChandle  := CreateCompatibleDC(CompatibleBMP^.DChandle);
+        DChandle  := CreateCompatibleDC(0);
         origDC    := SaveDC(DChandle);
         TheBitmap := LoadBitmapFile(pc(filename));
         if TheBitmap=0 then
@@ -677,7 +674,7 @@ procedure saveBMP(TheBMP:BMP; filename:string);
 procedure drawpicture(TheBMP: BMP; filename: string; x,y:integer);
   var n: bmp;
   begin
-    n := LoadBMP(TheBMP,filename);
+    n := LoadBMP(filename);
     SupremeCopy(n, nil, TheBMP,
                 0,0,0,0,
                 x,y,0,0);
