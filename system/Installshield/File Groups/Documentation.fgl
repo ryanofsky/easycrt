@@ -1,0 +1,56 @@
+[EasyCRT\html\media]
+file15=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\backarr.gif
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\tinygdi.gif
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\bgfleck.gif
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\bgmoss.gif
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\bookani2.gif
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\counter.gif
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\easycrt.gif
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\easygdi.gif
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\elg.gif
+file8=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\gears.gif
+file9=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\hand.gif
+file10=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\key.gif
+fulldirectory=
+file11=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\mrhair.gif
+file12=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\ogleeye.gif
+file13=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\orange-cubes.jpg
+file14=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media\tinycrt.gif
+
+[TopDir]
+SubDir0=EasyCRT
+
+[EasyCRT\html]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\version.html
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\commands.html
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\crtsrc.html
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\demo.html
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\gdisrc.html
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\index.html
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\main.html
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\cm.html
+SubDir0=EasyCRT\html\media
+SubDir1=EasyCRT\html\report
+fulldirectory=
+
+[EasyCRT\html\report]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\wingdi.gif
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\easygdi.gif
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\easygdi2.gif
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\monitor.gif
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\report.htm
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\shots.jpg
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\speed.gif
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\struct.gif
+file8=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\wincrt.gif
+file9=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report\easycrt.gif
+fulldirectory=
+
+[EasyCRT]
+SubDir0=EasyCRT\html
+fulldirectory=
+
+[General]
+Type=FILELIST
+Version=1.00.000
+

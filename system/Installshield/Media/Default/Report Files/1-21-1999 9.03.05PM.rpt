@@ -1,0 +1,298 @@
+////////////////////////////////////////////////////////////////////////////////
+///////////////////InstallShield Media Library Report Summary///////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Media Name      : Default
+Report Filename : C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\Media\Default\Report Files\1-21-1999 9.03.05PM.rpt
+Date            : 01/21/1999
+Time            : 9:03PM
+
+Number of Components:                4 
+Number of File Groups:               4 
+Number of Files:                   126 
+Total Size of Files:         3,272,149 (bytes)
+
+==========
+COMPONENTS
+==========
+
+
+     Program Files
+     Documentation
+     Sample Programs
+     Supplemental Fonts
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Report Details/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+================================================================================
+                           COMPONENT: "Program Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                5 (files for this component only)
+    Source Bytes:          87,060 (files for this component only)
+
+
+                     **** File Group: "Program Files" ****
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    easygdi.pas                 01/17/1999  20:17:36       25,141               
+    easy.ICO                    01/08/1999  22:35:12        7,926               
+    easy.res                    03/04/1998  01:09:32        7,958               
+    easycrt.pas                 01/21/1999  18:44:54       38,423               
+    BITMAPS.PAS                 11/22/1998  00:05:34        7,612               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=5                                                87,060               
+
+
+================================================================================
+                           COMPONENT: "Documentation"
+================================================================================
+
+SUMMARY:
+    Total Files:               34 (files for this component only)
+    Source Bytes:         608,905 (files for this component only)
+
+
+                     **** File Group: "Documentation" ****
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    version.html                11/22/1998  22:10:38        4,477               
+    commands.html               01/21/1999  18:56:04       69,205               
+    crtsrc.html                 01/21/1999  20:13:18       39,373               
+    demo.html                   11/25/1998  01:17:38        3,767               
+    gdisrc.html                 01/21/1999  20:14:06       26,089               
+    index.html                  01/21/1999  20:11:08        1,222               
+    main.html                   11/23/1998  23:40:50        2,271               
+    cm.html                     01/21/1999  18:31:44        2,970               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=8                                               149,374               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\media
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    tinygdi.gif                 03/14/1998  07:56:56        1,747               
+    bgfleck.gif                 03/06/1998  19:42:36        1,348               
+    bgmoss.gif                  03/13/1998  23:56:40        7,978               
+    bookani2.gif                04/25/1997  13:08:04       24,050               
+    counter.gif                 07/23/1997  11:33:58       10,315               
+    easycrt.gif                 03/14/1998  11:58:18       94,065               
+    easygdi.gif                 03/14/1998  12:09:28       44,270               
+    elg.gif                     06/18/1997  13:20:12       18,700               
+    gears.gif                   01/15/1998  20:17:48        9,873               
+    hand.gif                    01/22/1998  19:11:08          653               
+    key.gif                     03/14/1998  12:17:52        3,892               
+    mrhair.gif                  11/23/1998  23:38:12        3,342               
+    ogleeye.gif                 07/24/1997  22:51:14        8,965               
+    orange-cubes.jpg            03/10/1998  17:20:42        9,410               
+    tinycrt.gif                 03/14/1998  07:56:58        1,415               
+    backarr.gif                 06/20/1997  00:31:06       16,243               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=16                                              256,266               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\html\report
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    wingdi.gif                  01/21/1999  19:09:44        1,493               
+    easygdi.gif                 01/21/1999  19:10:40        4,955               
+    easygdi2.gif                01/21/1999  19:14:10        2,786               
+    monitor.gif                 03/14/1998  12:22:50       10,867               
+    report.htm                  01/21/1999  20:05:30       12,703               
+    shots.jpg                   03/14/1998  12:42:38       45,083               
+    speed.gif                   01/21/1999  20:09:04       18,890               
+    struct.gif                  01/21/1999  19:12:44       12,556               
+    wincrt.gif                  03/14/1998  12:22:58        4,821               
+    easycrt.gif                 01/21/1999  19:20:48        2,051               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=10                                              116,205               
+
+
+================================================================================
+                          COMPONENT: "Sample Programs"
+================================================================================
+
+SUMMARY:
+    Total Files:               66 (files for this component only)
+    Source Bytes:       1,429,221 (files for this component only)
+
+
+                    **** File Group: "Sample Programs" ****
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    wavetext.pas                01/21/1999  20:28:20        1,211               
+    gback.pas                   12/13/1998  14:02:36          346               
+    getpos.pas                  11/25/1998  00:42:32        1,010               
+    howlong.pas                 11/25/1998  00:44:26          674               
+    inkey.pas                   11/25/1998  00:49:30          263               
+    inkeyasc.pas                11/25/1998  01:11:24          271               
+    shape.pas                   01/01/1999  15:39:46        4,202               
+    stars.pas                   12/17/1998  08:57:22          442               
+    emouse.pas                  12/20/1998  17:45:36          728               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=9                                                 9,147               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    ym.bmp                      12/04/1998  21:45:58        1,754               
+    am.bmp                      11/24/1998  23:01:36        1,754               
+    c.bmp                       11/24/1998  21:48:18       15,742               
+    cm.bmp                      11/24/1998  23:01:34        2,318               
+    demo.pas                    01/20/1999  06:45:06       13,145               
+    e.bmp                       11/24/1998  21:48:18       16,306               
+    em.bmp                      11/24/1998  23:01:30        2,318               
+    head1.bmp                   01/19/1999  21:01:20       14,518               
+    head2.bmp                   01/19/1999  21:01:36       14,518               
+    head3.bmp                   01/19/1999  21:02:04       14,518               
+    monalisa.bmp                01/19/1999  19:32:48      150,838               
+    r.bmp                       11/24/1998  21:48:20       16,870               
+    rm.bmp                      11/24/1998  23:01:28        2,318               
+    s.bmp                       11/24/1998  21:48:20       11,230               
+    sm.bmp                      11/24/1998  23:01:24        1,754               
+    t.bmp                       11/24/1998  21:48:20       16,306               
+    tm.bmp                      11/24/1998  23:01:20        2,318               
+    y.bmp                       11/24/1998  21:48:20       14,050               
+    a.bmp                       11/24/1998  21:48:18       13,486               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=19                                              326,061               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\homer
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    homer.bmp                   12/16/1998  20:15:28       42,438               
+    crosshm.bmp                 12/12/1998  09:57:42          186               
+    crossh.bmp                  12/12/1998  09:56:16          186               
+    homer.pas                   12/12/1998  11:24:28        2,142               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                                44,952               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    inanim.pas                  12/06/1998  23:37:02        4,631               
+    cool2.bmp                   12/01/1997  12:45:56          630               
+    cool3.bmp                   12/01/1997  12:45:46          630               
+    cool4.bmp                   12/01/1997  12:45:36          630               
+    cool5.bmp                   12/01/1997  12:45:16          630               
+    cool6.bmp                   12/01/1997  12:45:06          630               
+    cool7.bmp                   12/01/1997  12:44:54          630               
+    cool8.bmp                   12/01/1997  12:44:32          630               
+    cool1.bmp                   12/01/1997  12:46:10          630               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=9                                                 9,671               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\masks
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    masks.pas                   12/06/1998  23:47:40        2,560               
+    bombmask.bmp                12/01/1997  13:57:28        1,886               
+    bomb.bmp                    12/01/1997  13:55:26       13,390               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=3                                                17,836               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    stick.res                   03/14/1998  23:20:34          788               
+    easygdi.pas                 09/28/1998  22:57:04       20,874               
+    scores.dat                  01/21/1999  20:32:06        2,620               
+    stick.bmp                   01/19/1998  20:29:10       71,926               
+    STICK.EXE                   12/24/1998  00:21:56       87,808               
+    stick.pas                   11/25/1998  00:13:02       67,743               
+    blank.bmp                   01/18/1998  14:54:56       38,462               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=7                                               290,221               
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    ym.bmp                      12/04/1998  21:45:58        1,754               
+    am.bmp                      11/24/1998  23:01:36        1,754               
+    c.bmp                       11/24/1998  21:48:18       15,742               
+    cm.bmp                      11/24/1998  23:01:34        2,318               
+    e.bmp                       11/24/1998  21:48:18       16,306               
+    em.bmp                      11/24/1998  23:01:30        2,318               
+    r.bmp                       11/24/1998  21:48:20       16,870               
+    rm.bmp                      11/24/1998  23:01:28        2,318               
+    s.bmp                       11/24/1998  21:48:20       11,230               
+    sm.bmp                      11/24/1998  23:01:24        1,754               
+    t.bmp                       11/24/1998  21:48:20       16,306               
+    title.pas                   12/07/1998  00:11:12        3,904               
+    tm.bmp                      11/24/1998  23:01:20        2,318               
+    y.bmp                       11/24/1998  21:48:20       14,050               
+    a.bmp                       11/24/1998  21:48:18       13,486               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=15                                              122,428               
+
+
+================================================================================
+                        COMPONENT: "Supplemental Fonts"
+================================================================================
+
+SUMMARY:
+    Total Files:               21 (files for this component only)
+    Source Bytes:       3,272,149 (files for this component only)
+
+
+                   **** File Group: "Supplemental Fonts" ****
+
+
+<Directory>: C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\fonts
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    VERDANAZ.TTF                05/11/1998  20:01:00      124,712               
+    ARIALBD.TTF                 05/11/1998  20:01:00       74,000               
+    ARIALBI.TTF                 05/11/1998  20:01:00       80,548               
+    Britanic.TTF                02/20/1996  00:00:00       35,360               
+    COMIC.TTF                   03/12/1998  00:00:00      128,244               
+    COMICBD.TTF                 03/12/1998  00:00:00      113,316               
+    COUR.TTF                    05/11/1998  20:01:00      105,308               
+    COURBD.TTF                  05/11/1998  20:01:00       90,704               
+    COURBI.TTF                  05/11/1998  20:01:00       90,988               
+    COURI.TTF                   05/11/1998  20:01:00       88,504               
+    CURSIVE.TTF                 07/20/1993  09:00:00       39,988               
+    rans____.TTF                10/10/1993  18:40:18       55,188               
+    STENCIL.TTF                 08/06/1996  00:00:00       48,732               
+    TIMES.TTF                   05/11/1998  20:01:00       92,508               
+    TIMESBD.TTF                 05/11/1998  20:01:00       90,332               
+    TIMESBI.TTF                 05/11/1998  20:01:00       83,696               
+    TIMESI.TTF                  05/11/1998  20:01:00       86,520               
+    VERDANA.TTF                 05/11/1998  20:01:00      109,724               
+    VERDANAB.TTF                05/11/1998  20:01:00      108,256               
+    VERDANAI.TTF                05/11/1998  20:01:00      123,824               
+    ARIAL.TTF                   05/11/1998  20:01:00       72,476               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=21                                            1,842,928               
