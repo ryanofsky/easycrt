@@ -1,4 +1,4 @@
-{ EasyCRT Demo v1.02 }
+{ EasyCRT Demo v2.0 }
 
 { EASYCRT Documentation:                            (maximize for best view)
 
