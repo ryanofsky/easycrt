@@ -1,5 +1,4 @@
-
-{ EASYCRT v2.0}
+{ EasyCRT v2.01 }
 
 {*******************************************************}
 {                                                       }
@@ -114,7 +113,9 @@ procedure maskbmp(x,y: integer;  themask,thepic: bmp;  stretched,wth,ht:integer)
 procedure fullscreen;
 procedure windowscreen;
 procedure delay(milliseconds:longint);
+procedure unfreeze;
 function inkey:word;
+function inkeyasc:char;
 
 const
   color: array[-1..15] of longint = (
@@ -686,7 +687,7 @@ begin
     with ScrollKeys[I] do
       if (Key = KeyDown) and (Ctrl = CtrlDown) then
       begin
-	WindowScroll(SBar, Action, 0);
+       {WindowScroll(SBar, Action, 0); }
 	Exit;
       end;
 end;
@@ -1348,15 +1349,39 @@ var t: longint;
   begin
     t:=gettickcount;
     repeat
+    unfreeze;
     until gettickcount-t>=milliseconds;
   end;
-
+{
 function inkey:word;
   begin
   inkey:=ink;
   ink:=0;
   end;
+      }
 
+procedure unfreeze;
+var M: TMsg;
+  begin  
+    while PeekMessage(M, 0, 0, 0, pm_Remove) do
+    begin
+      if M.Message = wm_Quit then Terminate;
+      DispatchMessage(M);
+    end;
+  end;
+
+function inkey:word;
+begin  
+  unfreeze;
+  inkey:=ink;
+  ink:=0;
+end;
+
+function inkeyasc:char;
+  begin
+    inkeyasc:=chr(0);
+    while keypressed do inkeyasc:=readkey;
+  end;
 
 {   </RUSS>    }
 
