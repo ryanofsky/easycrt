@@ -1,6 +1,3 @@
-{ EasyCRT v1.02 }
-
-
 
 {*******************************************************}
 {                                                       }
@@ -14,35 +11,27 @@
 unit easycrt;
 
 {$S-}
+{$R CLC.RES}
 
 interface
 
-uses WinTypes, WinProcs, WinDos,Wobjects,strings, Win31, CommDlg, BWCC;
+uses WinTypes, WinProcs, WinDos, Strings, WObjects;
 
 const
-  WindowOrg: TPoint =                       { CRT window origin }
+  WindowOrg: TPoint =                          { CRT window origin }
     (X: cw_UseDefault; Y: cw_UseDefault);
-  WindowSize: TPoint =                      { CRT window size }
+  WindowSize: TPoint =                         { CRT window size }
     (X: cw_UseDefault; Y: cw_UseDefault);
-  ScreenSize: TPoint = (X: 80; Y: 25);      { Screen buffer dimensions }
-  Cursor: TPoint = (X: 0; Y: 0);            { Cursor location }
-  Origin: TPoint = (X: 0; Y: 0);            { Client area origin }
-  InactiveTitle: PChar = '(Inactive %s)';   { Inactive window title }
-  AutoTracking: Boolean = True;             { Track cursor on Write? }
-  CheckEOF: Boolean = False;                { Allow Ctrl-Z for EOF? }
-  CheckBreak: Boolean = True;               { Allow Ctrl-C for break? }
+  ScreenSize: TPoint = (X: 80; Y: 29{RWH 25}); { Screen buffer dimensions }
+  Cursor: TPoint = (X: 0; Y: 0);               { Cursor location }
+  Origin: TPoint = (X: 0; Y: 0);               { Client area origin }
+  InactiveTitle: PChar = '%s - Inactive';      { Inactive window title }
+  AutoTracking: Boolean = True;                { Track cursor on Write? }
+  CheckEOF: Boolean = False;                   { Allow Ctrl-Z for EOF? }
+  CheckBreak: Boolean = True;                  { Allow Ctrl-C for break? }
 
 var
   WindowTitle: array[0..79] of Char;        { CRT window title }
-  FileName: string;
-  BitmapHandle: HBitmap;
-  IconizedBits: HBitmap;
-  IconImageValid: Boolean;
-  PixelHeight, PixelWidth: Word;
-  Mode: Longint;
-  DCHandle: HDC;
-  ThePen:HPEN;
-  thefont: tlogfont;
 
 procedure InitWinCrt;
 procedure DoneWinCrt;
@@ -66,22 +55,68 @@ procedure TrackCursor;
 
 procedure AssignCrt(var F: Text);
 
+
+{   <RUSS>    }
+type HDC = THandle;
+     BMP = THandle;
+     Points = record
+       x: Integer;
+       y: Integer;
+     end;
+
+var DC:HDC;
+    ThePen: HPen;
+    OldPen: HPen;
+    PrpPen: TLogPen;
+    TheBrush: HBrush;
+    OldBrush: HBrush;
+    PrpBrush:TLogBrush;
+    TheFont: HFont;
+    OldFont: HFont;
+    PrpFont: TLogFont;
+    ink: word;
+procedure InitDeviceContext;
+procedure DoneDeviceContext;
 function initdraw:HDC;
 procedure stopdraw;
-procedure drawpicture(DC:HDC; x,y:integer; filename:string);
-procedure circle(DC:HDC; xpos,ypos,radiusw,radiush:integer; color:longint;  linestyle,width:integer);
-procedure line(DC:HDC; x1,y1,x2,y2:integer; color:longint;  linestyle,width:integer);
-procedure settitle(lbl:string);
 function pc(strng:string):pchar;
 function rgb(red,green,blue:integer):longint;
-procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
+function getred(color:longint):integer;
+function getgreen(color:longint):integer;
+function getblue(color:longint):integer;
+function gradient(color1,color2:longint; stepno,steps:integer):longint;
+procedure settitle(lbl:string);
+procedure circle(DC:HDC; xpos,ypos,radiusw,radiush:integer; color:longint;  linestyle,width:integer);
+procedure line(DC:HDC; x1,y1,x2,y2:integer; color:longint;  linestyle,width:integer);
 procedure pprint(DC:HDC; x,y:integer;  color:longint; txt:string);
-
-type
-  HDC = THandle;
+procedure txt(x,y,align:integer; color:longint; txt:string);
+procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
+procedure setpen(color: longint; linestyle, width: integer);
+procedure setbrush(color:longint; style:integer);
+procedure qline(x1,y1,x2,y2:integer);
+procedure qcircle(xpos,ypos,radiusw,radiush:integer);
+procedure qarc(xpos,ypos,radiusw,radiush,angle1,angle2,way:integer);
+procedure pset(xpos,ypos: integer; color:longint);
+function pixel(xpos,ypos:integer):longint;
+procedure fill(xpos,ypos:integer; colorinfo:longint; filltype:integer);
+procedure connectdots(var pointarray:points; count:integer);
+procedure shape(var pointarray:points; count,method: integer);
+procedure box(x1,y1,x2,y2,x3,y3:integer);
+procedure drawpicture(DC:HDC; x,y:integer; filename:string);
+function loadbmp(filename:string):BMP;
+procedure drawbmp(x,y: integer;  bmpname: bmp;  stretched,width,height:integer);
+procedure deletebmp(var thebmp:bmp);
+function getwidth(thebmp:bmp):integer;
+function getheight(thebmp:bmp):integer;
+procedure maskbmp(x,y: integer;  themask,thepic: bmp;  stretched,wth,ht:integer);
+procedure fullscreen;
+procedure windowscreen;
+procedure delay(milliseconds:longint);
+function inkey:word;
 
 const
-  color: array[0..15] of longint = (
+  color: array[-1..15] of longint = (
+      -1                              ,   {color -1 Transparent   }
       0 + (256 *   0) + (65536 *   0) ,   {color 0  Black         }
       0 + (256 *   0) + (65536 * 170) ,   {color 1  Blue          }
       0 + (256 * 170) + (65536 *   0) ,   {color 2  Green         }
@@ -98,21 +133,25 @@ const
     255 + (256 *  85) + (65536 * 255) ,   {color 13 Light Magenta }
     255 + (256 * 255) + (65536 *  85) ,   {color 14 Yellow        }
     255 + (256 * 255) + (65536 * 255) );  {color 15 Bright White  }
+{   </RUSS>    }
 
 implementation
 
 { Double word record }
+
 type
   LongRec = record
     Lo, Hi: Integer;
   end;
 
 { MinMaxInfo array }
+
 type
   PMinMaxInfo = ^TMinMaxInfo;
   TMinMaxInfo = array[0..4] of TPoint;
 
 { Scroll key definition record }
+
 type
   TScrollKey = record
     Key: Byte;
@@ -145,7 +184,7 @@ const
   CrtWindow: HWnd = 0;                  { CRT window handle }
   FirstLine: Integer = 0;               { First line in circular buffer }
   KeyCount: Integer = 0;                { Count of keys in KeyBuffer }
-  Created: Boolean = False;       	{ CRT window created? }
+  Created: Boolean = False;       	{ CRT window created3? }
   Focused: Boolean = False;             { CRT window focused? }
   Reading: Boolean = False;             { Reading from CRT window? }
   Painting: Boolean = False;            { Handling wm_Paint? }
@@ -157,12 +196,10 @@ var
   Range: TPoint;                        { Scroll bar ranges }
   CharSize: TPoint;                     { Character cell size }
   CharAscent: Integer;                  { Character ascent }
-  DC: HDC;                              { Global device context }
+{RWH  DC: HDC;}                         { Global device context }
   PS: TPaintStruct;                     { Global paint structure }
   SaveFont: HFont;                      { Saved device context font }
   KeyBuffer: array[0..63] of Char;      { Keyboard type-ahead buffer }
-  textcolor:tcolorref;       
-
 
 { Scroll keys table }
 
@@ -201,9 +238,18 @@ end;
 procedure InitDeviceContext;
 begin
   if Painting then
+    begin
+      ReleaseDC(CrtWindow, DC);
+      DC := BeginPaint(CrtWindow, PS)
+    end;
+{RWH
+  if Painting then
     DC := BeginPaint(CrtWindow, PS) else
     DC := GetDC(CrtWindow);
-  SaveFont := SelectObject(DC, GetStockObject(10{System_Fixed_Font}));
+}
+  SaveFont := SelectObject(DC, GetStockObject(System_Fixed_Font));
+
+
 end;
 
 { Release device context }
@@ -212,8 +258,17 @@ procedure DoneDeviceContext;
 begin
   SelectObject(DC, SaveFont);
   if Painting then
+    begin
+      EndPaint(CrtWindow, PS);
+      DC:=GetDC(CrtWindow);
+      selectobject(DC, Thepen);
+      selectobject(DC, Thebrush);
+    end;
+{RWH
+   if Painting then
     EndPaint(CrtWindow, PS) else
     ReleaseDC(CrtWindow, DC);
+}
 end;
 
 { Show caret }
@@ -298,269 +353,8 @@ begin
   ScreenPtr := @ScreenBuffer[Y * ScreenSize.X + X];
 end;
 
-{Russrules}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function initdraw:HDC;
-  begin
-    DC := GetDC(CrtWindow);
-    initdraw:=DC;
-  end;
-
-procedure stopdraw;
-  begin
-    ReleaseDC(CrtWindow, DC);
-  end;
-
-function pc(strng:string):pchar;
-var step1: array[0..1000] of Char;
-  begin
-    StrPCopy(step1,strng);
-    pc:=step1;
-  end;
-
-procedure AHIncr; far; external 'KERNEL' index 114;
-procedure bitmapinit;
-begin
-  BitmapHandle := 0;
-  IconImageValid := False;
-  DCHandle := initdraw;
-  IconizedBits := CreateCompatibleBitmap(DCHandle, 64, 64);
-  if GetDeviceCaps(DCHandle, numColors) < 3 then Mode := notSrcCopy
-  else Mode := srcCopy;
-  stopdraw;
-end;
-procedure GetBitmapData(var TheFile: File;
-  BitsHandle: THandle; BitsByteSize: Longint);
-type
-  LongType = record
-    case Word of
-      0: (Ptr: Pointer);
-      1: (Long: Longint);
-      2: (Lo: Word;
-	  Hi: Word);
-  end;
-var
-  Count: Longint;
-  Start, ToAddr, Bits: LongType;
-begin
-  Start.Long := 0;
-  Bits.Ptr := GlobalLock(BitsHandle);
-  Count := BitsByteSize - Start.Long;
-  while Count > 0 do
-  begin
-    ToAddr.Hi := Bits.Hi + (Start.Hi * Ofs(AHIncr));
-    ToAddr.Lo := Start.Lo;
-    if Count > $4000 then Count := $4000;
-    BlockRead(TheFile, ToAddr.Ptr^, Count);
-    Start.Long := Start.Long + Count;
-    Count := BitsByteSize - Start.Long;
-  end;
-  GlobalUnlock(BitsHandle);
-end;
-function OpenDIB(var TheFile: File): Boolean;
-var
-  bitCount: Word;
-  size: Word;
-  longWidth: Longint;
-  DCHandle: HDC;
-  BitsPtr: Pointer;
-  BitmapInfo: PBitmapInfo;
-  BitsHandle, NewBitmapHandle: THandle;
-  NewPixelWidth, NewPixelHeight: Word;
-begin
-  OpenDIB := True;
-  Seek(TheFile, 28);
-  BlockRead(TheFile, bitCount, SizeOf(bitCount));
-  if bitCount <= 8 then
-  begin
-    size := SizeOf(TBitmapInfoHeader) + ((1 shl bitCount) * SizeOf(TRGBQuad));
-    BitmapInfo := MemAlloc(size);
-    Seek(TheFile, SizeOf(TBitmapFileHeader));
-    BlockRead(TheFile, BitmapInfo^, size);
-    NewPixelWidth := BitmapInfo^.bmiHeader.biWidth;
-    NewPixelHeight := BitmapInfo^.bmiHeader.biHeight;
-    longWidth := (((NewPixelWidth * bitCount) + 31) div 32) * 4;
-    BitmapInfo^.bmiHeader.biSizeImage := longWidth * NewPixelHeight;
-    GlobalCompact(-1);
-    BitsHandle := GlobalAlloc(gmem_Moveable or gmem_Zeroinit,
-      BitmapInfo^.bmiHeader.biSizeImage);
-    GetBitmapData(TheFile, BitsHandle, BitmapInfo^.bmiHeader.biSizeImage);
-    DCHandle := initdraw;
-    BitsPtr := GlobalLock(BitsHandle);
-    NewBitmapHandle :=
-      CreateDIBitmap(DCHandle, BitmapInfo^.bmiHeader, cbm_Init, BitsPtr,
-      BitmapInfo^, 0);
-    stopdraw;
-    GlobalUnlock(BitsHandle);
-    GlobalFree(BitsHandle);
-    FreeMem(BitmapInfo, size);
-    if NewBitmapHandle <> 0 then
-    begin
-      if BitmapHandle <> 0 then DeleteObject(BitmapHandle);
-      BitmapHandle := NewBitmapHandle;
-      PixelWidth := NewPixelWidth;
-      PixelHeight := NewPixelHeight;
-    end
-    else
-      OpenDIB := False;
-  end
-  else
-    OpenDIB := False;
-end;
-function LoadBitmapFile(Name: pchar): Boolean;
-var
-  TheFile: File;
-  TestWin30Bitmap: Longint;
-  ErrorMsg: PChar;
-  OldCursor: HCursor;
-begin
-  ErrorMsg := nil;
-  OldCursor := SetCursor(LoadCursor(0, idc_Wait));
-  Assign(TheFile, Name);
-  {$I-}
-  Reset(TheFile, 1);
-  {$I+}
-  if IOResult = 0 then
-  begin
-    Seek(TheFile, 14);
-    BlockRead(TheFile, TestWin30Bitmap, SizeOf(TestWin30Bitmap));
-    if TestWin30Bitmap = 40 then
-      if OpenDIB(TheFile) then
-      begin
-	{AdjustScroller;}
-	IconImageValid := False;
-      end
-      else ErrorMsg := 'Unable to create Windows 3.0 bitmap from file'
-    else
-      ErrorMsg := 'Not a Windows 3.0 bitmap file';
-    Close(TheFile);
-  end
-  else
-    ErrorMsg := 'Cannot open bitmap file';
-  SetCursor(OldCursor);
-  if ErrorMsg = nil then LoadBitmapFile := True else
-  begin
-
-    {MessageBox(HWindow, ErrorMsg, bsa_Name, mb_Ok);}
-    writeln('EASYCRT:  Bitmap File Error');
-    LoadBitmapFile := False;
-  end;
-end;
-procedure Paint(PaintDC: HDC; var PaintInfo: TPaintStruct; xpos,ypos:integer);
-var
-  MemoryDC: HDC;
-  OldBitmapHandle: THandle;
-  ClientRect: TRect;
-begin
-  if BitmapHandle <> 0 then
-  begin
-    MemoryDC := CreateCompatibleDC(PaintDC);
-{    if IsIconic(HWindow) then
-      OldBitmapHandle := SelectObject(MemoryDC, IconizedBits)
-    else}
-    begin
-      OldBitmapHandle := SelectObject(MemoryDC, BitmapHandle);
-      if Mode = srcCopy then
-      begin
-	SetBkColor(PaintDC, GetNearestColor(PaintDC, $800000));
-	SetTextColor(PaintDC, $FFFFFF);
-      end;
-    end;
-    BitBlt(PaintDC, xpos, ypos, PixelWidth, PixelHeight, MemoryDC, 0, 0,
-      Mode);
-    SelectObject(MemoryDC, OldBitmapHandle);
-    stopdraw;
-  end;
-end;
-
-procedure drawpicture(DC:HDC; x,y:integer; filename:string);
-var test:bool;
-    wat: char;
-    info:tpaintstruct;
-  begin
-    bitmapinit;
-    test:=loadbitmapfile(pc(filename));
-    paint(initdraw,info,x,y);
-  end;
-
-procedure circle(DC:HDC; xpos,ypos,radiusw,radiush:integer; color:longint;  linestyle,width:integer);
-var x1,y1,x2,y2:integer;
-  begin
-    x1:=xpos-radiusw;  y1:=ypos-radiush;  x2:=xpos+radiusw;  y2:=ypos+radiush;
-    ThePen := SelectObject(DC, CreatePen(linestyle, width, color));
-    Ellipse(DC, X1,Y1,X2,Y2);
-    DeleteObject(SelectObject(DC, ThePen));
-  end;
-
-procedure line(DC:HDC; x1,y1,x2,y2:integer; color:longint;  linestyle,width:integer);
-var ends:array[1..2] of tpoint;
-  begin
-    ends[1].x:=x1;  ends[1].y:=y1;  ends[2].x:=x2;  ends[2].y:=y2;
-    ThePen := SelectObject(DC, CreatePen(linestyle, width, color));
-    polyline(DC,ends,2);
-    DeleteObject(SelectObject(DC, ThePen));
-  end;
-
-function rgb(red,green,blue:integer):longint;
-  begin
-    rgb:=red+(256*green)+(65536*blue);
-  end;
-
-procedure settitle(lbl:string);
-begin
-  SetWindowText(CrtWindow, pc(lbl));
-end;
-
-procedure pprint(DC:HDC; x,y:integer;  color:longint; txt:string);
-var lng:integer;
-  begin
-    SelectObject(DC, CreateFontIndirect(thefont));
-    lng:=length(txt);
-    setbkmode(DC,1);
-    settextcolor(DC,color);
-    textout(DC,x,y,pc(txt),lng);
-    DeleteObject(SelectObject(DC, CreateFontIndirect(thefont)));
-  end;
-
-procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
-  begin
-    thefont.lfheight         := size;
-    thefont.lfwidth          := 0;
-    thefont.lfEscapement     := round(angle*10);
-    thefont.lfweight         := weight*100;
-    thefont.lfitalic         := italic;
-    thefont.lfunderline      := underline;
-    thefont.lfstrikeout      := strikeout;
-{   thefont.lfcharset } 
-    thefont.lfoutprecision   := OUT_TT_PRECIS;
-    thefont.lfquality        := PROOF_QUALITY;
-    thefont.lfPitchAndFamily := DEFAULT_PITCH or FF_DONTCARE; 
-    StrCopy(thefont.lfFaceName,pc(fontface));
-  end;
-
-
-
-
-
-
-
-
-
-
 { Update text on cursor line }
+
 procedure ShowText(L, R: Integer);
 begin
   if L < R then
@@ -574,6 +368,7 @@ begin
 end;
 
 { Write text buffer to CRT window }
+
 procedure WriteBuf(Buffer: PChar; Count: Word);
 var
   L, R: Integer;
@@ -769,6 +564,7 @@ procedure WindowPaint;
 var
   X1, X2, Y1, Y2: Integer;
 begin
+  
   Painting := True;
   InitDeviceContext;
   X1 := Max(0, PS.rcPaint.left div CharSize.X + Origin.X);
@@ -785,6 +581,8 @@ begin
   end;
   DoneDeviceContext;
   Painting := False;
+
+  
 end;
 
 { wm_VScroll and wm_HScroll message handler }
@@ -933,7 +731,7 @@ begin
     wm_Size: WindowResize(LongRec(LParam).Lo, LongRec(LParam).Hi);
     wm_GetMinMaxInfo: WindowMinMaxInfo(PMinMaxInfo(LParam));
     wm_Char: WindowChar(Char(WParam));
-    wm_KeyDown: WindowKeyDown(Byte(WParam));
+    wm_KeyDown: begin ink:=wParam; WindowKeyDown(Byte(WParam)); end;
     wm_SetFocus: WindowSetFocus;
     wm_KillFocus: WindowKillFocus;
     wm_Destroy: WindowDestroy;
@@ -1013,15 +811,17 @@ begin
     CrtWindow := CreateWindow(
       CrtClass.lpszClassName,
       WindowTitle,
-      ws_maximize + ws_OverlappedWindow + ws_HScroll + ws_VScroll,
+      ws_maximize + ws_OverlappedWindow + ws_HScroll + ws_VScroll
+{RWH} + CS_BYTEALIGNCLIENT + CS_SAVEBITS,
       WindowOrg.X, WindowOrg.Y,
       WindowSize.X, WindowSize.Y,
       0,
       0,
       HInstance,
       nil);
-    ShowWindow(CrtWindow, 5);
+    ShowWindow(CrtWindow, 5{RWH CmdShow});
     UpdateWindow(CrtWindow);
+{    DC:=getDC(CrtWindow); }
   end;
 end;
 
@@ -1029,6 +829,11 @@ end;
 
 procedure DoneWinCrt;
 begin
+{RWH}
+  deleteobject(ThePen);
+  deleteobject(OldPen);
+  deleteobject(TheBrush);
+  deleteobject(OldBrush);
   if Created then DestroyWindow(CrtWindow);
   Halt(0);
 end;
@@ -1049,6 +854,12 @@ begin
     SetWindowText(CrtWindow, Title);
     EnableMenuItem(GetSystemMenu(CrtWindow, True), sc_Close, mf_Enabled);
     CheckBreak := False;
+ {RWH}
+    deleteobject(ThePen);
+    deleteobject(OldPen);
+    deleteobject(TheBrush);
+    deleteobject(OldBrush);
+    ReleaseDC(CrtWindow, DC);
     while GetMessage(Message, 0, 0, 0) do
     begin
       TranslateMessage(Message);
@@ -1056,6 +867,496 @@ begin
     end;
   end;
 end;
+
+{   <RUSS>    }
+
+function initdraw:HDC;
+  begin
+    initdraw:=DC;
+  end;
+
+procedure stopdraw;
+  begin
+  end;
+
+function pc(strng:string):pchar;
+var step1: array[0..1000] of Char;
+  begin
+    StrPCopy(step1,strng);
+    pc:=step1;
+  end;
+procedure settitle(lbl:string);
+begin
+  SetWindowText(CrtWindow, pc(lbl));
+  StrCopy(WindowTitle, pc(lbl))
+end;
+
+function rgb(red,green,blue:integer):longint;
+  begin
+    rgb:=red+(256*green)+(65536*blue);
+  end;
+
+function getred(color:longint):integer;
+var red,green,blue: integer;
+  begin
+    {rgb:=red+(256*green)+(65536*blue);}
+    blue:=color div 65536;
+    green:=(color-blue*65536) div 256;
+    red:=color-65536*blue-256*green;
+    getred:=red;       
+  end;
+
+function getgreen(color:longint):integer;
+var red,green,blue: integer;
+  begin
+    {rgb:=red+(256*green)+(65536*blue);}
+    blue:=color div 65536;
+    green:=(color-blue*65536) div 256;
+    red:=color-65536*blue-256*green;
+    getgreen:=green;       
+  end;
+
+function getblue(color:longint):integer;
+var red,green,blue: integer;
+  begin
+    {rgb:=red+(256*green)+(65536*blue);}
+    blue:=color div 65536;
+    green:=(color-blue*65536) div 256;
+    red:=color-65536*blue-256*green;
+    getblue:=blue;       
+  end;
+
+function gradient(color1,color2:longint; stepno,steps:integer):longint;
+var red,green,blue: integer;
+  begin
+    red:=(stepno*(getred(color2)-getred(color1)))div steps + getred(color1);
+    green:=(stepno*(getgreen(color2)-getgreen(color1)))div steps + getgreen(color1);
+    blue:=(stepno*(getblue(color2)-getblue(color1)))div steps + getblue(color1);
+    gradient:=rgb(red,green,blue);
+  end;
+
+procedure circle(DC:HDC; xpos,ypos,radiusw,radiush:integer; color:longint;  linestyle,width:integer);
+var x1,y1,x2,y2:integer;
+  begin
+    x1:=xpos-radiusw;  y1:=ypos-radiush;  x2:=xpos+radiusw;  y2:=ypos+radiush;
+    ThePen := CreatePen(linestyle, width, color);
+    OldPen := SelectObject(DC, ThePen);
+    Ellipse(DC, X1,Y1,X2,Y2);
+    ThePen:=SelectObject(DC, OldPen);
+    DeleteObject(ThePen);
+    ThePen:=OldPen;
+  end;
+
+procedure line(DC:HDC; x1,y1,x2,y2:integer; color:longint;  linestyle,width:integer);
+var ends:array[1..2] of tpoint;
+  begin
+    ends[1].x:=x1;  ends[1].y:=y1;  ends[2].x:=x2;  ends[2].y:=y2;
+    ThePen := CreatePen(linestyle, width, color);
+    OldPen := SelectObject(DC, ThePen);
+    polyline(DC,ends,2);
+    ThePen:=SelectObject(DC, OldPen);
+    DeleteObject(ThePen);
+    ThePen:=OldPen;
+  end;
+
+procedure txt(x,y,align:integer; color:longint; txt:string);
+var aln,lng:integer;
+  begin
+    case align of
+      1: aln:=TA_LEFT;
+      2: aln:=TA_RIGHT;
+      3: aln:=TA_CENTER;
+      end;
+    lng:=length(txt);
+    TheFont := CreateFontIndirect(PrpFont);
+    OldFont := SelectObject(DC, TheFont);
+    settextalign(DC,aln);
+    setbkmode(DC,1);  settextcolor(DC,color); textout(DC,x,y,pc(txt),lng); settextcolor(DC,0);
+    TheFont:=SelectObject(DC, OldFont);
+    DeleteObject(TheFont);
+    TheFont:=OldFont;
+  end;
+
+procedure pprint(DC:HDC; x,y:integer;  color:longint; txt:string);
+var lng:integer;
+  begin
+    lng:=length(txt);
+    TheFont := CreateFontIndirect(PrpFont);
+    OldFont := SelectObject(DC, TheFont);
+    setbkmode(DC,1);  settextcolor(DC,color); textout(DC,x,y,pc(txt),lng); settextcolor(DC,0);
+    TheFont:=SelectObject(DC, OldFont);
+    DeleteObject(TheFont);
+    TheFont:=OldFont;
+  end;
+
+procedure setfont(fontface:string; size,weight,italic,underline,strikeout:integer;angle:real );
+  begin
+    PrpFont.lfHeight         := -1*size;
+    PrpFont.lfWidth          := 0;
+    PrpFont.lfEscapement     := round(angle*10);
+    PrpFont.lfWeight         := weight*100;
+    PrpFont.lfItalic         := byte(italic);
+    PrpFont.lfUnderline      := byte(underline);
+    PrpFont.lfStrikeout      := byte(strikeout);
+{   PrpFont.lfcharset }
+{   PrpFont.lfOutprecision   := OUT_TT_PRECIS; }
+    PrpFont.lfQuality        := PROOF_QUALITY;
+    PrpFont.lfPitchAndFamily := DEFAULT_PITCH or FF_DONTCARE;
+    StrCopy(Prpfont.lfFaceName,pc(fontface));
+  end;
+
+procedure setpen(color: longint; linestyle, width: integer);
+  begin
+    if color <> -1 then
+      ThePen := CreatePen(linestyle, width, color)
+    else
+    ThePen := CreatePen(PS_NULL,width,0);
+    oldpen:=selectobject(DC,ThePen);
+    deleteobject(oldpen);
+  end;
+
+procedure setbrush(color:longint; style: integer);
+var brushstyle: tlogbrush;
+  begin
+    if color=-1 then
+      begin
+        brushstyle.lbstyle:=BS_HOLLOW;
+        thebrush:=CreateBrushIndirect(brushstyle);
+      end
+    else
+      if style=0 then
+        begin
+          brushstyle.lbstyle:=BS_SOLID;
+          brushstyle.lbcolor:=color;
+          thebrush:=CreateBrushIndirect(brushstyle);
+        end
+      else
+        thebrush:=createhatchbrush(style-1,color);;
+    oldbrush:=selectobject(DC,thebrush);
+    deleteobject(oldbrush);
+  end;
+
+{
+1	Horizontal Line.
+2	Vertical Line.
+3       Downward Diagonal.
+4	Upward Diagonal.
+5 	Cross.
+6	Diagonal Cross.
+}
+
+procedure qline(x1,y1,x2,y2:integer);
+var ends:array[1..2] of tpoint;
+  begin
+    ends[1].x:=x1;  ends[1].y:=y1;  ends[2].x:=x2;  ends[2].y:=y2;
+    polyline(DC,ends,2);
+  end;
+
+procedure qcircle(xpos,ypos,radiusw,radiush:integer);
+var x1,y1,x2,y2,c,d:integer;
+  begin
+    x1:=xpos-radiusw;  y1:=ypos-radiush;  x2:=xpos+radiusw;  y2:=ypos+radiush;
+    Ellipse(DC, X1,Y1,X2,Y2);
+  end;
+
+procedure Qarc(xpos,ypos,radiusw,radiush,angle1,angle2,way:integer);
+var x1,y1,x2,y2,x3,y3,x4,y4,c,d:integer;
+  begin
+    x1:=xpos-radiusw;  y1:=ypos-radiush;  x2:=xpos+radiusw;  y2:=ypos+radiush;
+    x3:=xpos+round(radiusw*(cos(angle1/180*pi))); y3:=ypos-round(radiush*(sin(angle1/180*pi)));
+    x4:=xpos+round(radiusw*(cos(angle2/180*pi))); y4:=ypos-round(radiush*(sin(angle2/180*pi)));
+    case way of
+      0: arc(DC, X1,Y1,X2,Y2,X3,Y3,X4,Y4);
+      1: chord(DC, X1,Y1,X2,Y2,X3,Y3,X4,Y4);
+      2: pie(DC, X1,Y1,X2,Y2,X3,Y3,X4,Y4);
+    end;
+  end;
+
+procedure pset(xpos,ypos: integer; color:longint);
+  begin
+    setpixel(DC,xpos,ypos,color);
+  end;
+
+function pixel(xpos,ypos:integer):longint;
+  begin
+    pixel:=getpixel(DC,xpos,ypos);
+  end;
+
+procedure fill(xpos,ypos:integer; colorinfo:longint; filltype:integer);
+  begin
+    EXTFLOODFILL(DC,xpos,ypos,colorinfo,filltype);
+  end;
+
+procedure box(x1,y1,x2,y2,x3,y3:integer);
+  begin
+    roundrect(DC,x1,y1,x2,y2,x3,y3);
+  end;
+
+procedure connectdots(var pointarray:points; count:integer);
+  begin
+    Polyline(DC,pointarray,count)
+  end;
+
+procedure shape(var pointarray:points; count,method: integer);
+  begin
+    setpolyfillmode(DC,method);     {1=alternate, 2=winding}
+    polygon(DC,pointarray,count);
+  end;
+
+var BitMapHandle: HBitmap;
+    IconizedBits: HBitmap;
+    IconImageValid: Boolean;
+    Stretch: Boolean;
+    Width, Height: LongInt;
+procedure AHIncr; far; external 'KERNEL' index 114;
+procedure GetBitmapData(var TheFile: File;
+  BitsHandle: THandle; BitsByteSize: Longint);
+type
+  LongType = record
+    case Word of
+      0: (Ptr: Pointer);
+      1: (Long: Longint);
+      2: (Lo: Word;
+	  Hi: Word);
+  end;
+var
+  Count: Longint;
+  Start, ToAddr, Bits: LongType;
+begin
+  Start.Long := 0;
+  Bits.Ptr := GlobalLock(BitsHandle);
+  Count := BitsByteSize - Start.Long;
+  while Count > 0 do
+  begin
+    ToAddr.Hi := Bits.Hi + (Start.Hi * Ofs(AHIncr));
+    ToAddr.Lo := Start.Lo;
+    if Count > $4000 then Count := $4000;
+    BlockRead(TheFile, ToAddr.Ptr^, Count);
+    Start.Long := Start.Long + Count;
+    Count := BitsByteSize - Start.Long;
+  end;
+  GlobalUnlock(BitsHandle);
+end;
+function OpenDIB(var TheFile: File): Boolean;
+var
+  bitCount: Word;
+  size: Word;
+  longWidth: Longint;
+  DCHandle: HDC;
+  BitsPtr: Pointer;
+  BitmapInfo: PBitmapInfo;
+  BitsHandle, NewBitmapHandle: THandle;
+  NewPixelWidth, NewPixelHeight: Word;
+begin
+  OpenDIB := True;
+  Seek(TheFile, 28);
+  BlockRead(TheFile, bitCount, SizeOf(bitCount));
+  if bitCount <= 8 then
+  begin
+    size := SizeOf(TBitmapInfoHeader) + ((1 shl bitCount) * SizeOf(TRGBQuad));
+    BitmapInfo := MemAlloc(size);
+    Seek(TheFile, SizeOf(TBitmapFileHeader));
+    BlockRead(TheFile, BitmapInfo^, size);
+    NewPixelWidth := BitmapInfo^.bmiHeader.biWidth;
+    NewPixelHeight := BitmapInfo^.bmiHeader.biHeight;
+    longWidth := (((NewPixelWidth * bitCount) + 31) div 32) * 4;
+    BitmapInfo^.bmiHeader.biSizeImage := longWidth * NewPixelHeight;
+    GlobalCompact(-1);
+    BitsHandle := GlobalAlloc(gmem_Moveable or gmem_Zeroinit,
+      BitmapInfo^.bmiHeader.biSizeImage);
+    GetBitmapData(TheFile, BitsHandle, BitmapInfo^.bmiHeader.biSizeImage);
+    DCHandle := CreateDC('Display', nil, nil, nil);
+    BitsPtr := GlobalLock(BitsHandle);
+    NewBitmapHandle :=
+      CreateDIBitmap(DCHandle, BitmapInfo^.bmiHeader, cbm_Init, BitsPtr,
+      BitmapInfo^, 0);
+    DeleteDC(DCHandle);
+    GlobalUnlock(BitsHandle);
+    GlobalFree(BitsHandle);
+    FreeMem(BitmapInfo, size);
+    if NewBitmapHandle <> 0 then
+    begin
+      if BitmapHandle <> 0 then DeleteObject(BitmapHandle);
+      BitmapHandle := NewBitmapHandle;
+      Width := NewPixelWidth;
+      Height := NewPixelHeight;
+    end
+    else
+      OpenDIB := False;
+  end
+  else
+    OpenDIB := False;
+end;
+function LoadBitmapFile(Name: PChar): Boolean;
+var
+  TheFile: File;
+  TestWin30Bitmap: Longint;
+  MemDC: HDC;
+begin
+  LoadBitmapFile := False;
+  Assign(TheFile, Name);
+  Reset(TheFile, 1);
+  Seek(TheFile, 14);
+  BlockRead(TheFile, TestWin30Bitmap, SizeOf(TestWin30Bitmap));
+  if TestWin30Bitmap = 40 then
+    if OpenDIB(TheFile) then
+    begin
+      LoadBitmapFile := True;
+      IconImageValid := False;
+    end
+    else
+      MessageBox(0, 'EASYCRT:  Unable to create Windows 3.0 bitmap from file.',
+	Name, mb_Ok)
+  else
+      MessageBox(0, 'EASYCRT:  Not a Windows 3.0 bitmap file.  Convert using Paintbrush.', Name, mb_Ok);
+  Close(TheFile);
+end;
+procedure Paint(PaintDC:HDC;  xpos,ypos,wth,ht:integer; Rop:longint; var PaintInfo: TPaintStruct);
+var
+  MemDC: HDC;
+  OldBitmap: HBitmap;
+  R: TRect;
+  Info:tbitmap;
+begin
+  getobject(BitMapHandle,10,@info);
+  width:=info.bmwidth;
+  height:=info.bmheight;
+  if BitMapHandle <> 0 then
+  begin
+    MemDC := CreateCompatibleDC(PaintDC);
+      SelectObject(MemDC, BitMapHandle);
+      if Stretch then
+        begin
+          GetClientRect(CrtWindow, R);
+   	  SetCursor(LoadCursor(0, idc_Wait));
+          SetStretchBltMode(PaintDC,3);
+          StretchBlt(PaintDC, xpos, ypos, wth, ht, MemDC, 0, 0,
+	    width, Height, Rop);  
+	  SetCursor(LoadCursor(0, idc_Arrow));
+        end
+      else
+        begin
+          if wth <> 0 then width  := wth;
+          if ht  <> 0 then height := ht;
+	  BitBlt(PaintDC, xpos, ypos, Width, Height, MemDC, 0, 0, Rop);
+        end;
+    DeleteDC(MemDC);
+  end;
+end;
+
+procedure drawpicture(DC:HDC; x,y:integer; filename:string);
+var info:tpaintstruct;
+begin
+  IconImageValid := False;
+  Stretch := False;
+  loadbitmapfile(pc(filename));
+  Paint(DC,x,y,0,0,srccopy,info);
+  deleteobject(BitMapHandle);
+end;
+
+function loadbmp(filename:string):BMP;
+begin
+  bitmaphandle:=0;
+  IconImageValid := False;
+  Stretch := False;
+  loadbitmapfile(pc(filename));
+  loadbmp:=BitMapHandle;  
+  bitmaphandle:=0;
+end;
+
+procedure drawbmp(x,y: integer;  bmpname: bmp;  stretched,width,height:integer);
+var info:tpaintstruct;
+  begin
+    IconImageValid := False;
+    if stretched=0 then Stretch := False else stretch:=True;
+    bitmaphandle:=bmpname;
+    Paint(DC,x,y,width,height,srccopy,info);
+  end;
+
+procedure deletebmp(var thebmp:bmp);
+begin
+  deleteobject(thebmp);
+  deleteobject(BitMapHandle);
+end;
+
+procedure maskbmp(x,y: integer;  themask,thepic: bmp;  stretched,wth,ht:integer);
+var memdc,tempdc: HDC;
+    Infob:tbitmap;
+    info:tpaintstruct;
+    dwidth,dheight,rwidth,rheight:integer;
+  begin
+    IconImageValid := False;
+    if stretched=0 then Stretch := False else stretch:=True;
+    getobject(thepic,10,@infob); rwidth:=infob.bmwidth; rheight:=infob.bmheight;
+    if wth <> 0 then dwidth  := wth else dwidth  :=rwidth;
+    if ht  <> 0 then dheight := ht  else dheight :=rheight;;
+    bitmaphandle:=themask; paint(DC,x,y,dwidth,dheight,dstinvert,info);   
+    bitmaphandle:=themask; paint(DC,x,y,dwidth,dheight,srcpaint,info);  
+    bitmaphandle:=themask; paint(DC,x,y,dwidth,dheight,dstinvert,info);  
+    tempdc:=createcompatibledc(DC);    Selectobject(tempdc, thepic);
+    memdc:=createcompatibledc(tempDC); SelectObject(memdc, thepic);
+    BitBlt(tempDC,0,0,rWidth,rHeight, MemDC, 0, 0, srccopy);
+    deletedc(memdc);
+    memdc:=createcompatibledc(tempDC); SelectObject(memdc, themask);
+    BitBlt(tempDC,0,0,rWidth,rHeight, MemDC, 0, 0, srcand);
+    deletedc(memdc);
+    StretchBlt(DC,X,Y,DWidth,DHeight,tempDC,0,0,RWidth,RHeight,srcpaint);
+    deletedc(tempdc); 
+  end;
+
+function getwidth(thebmp:bmp):integer;
+var Infob:tbitmap;
+  begin
+    getobject(thebmp,10,@infob);
+    getwidth:=infob.bmwidth;
+  end;
+
+
+function getheight(thebmp:bmp):integer;
+var Infob:tbitmap;
+  begin
+    getobject(thebmp,10,@infob);
+    getheight:=infob.bmheight;
+  end;
+
+
+
+const dbxresname: pchar = 'CALC';
+
+var dbx:integer;
+    dbxhandle:hwnd;
+
+function dbxproc(Dlg: HWnd; Msg, wParam: Word; lParam: LongInt): LongInt; export;
+  begin
+    dbxproc:=DefDlgProc(Dlg,Msg,wParam,lParam);
+  end;
+
+procedure fullscreen;
+  begin
+  dbx:=DialogBox(HInstance,dbxresname,CrtWindow,@dbxproc);
+  end;
+
+procedure windowscreen;
+  begin
+  enddialog(dbxhandle,dbx);
+  end;
+
+procedure delay(milliseconds:longint);
+var t: longint;
+  begin
+    t:=gettickcount;
+    repeat
+    until gettickcount-t>=milliseconds;
+  end;
+
+function inkey:word;
+  begin
+  inkey:=ink;
+  ink:=0;
+  end;
+
+
+{   </RUSS>    }
 
 begin
   if HPrevInst = 0 then
@@ -1073,4 +1374,8 @@ begin
   GetModuleFileName(HInstance, WindowTitle, SizeOf(WindowTitle));
   SaveExit := ExitProc;
   ExitProc := @ExitWinCrt;
+{RWH}
+   DC:=getDC(CrtWindow);  
+   initwincrt;
+
 end.
