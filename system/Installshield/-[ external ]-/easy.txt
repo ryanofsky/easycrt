@@ -1,0 +1,1 @@
+This program will install EasyCRT 4.02 and EasyGDI 4.02

@@ -1,0 +1,104 @@
+[EasyCRT\samples\title]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\ym.bmp
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\am.bmp
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\c.bmp
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\cm.bmp
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\e.bmp
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\em.bmp
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\r.bmp
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\rm.bmp
+file8=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\s.bmp
+file9=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\sm.bmp
+file10=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\t.bmp
+fulldirectory=
+file11=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\title.pas
+file12=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\tm.bmp
+file13=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\y.bmp
+file14=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\title\a.bmp
+
+[EasyCRT\samples]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\wavetext.pas
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\gback.pas
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\getpos.pas
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\howlong.pas
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inkey.pas
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inkeyasc.pas
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\shape.pas
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stars.pas
+SubDir0=EasyCRT\samples\demo
+file8=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\emouse.pas
+SubDir1=EasyCRT\samples\homer
+SubDir2=EasyCRT\samples\inanim
+SubDir3=EasyCRT\samples\masks
+fulldirectory=
+SubDir4=EasyCRT\samples\stick
+SubDir5=EasyCRT\samples\title
+
+[EasyCRT\samples\inanim]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\inanim.pas
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool2.bmp
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool3.bmp
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool4.bmp
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool5.bmp
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool6.bmp
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool7.bmp
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool8.bmp
+file8=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\inanim\cool1.bmp
+fulldirectory=
+
+[TopDir]
+SubDir0=EasyCRT
+
+[EasyCRT\samples\stick]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\stick.res
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\easygdi.pas
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\scores.dat
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\stick.bmp
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\STICK.EXE
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\stick.pas
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\stick\blank.bmp
+fulldirectory=
+
+[EasyCRT\samples\homer]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\homer\homer.bmp
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\homer\crosshm.bmp
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\homer\crossh.bmp
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\homer\homer.pas
+fulldirectory=
+
+[EasyCRT]
+SubDir0=EasyCRT\samples
+fulldirectory=
+
+[General]
+Type=FILELIST
+Version=1.00.000
+
+[EasyCRT\samples\demo]
+file15=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\t.bmp
+file16=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\tm.bmp
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\ym.bmp
+file17=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\y.bmp
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\am.bmp
+file18=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\a.bmp
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\c.bmp
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\cm.bmp
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\demo.pas
+file5=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\e.bmp
+file6=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\em.bmp
+file7=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\head1.bmp
+file8=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\head2.bmp
+file9=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\head3.bmp
+file10=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\monalisa.bmp
+fulldirectory=
+file11=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\r.bmp
+file12=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\rm.bmp
+file13=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\s.bmp
+file14=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\demo\sm.bmp
+
+[EasyCRT\samples\masks]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\masks\masks.pas
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\masks\bombmask.bmp
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\samples\masks\bomb.bmp
+fulldirectory=
+

@@ -1,0 +1,34 @@
+[Shortcut0]
+Target=<TARGETDIR>\EasyCRT\html\index.html
+Parameters=
+ShortcutKey=
+SeparateMemorySpace=No
+Run=Normal Window
+FileGroup=
+Replace=Yes
+IconIndex=0
+StartIn=
+InternetShortcut=No
+IconFile=<TARGETDIR>\EasyCRT\easy.ico
+Comments=
+DisplayText=EasyCRT Documentation
+
+[Folder4]
+Type=Common
+DisplayText=
+Comments=
+
+[Data]
+Shortcut0=Folder4\EasyCRT Documentation
+Folder3=<FOLDER_STARTUP>
+Folder4=Folder2\Computer Math
+Group0=Main
+Group1=Startup
+Folder0=<FOLDER_DESKTOP>
+Folder1=<FOLDER_STARTMENU>
+Folder2=<FOLDER_PROGRAMS>
+
+[Info]
+Type=ShellObject
+Version=1.00.000
+

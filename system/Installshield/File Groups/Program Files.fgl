@@ -1,0 +1,15 @@
+[TopDir]
+SubDir0=EasyCRT
+
+[EasyCRT]
+file0=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\easygdi.pas
+file1=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\easy.ICO
+file2=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\easy.res
+file3=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\easycrt.pas
+file4=C:\My Installations\EasyCRT 4.02, EasyGDI 2.02\-[ external ]-\EasyCRT\BITMAPS.PAS
+fulldirectory=
+
+[General]
+Type=FILELIST
+Version=1.00.000
+
