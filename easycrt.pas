@@ -398,7 +398,6 @@ procedure setborder(index,setting: integer);
       nowx,newx:longint;
   begin
     now  := getwindowlong(CrtWindow, GWL_Style);
-    nowx := getwindowlong(CrtWindow, GWL_EXSTYLE);
     case index of
     0:   { 0=no caption 1=caption} 
          case setting of
@@ -435,31 +434,17 @@ procedure setborder(index,setting: integer);
          case setting of
          0:   new := now and not WS_MAXIMIZEBOX 
          else new := now or WS_CAPTION or WS_MAXIMIZEBOX; end;
-    5:   { 0=no maximize box 1=minimize box}
-         case setting of
-         0:   new := now and not WS_MAXIMIZEBOX
-         else new := now or WS_CAPTION or WS_MAXIMIZEBOX; end;
-    6:   { 0=no system menu 1=system menu}
+    5:   { 0=no system menu 1=system menu}
          case setting of
          0:   new := now and not WS_SYSMENU
          else new := now or WS_CAPTION or WS_SYSMENU; end;
-    7:   { 0=not disabled 1=disabled}
+    6:   { 0=not disabled 1=disabled}
          case setting of
          0:   new := now and not WS_DISABLED
          else new := now or WS_DISABLED; end;
-    8:   { 0=not topmost 1=topmost}
-         case setting of
-         0:   setwindowpos(crtwindow,HWND_NOTOPMOST,0,0,0,0,SWP_NOMOVE or SWP_NOSIZE);
-         else setwindowpos(crtwindow,HWND_TOP,0,0,0,0,SWP_NOMOVE or SWP_NOSIZE); end;
-    9:   { 0=not transparent 1=transparent}
-         case setting of
-         0:   newx := nowx and not WS_EX_TRANSPARENT;
-         else newx := nowx or WS_EX_TRANSPARENT; end;
-
-    else begin new := now; newx := nowx; end; end;
+    else new := now; end;
 
     setwindowlong(CrtWindow, GWL_Style,new);
-    setwindowlong(CrtWindow, GWL_EXSTYLE,newx);
 
     setwindowpos(crtwindow,0,0,0,0,0,SWP_NOZORDER or SWP_NOMOVE or SWP_NOSIZE or SWP_DRAWFRAME);
     InvalidateRect(CrtWindow, nil,false);
