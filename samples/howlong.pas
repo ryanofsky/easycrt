@@ -3,10 +3,10 @@ uses winprocs, easycrt;
 var days, hours, minutes, seconds, milliseconds,t:longint;
 
 begin
-  restore;
-  set
+  setsize(300,100);
   writeln('How long has windows been running?');
   repeat
+    delay(1);
     t:=gettickcount;
     days:=trunc(t/1000/60/60/24);
     t:=t-days*1000*60*60*24;
