@@ -1,4 +1,4 @@
-{ EasyCRT v3.3 }
+{ EasyCRT v4.0 }
 
 {*******************************************************}
 {                                                       }
@@ -15,13 +15,9 @@ unit EasyCrt;
 
 interface
 
-uses WinTypes, WinProcs, WinDos, EasyGDI, strings;
+uses WinTypes, WinProcs, Win31, WinDos, EasyGDI, strings;
 
 const
-  WindowOrg: TPoint =                       { CRT window origin }
-    (X: cw_UseDefault; Y: cw_UseDefault);
-  WindowSize: TPoint =                      { CRT window size }
-    (X: cw_UseDefault; Y: cw_UseDefault);
   ScreenSize: TPoint = (X: 80; Y: 29{RWH 25}); { Screen buffer dimensions }
   Cursor: TPoint = (X: 0; Y: 0);            { Cursor location }
   Origin: TPoint = (X: 0; Y: 0);            { Client area origin }
@@ -56,8 +52,6 @@ procedure TrackCursor;
 procedure AssignCrt(var F: Text);
 
 {  RUSS   }
-
-var DC:HDC;
 
 var TheDC: SDC;
     ldown,rdown: boolean;
@@ -173,7 +167,7 @@ var
   Range: TPoint;                        { Scroll bar ranges }
   CharSize: TPoint;                     { Character cell size }
   CharAscent: Integer;                  { Character ascent }
- { DC: HDC;                             { Global device context }
+  DC: HDC;                              { Global device context }
   PS: TPaintStruct;                     { Global paint structure }
   SaveFont: HFont;                      { Saved device context font }
   KeyBuffer: array[0..63] of Char;      { Keyboard type-ahead buffer }
@@ -203,11 +197,6 @@ const
 {   RUSS   }
 
 var existscrollv, existscrollh: boolean;
-
-procedure cleanup;
-  begin
-    killdc(TheDC);
-  end;
 
 procedure setpen(color: longint; linestyle, width: integer);
   begin
@@ -406,8 +395,10 @@ function getpos(index:integer):integer;
 
 procedure setborder(index,setting: integer);
   var now,new: longint;
+      nowx,newx:longint;
   begin
-    now := getwindowlong(CrtWindow, GWL_Style);
+    now  := getwindowlong(CrtWindow, GWL_Style);
+    nowx := getwindowlong(CrtWindow, GWL_EXSTYLE);
     case index of
     0:   { 0=no caption 1=caption} 
          case setting of
@@ -425,11 +416,11 @@ procedure setborder(index,setting: integer);
                 existscrollh := false;  existscrollv := false;
               end;
          1:   begin
-                new := now and not (ws_hscroll) or ws_vscroll;
+                new := now and (not ws_hscroll) or ws_vscroll;
                 existscrollh := false;  existscrollv := true;
               end;
          2:   begin
-                new := now or ws_hscroll and not ws_vscroll;
+                new := now and (not ws_vscroll) or ws_hscroll;
                 existscrollh := true;  existscrollv := false;
               end;
          else begin
@@ -440,12 +431,41 @@ procedure setborder(index,setting: integer);
          case setting of
          0:   new := now and not WS_MINIMIZEBOX 
          else new := now or WS_CAPTION or WS_MINIMIZEBOX; end;
+    4:   { 0=no maximize box 1=minimize box}
+         case setting of
+         0:   new := now and not WS_MAXIMIZEBOX 
+         else new := now or WS_CAPTION or WS_MAXIMIZEBOX; end;
+    5:   { 0=no maximize box 1=minimize box}
+         case setting of
+         0:   new := now and not WS_MAXIMIZEBOX
+         else new := now or WS_CAPTION or WS_MAXIMIZEBOX; end;
+    6:   { 0=no system menu 1=system menu}
+         case setting of
+         0:   new := now and not WS_SYSMENU
+         else new := now or WS_CAPTION or WS_SYSMENU; end;
+    7:   { 0=not disabled 1=disabled}
+         case setting of
+         0:   new := now and not WS_DISABLED
+         else new := now or WS_DISABLED; end;
+    8:   { 0=not topmost 1=topmost}
+         case setting of
+         0:   setwindowpos(crtwindow,HWND_NOTOPMOST,0,0,0,0,SWP_NOMOVE or SWP_NOSIZE);
+         else setwindowpos(crtwindow,HWND_TOP,0,0,0,0,SWP_NOMOVE or SWP_NOSIZE); end;
+    9:   { 0=not transparent 1=transparent}
+         case setting of
+         0:   newx := nowx and not WS_EX_TRANSPARENT;
+         else newx := nowx or WS_EX_TRANSPARENT; end;
 
-    else new := now; end;
+    else begin new := now; newx := nowx; end; end;
 
     setwindowlong(CrtWindow, GWL_Style,new);
-    ShowWindow(CrtWindow, SW_show);
-    UpdateWindow(CrtWindow);
+    setwindowlong(CrtWindow, GWL_EXSTYLE,newx);
+
+    setwindowpos(crtwindow,0,0,0,0,0,SWP_NOZORDER or SWP_NOMOVE or SWP_NOSIZE or SWP_DRAWFRAME);
+    InvalidateRect(CrtWindow, nil,false);
+    updatewindow(CrtWindow);
+
+    
   end;
 
 var ink: word;
@@ -583,7 +603,6 @@ end;
 
 procedure Terminate;
 begin
-  cleanup;
   if Focused and Reading then HideCursor;
   Halt(255);
 end;
@@ -989,7 +1008,7 @@ end;
 
 procedure WindowDestroy;
 begin
-  cleanup;
+{RWH} killdc(TheDC);
   FreeMem(ScreenBuffer, ScreenSize.X * ScreenSize.Y);
   Longint(Cursor) := 0;
   Longint(Origin) := 0;
@@ -1004,45 +1023,46 @@ function CrtWinProc(Window: HWnd; Message, WParam: Word;
 begin
   CrtWinProc := 0;
   CrtWindow := Window;
-  case Message of
-    wm_Create: WindowCreate;
-    wm_Paint: WindowPaint;
-    wm_VScroll: WindowScroll(sb_Vert, WParam, LongRec(LParam).Lo);
-    wm_HScroll: WindowScroll(sb_Horz, WParam, LongRec(LParam).Lo);
-    wm_Size: WindowResize(LongRec(LParam).Lo, LongRec(LParam).Hi);
-    wm_GetMinMaxInfo: WindowMinMaxInfo(PMinMaxInfo(LParam));
-    wm_Char: WindowChar(Char(WParam));
-{RWH}
-    wm_KeyDown: begin ink:=wParam; WindowKeyDown(Byte(WParam)); end;
-    wm_KeyUp: begin if ink=wParam then ink:=0; end;
-    wm_SetFocus: WindowSetFocus;
-    wm_KillFocus: WindowKillFocus;
-    wm_Destroy: WindowDestroy;
-    wm_lButtonDown:
-      begin
-        ldown:=true;
-        lastclick.x := mousex;
-        lastclick.y := mousey;
-        setcapture(CRTWindow);
+
+      case Message of
+        wm_Create: WindowCreate;
+        wm_Paint: WindowPaint;
+        wm_VScroll: WindowScroll(sb_Vert, WParam, LongRec(LParam).Lo);
+        wm_HScroll: WindowScroll(sb_Horz, WParam, LongRec(LParam).Lo);
+        wm_Size: WindowResize(LongRec(LParam).Lo, LongRec(LParam).Hi);
+        wm_GetMinMaxInfo: WindowMinMaxInfo(PMinMaxInfo(LParam));
+        wm_Char: WindowChar(Char(WParam));
+    {RWH}
+        wm_KeyDown: begin ink:=wParam; WindowKeyDown(Byte(WParam)); end;
+        wm_KeyUp: begin if ink=wParam then ink:=0; end;
+        wm_SetFocus: WindowSetFocus;
+        wm_KillFocus: WindowKillFocus;
+        wm_Destroy: WindowDestroy;
+        wm_lButtonDown:
+          begin
+            ldown:=true;
+            lastclick.x := mousex;
+            lastclick.y := mousey;
+            setcapture(CRTWindow);
+          end;
+        wm_lButtonUp:
+          begin
+            ldown:=false;
+            releasecapture;
+          end;
+        wm_rButtonDown:
+          begin
+            rdown:=true;
+            setcapture(CRTWindow);
+          end;
+        wm_rButtonUp:
+          begin
+            rdown:=false;
+            releasecapture;
+          end;
+      else
+        CrtWinProc := DefWindowProc(Window, Message, WParam, LParam);
       end;
-    wm_lButtonUp:
-      begin
-        ldown:=false;
-        releasecapture;
-      end;
-    wm_rButtonDown:
-      begin
-        rdown:=true;
-        setcapture(CRTWindow);
-      end;
-    wm_rButtonUp:
-      begin
-        rdown:=false;
-        releasecapture;
-      end;
-  else
-    CrtWinProc := DefWindowProc(Window, Message, WParam, LParam);
-  end;
 end;
 
 { Text file device driver output function }
@@ -1116,24 +1136,24 @@ begin
     CrtWindow := CreateWindow(
       CrtClass.lpszClassName,
       WindowTitle,
-      ws_maximize or ws_OverlappedWindow or ws_HScroll or ws_VScroll
-{RWH} or CS_BYTEALIGNCLIENT or CS_SAVEBITS,
-      WindowOrg.X, WindowOrg.Y,
-      WindowSize.X, WindowSize.Y,
+      ws_OverlappedWindow or ws_HScroll or ws_VScroll,
+      cw_UseDefault, cw_UseDefault,
+      cw_UseDefault, cw_UseDefault,
       0,
       0,
       HInstance,
       nil);
-{RWH}ShowWindow(CrtWindow, 5{CmdShow});
+    ShowWindow(CrtWindow,CmdShow);
     UpdateWindow(CrtWindow);
+{RWH} TheDC := makedc(crtwindow, 0);
   end;
 end;
+
 
 { Destroy CRT window if required }
 
 procedure DoneWinCrt;
 begin
-  cleanup;
   if Created then DestroyWindow(CrtWindow);
   Halt(0);
 end;
@@ -1149,7 +1169,6 @@ begin
   ExitProc := SaveExit;
   if Created and (ErrorAddr = nil) then
   begin
-{ RWH } cleanup;
     P := WindowTitle;
     WVSPrintF(Title, InactiveTitle, P);
     SetWindowText(CrtWindow, Title);
@@ -1183,6 +1202,15 @@ begin
   ExitProc := @ExitWinCrt;
   existscrollh := TRUE;
   existscrollv := TRUE;
-  write(chr(0));
-  TheDC := makedc(crtwindow, 0);
 end.
+
+{
+
+ Donewincrt - called from program, destroys window, puts up a halt(0)
+
+Windowdestroy - WM_DESTROY Handler closes up the window, posts WM_QUIT to end message loop
+
+Exitwincrt - part of big exit chain when Program runs out of code
+
+
+}
