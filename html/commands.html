@@ -8,7 +8,7 @@ content="text/html; charset=iso-8859-1">
 </head>
 
 <body background="bgfleck.gif" bgcolor="#FFFFFF" vlink="#8C26DF">
-
+<A name="top">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td width="70" bgcolor="#000000"><a href="index.html"><img
@@ -199,10 +199,8 @@ this can be found in TWindow.HWindow .</font></p>
         </table>
         </center></div><p><font size="2" face="Verdana">The
         purpose of these color constants is to make choosing
-        colors easier by provi a basic selection of colors. So
-        this way, the programmer can remember that COLOR[4] is
-        red rather than RGB(255,85,85). COLOR[x] vacan be added
-        wherever color values are needed.</font></p>
+        colors easier by providing a basic selection of colors.
+        COLOR[x] can be used wherever color values must be specified. </font></p>
         <p><font size="2" face="Verdana"><strong>function
         rgb(red,green,blue:integer):longint;</strong><br>
         This function returns a color value from the RED, GREEN
@@ -240,7 +238,7 @@ this can be found in TWindow.HWindow .</font></p>
     <tr>
         <td width="100%"><font size="2" face="Verdana">When
         windows draws a shape it draws lines and curves with the
-        an the current pen and it fills shapes and areas with the
+        current pen and it fills shapes and areas with the
         current brush. The drawing commands in EasyCRT and
         EasyGDI also use pens and brushes. Here are the functions
         that are used to set the pen and brush in your program</font>.<p><font
@@ -255,8 +253,7 @@ this can be found in TWindow.HWindow .</font></p>
             <p><font size="2" face="Verdana">The color value can
             be any value returned from a color function,<br>
             one of the COLOR[X] values, or -1. When the color is
-            -1 the pen is<br>
-            invisible<br>
+            -1 the pen is transparent<br>
             <br>
             Linestyle may be any of these values:<br>
             0 solid<br>
@@ -456,7 +453,7 @@ this can be found in TWindow.HWindow .</font></p>
             2, it specifies the fill mode. The fill modes can be
             confusing, so often the best way to use them is to
             experiment. But, here was the desciption given by
-            Microsoft in the Win32 SDK.<br>
+            Microsoft in the Win32 SDK:<br>
             <br>
             1 Alternate. The system fills the area between
             odd-numbered and even-numbered polygon sides on each
@@ -527,7 +524,7 @@ this can be found in TWindow.HWindow .</font></p>
         <blockquote>
             <p align="left"><font size="2" face="Verdana">This
             draws a string at position(x,y) in the specified
-            color.</font></p>
+            color with the current font.</font></p>
             <p align="left"><font size="2" face="Verdana">Align
             is a number 1-3<br>
             1 Text is left aligned at (X,Y)<br>
@@ -541,8 +538,8 @@ this can be found in TWindow.HWindow .</font></p>
         height="30">function getlng(text:string):longint;</strong></font></p>
         <blockquote>
             <p align="left"><font size="2" face="Verdana">This
-            function returns the width of the text string in
-            (pixels) if it would be drawn in the current font.<br>
+            function returns the width of a text string (in
+            pixels) if it would be drawn in the current font.<br>
             </font></p>
         </blockquote>
         </td>
@@ -555,7 +552,7 @@ this can be found in TWindow.HWindow .</font></p>
     <tr>
         <td>The bitmap procedures basically work by loading a
         bitmap from a disk into memory. Once the bitmap is in
-        memory and can be displayed in different ways. The
+        memory, it can be displayed in different ways. The
         commands make it look like the bitmap is being loaded
         into a variable, but actually the variable only holds a
         number value called a <em>handle</em> that tells Windows
@@ -582,7 +579,7 @@ this can be found in TWindow.HWindow .</font></p>
         load bomb.bmp.<br>
         <br>
         3) You can set one bitmap variable equal to another, but
-        even after you've done this, the changing one bitmap
+        even after you've done this, changing one bitmap
         variable will affect the other.</p>
         <p>Example:</p>
         <pre>    var mybmp1,mybmp2:BMP;
@@ -630,14 +627,12 @@ this can be found in TWindow.HWindow .</font></p>
             of the bitmap.<br>
             <br>
             WIDTH and HEIGHT tell Windows how big you want the
-            bitmap to be. If you set either of these to 0, it
-            will use the actual height or width of the bitmap.<br>
+            bitmap to be. If you set either of these to 0, the program defaults to the actual height or width of the bitmap.<br>
             <br>
-            If stretched is not zero then windows will stretch
+            If STRETCHED is nonzero then windows will stretch
             your bitmap to the<br>
             height and width you specify, otherwise it will crop
-            your bitmap to the<br>
-            specified dimensions.<strong><br>
+            your bitmap to the specified dimensions.<strong><br>
             </strong></font></p>
         </blockquote>
         <p><font size="2" face="Verdana"><strong><img
@@ -674,9 +669,9 @@ this can be found in TWindow.HWindow .</font></p>
             combines the LOADBMP, DRAWBMP, and DELETEBMP<strong> </strong>functions.
             It loads a bitmap from path in FILENAME, and draws it
             at (X,Y) on the screen. However, this command is a
-            considerable slower than using the other commands. It
+            considerably slower than the other bitmap commands. It
             takes longer to display a bitmap from the disk than
-            it does from memory. So, this should really only be
+            it does from memory. So this should really only be
             used when you are planning to display the bitmap
             once.<strong> </strong>This should not be used for
             animations.</font></p>
@@ -743,11 +738,10 @@ this can be found in TWindow.HWindow .</font></p>
         src="tinycrt.gif" align="middle" width="90" height="30">procedure
         showcursor;</strong></font></p>
         <blockquote>
-            <p><font size="2" face="Verdana">For EasyCRT programs
-            this displays the cursor in it's current position.
-            This signfies that the user should type something in
-            on the keyboard. It works well with the inkeyasc
-            function.</font></p>
+            <p><font size="2" face="Verdana">This tells the EasyCRT window 
+            to display a blinking cursor in it's current position. This can be 
+            used to signify to the user that the program is accepting keyboard
+            input. It works well with the inkeyasc function. </font></p>
         </blockquote>
         <p><font size="2" face="Verdana"><strong><img
         src="tinycrt.gif" align="middle" width="90" height="30">procedure
@@ -825,7 +819,7 @@ this can be found in TWindow.HWindow .</font></p>
             <p><font size="2" face="Verdana">These are two public
             EasyCRT variables. If the left button is down then
             LDOWN = TRUE otherwise LDOWN = FALSE. If the right
-            button is down then LDOWN = TRUE otherwise LDOWN =
+            button is down then RDOWN = TRUE otherwise RDOWN =
             FALSE.</font></p>
         </blockquote>
         <p><font size="2" face="Verdana"><strong><img
@@ -833,9 +827,8 @@ this can be found in TWindow.HWindow .</font></p>
         getclick;</font></p>
         <blockquote>
             <p><font size="2" face="Verdana">This pauses the
-            program until there is a mouse click. This click is
-            the record LASTCLICK. LASTCLICK.X is the x position
-            of the mouse during the click and LASTCLICK.Y is the
+            program until there is a mouse click. The location of the click is
+            stored in the point variable, LASTCLICK. LASTCLICK.X is the x position of the mouse during the click and LASTCLICK.Y is the
             y position of the mouse during the click.</font></p>
         </blockquote>
         <p><font size="2" face="Verdana"><strong><img
@@ -942,7 +935,7 @@ this can be found in TWindow.HWindow .</font></p>
             returns the position of the CRT window. Here are the
             options for index</font></p>
             <p><font size="2" face="Verdana">0: returns window x
-            coordinates<br>
+            coordinate<br>
             1: returns window y coordinate<br>
             2: returns window width<br>
             3: returns window height<br>
@@ -951,13 +944,28 @@ this can be found in TWindow.HWindow .</font></p>
         <p><font size="2" face="Verdana"><strong><img
         src="tinycrt.gif" align="middle" width="90" height="30"></strong>procedure
         setborder(index,setting: integer);</font></p>
+
+<blockquote>
+            <p><font size="2" face="Verdana">This function is used to control various other options about the EasyCRT window's appearance and behavior. 
+            </font></p>
+        </blockquote>
+
+
+
+
+
+
+
+
+
+
         <div align="center"><center><table border="1"
         cellpadding="7" cellspacing="1" width="260">
             <tr>
                 <td valign="top" width="20%" height="7"><font
                 size="2">Index</font></td>
                 <td valign="top" width="19%" height="7"><font
-                size="2">Style</font></td>
+                size="2">Setting</font></td>
                 <td valign="top" width="62%" height="7"><font
                 size="2">Meaning</font></td>
             </tr>
@@ -1022,7 +1030,7 @@ this can be found in TWindow.HWindow .</font></p>
                 size="2">Both Scrollbars</font></td>
             </tr>
         </table>
-        </center></div></td>
+        </center></div><BR></td>
     </tr>
     <tr>
         <td bgcolor="#000000"><p align="center"><font
@@ -1037,11 +1045,7 @@ this can be found in TWindow.HWindow .</font></p>
         <strong><img src="tinycrt.gif" align="middle" width="90"
         height="30"></strong>procedure unfreeze;</font><blockquote>
             <p><font size="2" face="Verdana">A program that is in
-            a repeat loop is unable to process its messages so it
-            will stop responding to keypresses and mouseclicks.
-            It can also cause the system to lock up. Putting an
-            unfreeze in a loop, though, forces the program to
-            look and respond to any messages so nothing locks up.</font></p>
+            a repeat loop is unable to process its messages. This causes it to stop responding to keypresses and mouseclicks and can cause the system to lock up. Putting an UNFREEZE in the loop forces the program to look for and respond to messages so nothing locks up. </font></p>
         </blockquote>
         <p><font size="2" face="Verdana"><strong><img
         src="tinygdi.gif" align="middle" width="90" height="18"></strong>procedure
@@ -1071,17 +1075,12 @@ this can be found in TWindow.HWindow .</font></p>
             used to keep track of handles. </font></p>
             <p><font size="2" face="Verdana">Form can have three
             values:</font></p>
-            <p><font size="2" face="Verdana">0: This retrieves
-            the device context from the specified window. The
-            Window's handle goes in FROMWHAT</font></p>
+            <p><font size="2" face="Verdana">0: This creates a device context for a particular window. The window's handle is specified in FROMWHAT</font></p>
             <p><font size="2" face="Verdana">1: This creates a
-            device context in memory. A memory device context is
-            used to draw things in memory and then save their
-            contents into files or project them onto areas of the
-            screen. It can also be used to store and operate on
-            bitmaps or to capture the screen. A memory device
+            device context in memory. A memory device context can be used 
+to draw things off screen. It's contents can then be saved into files or projected onto areas of the screen. It can also be used to store or operate on bitmaps or do screen captures. A memory device
             context will not work until a bitmap has been
-            selected into it. A bitmap with the the desired size
+            selected into it. A bitmap with the desired size
             can be created with the CREATECOMPATIBLEBITMAP
             function and then selected into the new device
             context with SETBMP. This form requires the handle of
@@ -1130,9 +1129,10 @@ this can be found in TWindow.HWindow .</font></p>
     </tr>
 </table>
 
-<p>&nbsp;</p>
+<p><A HREF="#top">Back to top</A></p>
 
 <p><font size="2" face="Verdana"><br>
 </font></p>
 </body>
 </html>
+
