@@ -1,0 +1,21 @@
+program writ2dsk;
+uses wincrt;
+var a: array[1..8] of integer;
+    b: integer;
+    x,y,z:string;
+    name:string;
+    ttt: file of integer;
+
+begin;
+randomize;
+for b := 1 to 8 do
+begin;
+a[b] := random(20);
+writeln (a[b]);
+end;
+assign(ttt,'a:\ttt.dat');
+rewrite(ttt);
+for b:= 1 to 8 do
+write(ttt,a[b]);
+close(ttt);
+end.
