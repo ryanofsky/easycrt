@@ -1,4 +1,4 @@
-{ EasyCRT v2.01 }
+ { EasyCRT v2.01 }
 
 {*******************************************************}
 {                                                       }
@@ -33,7 +33,7 @@ const
 
 var
   WindowTitle: array[0..79] of Char;        { CRT window title }
-
+  
 procedure InitWinCrt;
 procedure DoneWinCrt;
 
@@ -76,6 +76,10 @@ var DC:HDC;
     OldFont: HFont;
     PrpFont: TLogFont;
     ink: word;
+    crtwindow:hwnd;
+    ldown,rdown: boolean;
+    mousepos:tpoint;
+    windowpos:trect;
 procedure InitDeviceContext;
 procedure DoneDeviceContext;
 function initdraw:HDC;
@@ -116,6 +120,11 @@ procedure delay(milliseconds:longint);
 procedure unfreeze;
 function inkey:word;
 function inkeyasc:char;
+function mousex: integer;
+function mousey: integer;
+function GetKeyState(VirtKey: Integer): Integer;
+procedure showcursor;
+procedure hidecursor;
 
 const
   color: array[-1..15] of longint = (
@@ -136,9 +145,98 @@ const
     255 + (256 *  85) + (65536 * 255) ,   {color 13 Light Magenta }
     255 + (256 * 255) + (65536 *  85) ,   {color 14 Yellow        }
     255 + (256 * 255) + (65536 * 255) );  {color 15 Bright White  }
+
+const
+  vk_LButton   = $01;
+  vk_RButton   = $02;
+  vk_Cancel    = $03;
+  vk_MButton   = $04;   { NOT contiguous with L & RBUTTON }
+  vk_Back      = $08;
+  vk_Tab       = $09;
+  vk_Clear     = $0C;
+  vk_Return    = $0D;
+  vk_Shift     = $10;
+  vk_Control   = $11;
+  vk_Menu      = $12;
+  vk_Pause     = $13;
+  vk_Capital   = $14;
+  vk_Escape    = $1B;
+  vk_Space     = $20;
+  vk_Prior     = $21;
+  vk_Next      = $22;
+  vk_End       = $23;
+  vk_Home      = $24;
+  vk_Left      = $25;
+  vk_Up        = $26;
+  vk_Right     = $27;
+  vk_Down      = $28;
+  vk_Select    = $29;
+  vk_Print     = $2A;
+  vk_Execute   = $2B;
+  vk_SnapShot  = $2C;
+{ vk_Copy      = $2C not used by keyboards }
+  vk_Insert    = $2D;
+  vk_Delete    = $2E;
+  vk_Help      = $2F;
+{ vk_A thru vk_Z are the same as their ASCII equivalents: 'A' thru 'Z' }
+{ vk_0 thru vk_9 are the same as their ASCII equivalents: '0' thru '9' }
+  vk_NumPad0   = $60;
+  vk_NumPad1   = $61;
+  vk_NumPad2   = $62;
+  vk_NumPad3   = $63;
+  vk_NumPad4   = $64;
+  vk_NumPad5   = $65;
+  vk_NumPad6   = $66;
+  vk_NumPad7   = $67;
+  vk_NumPad8   = $68;
+  vk_NumPad9   = $69;
+  vk_Multiply  = $6A;
+  vk_Add       = $6B;
+  vk_Separator = $6C;
+  vk_Subtract  = $6D;
+  vk_Decimal   = $6E;
+  vk_Divide    = $6F;
+  vk_F1        = $70;
+  vk_F2        = $71;
+  vk_F3        = $72;
+  vk_F4        = $73;
+  vk_F5        = $74;
+  vk_F6        = $75;
+  vk_F7        = $76;
+  vk_F8        = $77;
+  vk_F9        = $78;
+  vk_F10       = $79;
+  vk_F11       = $7A;
+  vk_F12       = $7B;
+  vk_F13       = $7C;
+  vk_F14       = $7D;
+  vk_F15       = $7E;
+  vk_F16       = $7F;
+  vk_NumLock   = $90;
+
+
 {   </RUSS>    }
 
 implementation
+
+function mousex: integer;
+  begin
+    getcursorpos(mousepos);
+    ScreenToClient(CrtWindow, mousepos);
+    mousex:=mousepos.x;
+  end;
+
+function mousey: integer;
+  begin
+    getcursorpos(mousepos);
+    ScreenToClient(CrtWindow, mousepos);
+    mousey:=mousepos.y;
+  end;
+
+
+{   <RUSS>     }
+{   </RUSS>    }
+
 
 { Double word record }
 
@@ -184,7 +282,7 @@ const
     lpszClassName: 'TPWinCrt');
 
 const
-  CrtWindow: HWnd = 0;                  { CRT window handle }
+{ CrtWindow: HWnd = 0;      }          { CRT window handle }
   FirstLine: Integer = 0;               { First line in circular buffer }
   KeyCount: Integer = 0;                { Count of keys in KeyBuffer }
   Created: Boolean = False;       	{ CRT window created3? }
@@ -725,7 +823,7 @@ function CrtWinProc(Window: HWnd; Message, WParam: Word;
   LParam: Longint): Longint;
 begin
   CrtWinProc := 0;
-  CrtWindow := Window;
+  getwindowrect(window,windowpos);
   case Message of
     wm_Create: WindowCreate;
     wm_Paint: WindowPaint;
@@ -735,12 +833,37 @@ begin
     wm_GetMinMaxInfo: WindowMinMaxInfo(PMinMaxInfo(LParam));
     wm_Char: WindowChar(Char(WParam));
     wm_KeyDown: begin ink:=wParam; WindowKeyDown(Byte(WParam)); end;
+    wm_KeyUp: begin if ink=wParam then ink:=0; end;
     wm_SetFocus: WindowSetFocus;
     wm_KillFocus: WindowKillFocus;
     wm_Destroy: WindowDestroy;
-  else
+    wm_lButtonDown:
+      begin
+        ldown:=true;
+        clipcursor(@windowpos);
+        setcapture(CRTWindow);
+      end;
+    wm_lButtonUp:
+      begin
+        ldown:=false;
+        clipcursor(nil);
+        releasecapture;
+      end;
+    wm_rButtonDown:
+      begin
+        rdown:=true;
+        clipcursor(@windowpos);
+        setcapture(CRTWindow);
+      end;
+    wm_rButtonUp:
+      begin
+        rdown:=false;
+        clipcursor(nil);
+        releasecapture;
+      end;
+    end;
+
     CrtWinProc := DefWindowProc(Window, Message, WParam, LParam);
-  end;
 end;
 
 { Text file device driver output function }
@@ -837,6 +960,7 @@ begin
   deleteobject(OldPen);
   deleteobject(TheBrush);
   deleteobject(OldBrush);
+  clipcursor(nil);
   if Created then DestroyWindow(CrtWindow);
   Halt(0);
 end;
@@ -863,6 +987,7 @@ begin
     deleteobject(TheBrush);
     deleteobject(OldBrush);
     ReleaseDC(CrtWindow, DC);
+    clipcursor(nil);
     while GetMessage(Message, 0, 0, 0) do
     begin
       TranslateMessage(Message);
@@ -1322,8 +1447,6 @@ var Infob:tbitmap;
     getheight:=infob.bmheight;
   end;
 
-
-
 const dbxresname: pchar = 'CALC';
 
 var dbx:integer;
@@ -1336,7 +1459,12 @@ function dbxproc(Dlg: HWnd; Msg, wParam: Word; lParam: LongInt): LongInt; export
 
 procedure fullscreen;
   begin
-  dbx:=DialogBox(HInstance,dbxresname,CrtWindow,@dbxproc);
+  writeln('Instance:        ',hinstance);
+  writeln('Instance:        ',hinstance);
+  writeln('Instance:        ',hinstance);
+  writeln('Template Name:   ',dbxresname);
+  writeln('Parent:          ',CrtWindow);
+  dbx:=DialogBox(HInstance,dbxresname,CrtWindow,MakeProcInstance(@dbxproc, HInstance));
   end;
 
 procedure windowscreen;
@@ -1352,36 +1480,41 @@ var t: longint;
     unfreeze;
     until gettickcount-t>=milliseconds;
   end;
-{
-function inkey:word;
-  begin
-  inkey:=ink;
-  ink:=0;
-  end;
-      }
 
 procedure unfreeze;
 var M: TMsg;
   begin  
+    {
     while PeekMessage(M, 0, 0, 0, pm_Remove) do
     begin
       if M.Message = wm_Quit then Terminate;
       DispatchMessage(M);
     end;
+    }
+    write(chr(0));
   end;
 
 function inkey:word;
 begin  
   unfreeze;
   inkey:=ink;
-  ink:=0;
 end;
 
 function inkeyasc:char;
   begin
+    unfreeze;
     inkeyasc:=chr(0);
-    while keypressed do inkeyasc:=readkey;
+    if keypressed then 
+      begin
+        inkeyasc := KeyBuffer[0];
+        Dec(KeyCount);
+        Move(KeyBuffer[1], KeyBuffer[0], KeyCount);
+      end;
   end;
+
+function GetKeyState;			external 'USER' index 106;
+
+
 
 {   </RUSS>    }
 
